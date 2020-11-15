@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- primary -->
+    <color name="foi_red">#FFCF1F40</color>
+
+    <!-- helper colors -->
+    <color name="teal_acc">#FF00B2D6</color>
+    <color name="blue_acc">#FF3E4CCC</color>
+    <color name="red_acc">#FFD50000</color>
+    <color name="green_acc">#FF43A047</color>
+    <color name="yellow_acc">#FFFFCD03</color>
+    <color name="white_acc">#FFFFFFFF</color>
+    <color name="grey_10">#FFfCfCfC</color>
+    <color name="grey_20">#FFF2F2F2</color>
+    <color name="grey_30">#FFE5E5E5</color>
+    <color name="grey_60">#FF818186</color>
+
+    <!-- ambience -->
+    <color name="green_primary">#FF7B8501</color>
+    <color name="green_secondary">#FFADB53E</color>
+
+    <!-- my behaviours and habits -->
+    <color name="red_primary">#FFC2371A</color>
+
+    <!-- my classes -->
+    <color name="yellow_primary">#FFF2B705</color>
+    <color name="yellow_secondary">#FFFFD863</color>
+
+    <!-- study marketplace -->
+    <color name="blue_primary">#FFF2B705</color>
+</resources>
