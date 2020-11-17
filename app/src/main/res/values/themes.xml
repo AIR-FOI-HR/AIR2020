@@ -1,11 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AcademicLifestyle" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
+    <style name="Theme.AcademicLifestyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary colors. -->
         <item name="colorPrimary">@color/foi_red</item>
         <item name="colorPrimaryVariant">@color/foi_red</item>
-        <item name="colorOnPrimary">@color/grey_20</item>
+        <item name="colorOnPrimary">@color/foi_red</item>
+        <!-- background color. -->
+        <item name="android:windowBackground">@color/grey_20</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     </style>
+
+    <style name="Theme.AcademicLifestyle.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AcademicLifestyle.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AcademicLifestyle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

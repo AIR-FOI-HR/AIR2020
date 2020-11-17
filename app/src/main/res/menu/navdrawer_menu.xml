@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <!-- app:iconTint="@color/color" to change icon colors manually -->
+
+    <group android:id="@+id/nav_primary" android:checkableBehavior="single">
+        <item
+            android:id="@+id/homeFragment"
+            android:icon="@drawable/ic_house"
+            android:title="@string/nav_home" />
+        <item
+            android:id="@+id/ambienceFragment"
+            android:icon="@drawable/ic_leaf"
+            android:title="@string/nav_ambience"/>
+        <item
+            android:id="@+id/myClassesFragment"
+            android:icon="@drawable/ic_clock"
+            android:title="@string/nav_myclasses" />
+        <item
+            android:id="@+id/myBehavioursFragment"
+            android:icon="@drawable/ic_bicycle"
+            android:title="@string/nav_mybehaviours" />
+        <item
+            android:id="@+id/marketplace"
+            android:icon="@drawable/ic_handshake"
+            android:title="@string/nav_marketplace" />
+    </group>
+    <group android:id="@+id/nav_secondary" android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_cogwheel"
+            android:title="@string/nav_settings" />
+        <item
+            android:id="@+id/rate_us"
+            android:icon="@drawable/ic_person"
+            android:title="@string/nav_rating" />
+    </group>
+</menu>

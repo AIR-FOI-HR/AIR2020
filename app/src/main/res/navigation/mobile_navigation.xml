@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/ambienceFragment"
+        android:name="hr.foi.academiclifestyle.ambience.AmbienceFragment"
+        android:label="@string/nav_ambience"
+        tools:layout="@layout/fragment_ambience" />
+    <fragment
+        android:id="@+id/myClassesFragment"
+        android:name="hr.foi.academiclifestyle.myclasses.MyClassesFragment"
+        android:label="@string/nav_myclasses"
+        tools:layout="@layout/fragment_myclasses" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="hr.foi.academiclifestyle.home.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/myBehavioursFragment"
+        android:name="hr.foi.academiclifestyle.mybehaviours.MyBehavioursFragment"
+        android:label="@string/nav_mybehaviours"
+        tools:layout="@layout/fragment_mybehaviours" />
+</navigation>
