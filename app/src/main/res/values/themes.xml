@@ -19,4 +19,6 @@
     <style name="Theme.AcademicLifestyle.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.AcademicLifestyle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
 </resources>

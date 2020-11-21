@@ -13,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout

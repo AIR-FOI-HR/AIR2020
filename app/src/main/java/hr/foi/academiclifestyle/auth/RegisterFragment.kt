@@ -1,15 +1,13 @@
-package hr.foi.academiclifestyle.loginAndRegister
+package hr.foi.academiclifestyle.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import hr.foi.academiclifestyle.LoginActivity
 import hr.foi.academiclifestyle.R
-import org.w3c.dom.Text
 
 
 class RegisterFragment : Fragment() {
@@ -25,7 +23,7 @@ class RegisterFragment : Fragment() {
 
         val login =root.findViewById<TextView>(R.id.txtRegister_login)
 
-        login.setOnClickListener{
+            login.setOnClickListener{
             (activity as LoginActivity?)?.switchFragment(0)
         }
         return root
