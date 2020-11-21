@@ -35,7 +35,7 @@
             android:layout_height="0dp"
             android:fontFamily="sans-serif"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Academic Lifestyle"
+            android:text="@string/app_name"
             android:textColor="@color/white_acc"
             android:textSize="23sp"
             android:typeface="normal"
@@ -70,12 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:contextClickable="false"
-            android:focusable="auto"
-            android:focusableInTouchMode="true"
-            android:linksClickable="false"
+            android:contextClickable="true"
+            android:focusable="true"
             android:paddingTop="10dp"
-            android:selectAllOnFocus="true"
             android:text="Register"
             android:textColor="@color/white_acc"
             android:textSize="22sp"
@@ -84,7 +81,7 @@
             app:layout_constraintHorizontal_bias="0.87"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/applicationName"
-            app:layout_constraintVertical_bias="0.478" />
+            app:layout_constraintVertical_bias="0.471" />
 
         <View
             android:id="@+id/loginDivider"
