@@ -65,6 +65,9 @@ class RegisterViewModel:ViewModel() {
                         _registerValid.value = true
                         _responseType.value = 4
                     }
+                    else{
+                        _responseType.value = 5
+                    }
                 }
             })
         }

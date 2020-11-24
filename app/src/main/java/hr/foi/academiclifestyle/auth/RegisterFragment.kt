@@ -68,6 +68,7 @@ class RegisterFragment : Fragment() {
                 2 -> Toast.makeText(activity as LoginActivity?, "Email not in a valid format!", Toast.LENGTH_SHORT).show()
                 3 -> Toast.makeText(activity as LoginActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
                 4 -> Toast.makeText(activity as LoginActivity?, "Successfully registered, you may log in!", Toast.LENGTH_SHORT).show()
+                5 -> Toast.makeText(activity as LoginActivity?, "Username already taken",Toast.LENGTH_SHORT).show()
             }
         })
     }
