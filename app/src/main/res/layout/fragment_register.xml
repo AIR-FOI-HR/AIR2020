@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -111,7 +112,7 @@
             android:ellipsize="none"
             android:ems="10"
             android:fontFamily="sans-serif"
-            android:hint="Name"
+            android:hint="Full name"
             android:includeFontPadding="false"
             android:inputType="textPersonName"
             android:paddingStart="10dp"
@@ -129,14 +130,14 @@
             app:layout_constraintVertical_bias="0.1" />
 
         <EditText
-            android:id="@+id/txtSurnameRegister"
+            android:id="@+id/txtRegisterUsername"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:background="@drawable/edit_text"
             android:ellipsize="none"
             android:ems="10"
             android:fontFamily="sans-serif"
-            android:hint="Surname"
+            android:hint="Username"
             android:inputType="textPersonName"
             android:paddingStart="10dp"
             android:textColor="@android:color/black"
@@ -170,7 +171,7 @@
 
             android:typeface="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/txtSurnameRegister"
+            app:layout_constraintEnd_toEndOf="@+id/txtRegisterUsername"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/txtRegister_login"
             app:layout_constraintTop_toBottomOf="@+id/txtRegister_login" />
@@ -217,3 +218,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
+</layout>

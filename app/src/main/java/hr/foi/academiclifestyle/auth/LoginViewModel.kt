@@ -42,11 +42,11 @@ class LoginViewModel : ViewModel() {
                 }
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    Log.i("ApiResponse", "Success!")
-
-                    if (response.body()!!.jwt != "") {
-                        val user = User(response.body()!!.user!!.username, response.body()!!.user!!.email, true)
-                        _loginResponse.value = user
+                    if(response.code() == 200 && response.body()!!.jwt !="")
+                     {
+                        Log.i("ApiResponse", "Success!")
+                            val user = User(response.body()!!.user!!.username, response.body()!!.user!!.email, true)
+                            _loginResponse.value = user
                     }
                 }
             })

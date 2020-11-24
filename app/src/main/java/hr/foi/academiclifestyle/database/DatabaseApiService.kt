@@ -4,6 +4,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hr.foi.academiclifestyle.data.models.LoginRequest
 import hr.foi.academiclifestyle.data.models.LoginResponse
+import hr.foi.academiclifestyle.data.models.RegisterRequest
+import hr.foi.academiclifestyle.data.models.RegisterResponse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,6 +30,9 @@ private val retrofit = Retrofit.Builder()
 interface DatabaseApiService {
     @POST("auth/local/")
     fun postLogin(@Body body: LoginRequest?): Call<LoginResponse>
+
+    @POST("auth/local/register")
+    fun postRegister(@Body body: RegisterRequest?): Call<RegisterResponse>
 }
 
 object DatabaseApi {
