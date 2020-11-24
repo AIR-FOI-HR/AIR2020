@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/foi_red">
+
+
+        <ImageView
+            android:id="@+id/logoRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/applicationNameRegister"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/app_name"
+            android:textColor="@color/white_acc"
+            android:textSize="23sp"
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="@id/logoRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/logoRegister"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageView
+            android:id="@+id/registerPicture"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/txtRegister_login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/applicationNameRegister"
+            app:srcCompat="@drawable/login_picture" />
+
+        <TextView
+            android:id="@+id/txtRegister_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:focusable="true"
+            android:paddingTop="10dp"
+            android:text="Login"
+            android:textColor="@color/white_acc"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.13"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/applicationNameRegister"
+            app:layout_constraintVertical_bias="0.471" />
+
+        <TextView
+            android:id="@+id/txtRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingTop="10dp"
+            android:text="Register"
+            android:textColor="@color/white_acc"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.87"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/applicationNameRegister"
+            app:layout_constraintVertical_bias="0.471" />
+
+        <View
+            android:id="@+id/registerDivider"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/yellow_acc"
+            android:backgroundTint="@color/yellow_acc"
+            app:layout_constraintBottom_toTopOf="@+id/txtUsernameInput"
+            app:layout_constraintEnd_toEndOf="@+id/txtRegister"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtRegister"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/txtNameRegister"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text"
+            android:ellipsize="none"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="Full name"
+            android:includeFontPadding="false"
+            android:inputType="textPersonName"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey_60"
+            android:textSize="20sp"
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+
+            app:layout_constraintEnd_toEndOf="@+id/txtRegister"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtRegister_login"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister_login"
+            app:layout_constraintVertical_bias="0.1" />
+
+        <EditText
+            android:id="@+id/txtRegisterUsername"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text"
+            android:ellipsize="none"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="Username"
+            android:inputType="textPersonName"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey_60"
+            android:textSize="20sp"
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+
+            app:layout_constraintEnd_toEndOf="@+id/txtRegister"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtRegister_login"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister_login"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <EditText
+            android:id="@+id/txtEmailRegister"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text"
+            android:ellipsize="none"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="LDAP e-mail address"
+            android:inputType="textPersonName"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey_60"
+            android:textSize="20sp"
+
+
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtRegisterUsername"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtRegister_login"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister_login" />
+
+        <EditText
+            android:id="@+id/txtPasswordRegister"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text"
+            android:ellipsize="none"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey_60"
+
+
+            android:textSize="20sp"
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtRegister"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtRegister_login"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister_login"
+            app:layout_constraintVertical_bias="0.7" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/yellow_acc"
+            android:text="Submit"
+            android:textColor="@color/white_acc"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.855"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtRegister_login"
+            app:layout_constraintVertical_bias="0.9" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+</layout>

@@ -7,4 +7,6 @@
     <string name="nav_marketplace">Study Marketplace</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_rating">Rate Us</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
