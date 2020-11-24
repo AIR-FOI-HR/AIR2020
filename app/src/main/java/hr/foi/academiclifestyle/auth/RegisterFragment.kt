@@ -1,11 +1,10 @@
 package hr.foi.academiclifestyle.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,33 +29,26 @@ class RegisterFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentRegisterBinding>(inflater,R.layout.fragment_register,container,false)
         binding.lifecycleOwner= this
 
-        val login = binding.txtRegisterLogin
-        val registerName = binding.txtNameRegister
-        val registerUsername = binding.txtRegisterUsername
-        val registerEmail = binding.txtEmailRegister
-        val registerPassword =binding.txtPasswordRegister
-        val register =binding.btnRegister
-
-        login.setOnClickListener{
+        binding.txtRegisterLogin.setOnClickListener{
             (activity as LoginActivity?)?.switchFragment(0)
         }
 
         binding.txtNameRegister.doAfterTextChanged {
-            viewModel.setUsername(binding.txtNameRegister.text)
+            viewModel.setField(binding.txtNameRegister.text, 1)
         }
 
         binding.txtRegisterUsername.doAfterTextChanged {
-            viewModel.setUsername(binding.txtRegisterUsername.text)
+            viewModel.setField(binding.txtRegisterUsername.text, 2)
         }
 
         binding.txtEmailRegister.doAfterTextChanged {
-            viewModel.setUsername(binding.txtEmailRegister.text)
+            viewModel.setField(binding.txtEmailRegister.text, 3)
         }
 
         binding.txtPasswordRegister.doAfterTextChanged {
-            viewModel.setUsername(binding.txtPasswordRegister.text)
+            viewModel.setField(binding.txtPasswordRegister.text, 4)
         }
-        register.setOnClickListener(){
+        binding.btnRegister.setOnClickListener(){
             viewModel.sendRegisterData()
 
         }
@@ -67,8 +59,16 @@ class RegisterFragment : Fragment() {
 
     private fun setupObservers(){
         viewModel.response.observe(viewLifecycleOwner, Observer {
-            if (it.valid)
-                (activity as LoginActivity?)?.switchActivities()
+            if (it)
+                (activity as LoginActivity?)?.switchFragment(0)
+        })
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                1 -> Toast.makeText(activity as LoginActivity?, "All fields must be filled in!", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(activity as LoginActivity?, "Email not in a valid format!", Toast.LENGTH_SHORT).show()
+                3 -> Toast.makeText(activity as LoginActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+                4 -> Toast.makeText(activity as LoginActivity?, "Successfully registered, you may log in!", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 

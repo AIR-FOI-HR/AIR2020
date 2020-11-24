@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
@@ -62,6 +63,12 @@ class LoginFragment : Fragment() {
         viewModel.response.observe(viewLifecycleOwner, Observer {
             if (it.valid)
                 (activity as LoginActivity?)?.switchActivities()
+        })
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                1 -> Toast.makeText(activity as LoginActivity?, "Username or password must not be empty!", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(activity as LoginActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 

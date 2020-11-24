@@ -3,14 +3,11 @@ package hr.foi.academiclifestyle.database
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hr.foi.academiclifestyle.data.models.LoginRequest
-import hr.foi.academiclifestyle.data.models.LoginResponse
+import hr.foi.academiclifestyle.data.models.AuthResponse
 import hr.foi.academiclifestyle.data.models.RegisterRequest
-import hr.foi.academiclifestyle.data.models.RegisterResponse
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
 
 private const val BASE_URL = "http://10.0.2.2:1337/"
@@ -29,10 +26,10 @@ private val retrofit = Retrofit.Builder()
 
 interface DatabaseApiService {
     @POST("auth/local/")
-    fun postLogin(@Body body: LoginRequest?): Call<LoginResponse>
+    fun postLogin(@Body body: LoginRequest?): Call<AuthResponse>
 
     @POST("auth/local/register")
-    fun postRegister(@Body body: RegisterRequest?): Call<RegisterResponse>
+    fun postRegister(@Body body: RegisterRequest?): Call<AuthResponse>
 }
 
 object DatabaseApi {
