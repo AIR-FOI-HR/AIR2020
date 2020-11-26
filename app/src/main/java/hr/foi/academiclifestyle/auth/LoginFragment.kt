@@ -1,8 +1,6 @@
 package hr.foi.academiclifestyle.auth
 
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import hr.foi.academiclifestyle.LoginActivity
+import hr.foi.academiclifestyle.AuthActivity
 import hr.foi.academiclifestyle.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentLoginBinding
@@ -24,8 +22,11 @@ import hr.foi.academiclifestyle.databinding.FragmentLoginBinding
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(this).get(LoginViewModel::class.java)
+        ViewModelProvider((activity as AuthActivity)).get(LoginViewModel::class.java)
     }
+    private lateinit var loginBtn: Button
+    private lateinit var txtUsername: EditText
+    private lateinit var txtPassword: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,16 +36,20 @@ class LoginFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val register = binding.registertextView
-        val loginSubmit = binding.btnLogIn
+        loginBtn = binding.btnLogIn
+        txtUsername = binding.txtUsernameInput
+        txtPassword = binding.inputPasswordLogin
+
+        //preserve previous field values
+        binding.txtUsernameInput.setText(viewModel.usernameLogin.value)
 
         register.setOnClickListener(){
-            (activity as LoginActivity?)?.switchFragment(1)
+            (activity as AuthActivity?)?.switchFragment(1)
         }
 
-        loginSubmit.setOnClickListener(){
-            toggleBtn(binding.btnLogIn, false)
+        loginBtn.setOnClickListener(){
+            toggleFields(false, "...", "grey")
             viewModel.sendLoginData()
-            toggleBtn(binding.btnLogIn, true)
         }
 
         binding.txtUsernameInput.doAfterTextChanged {
@@ -60,25 +65,47 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupObservers(){
-        viewModel.response.observe(viewLifecycleOwner, Observer {
-            if (it.valid)
-                (activity as LoginActivity?)?.switchActivities()
+        viewModel.responseLogin.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                toggleFields(false, "✔", "green")
+                if (it.valid)
+                    (activity as AuthActivity?)?.switchActivities()
+                viewModel.resetEvents(0)
+            }
         })
         viewModel.responseType.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                1 -> Toast.makeText(activity as LoginActivity?, "Username or password must not be empty!", Toast.LENGTH_SHORT).show()
-                2 -> Toast.makeText(activity as LoginActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+            if (it != null) {
+                toggleFields(true, "Submit", "yellow")
+                when (it) {
+                    1 -> Toast.makeText(activity as AuthActivity?, "Username or password must not be empty!", Toast.LENGTH_SHORT).show()
+                    2 -> Toast.makeText(activity as AuthActivity?, "Username and password don't match!", Toast.LENGTH_SHORT).show()
+                    3 -> Toast.makeText(activity as AuthActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+                }
+                viewModel.resetEvents(1)
             }
         })
     }
 
-    private fun toggleBtn(button: Button, enabled: Boolean) {
-        if (enabled) {
-            button.isEnabled = true
-            button.isClickable = true
-        } else {
-            button.isEnabled = false
-            button.isClickable = false
+    fun toggleFields(state: Boolean, text: String, color: String) {
+        val colorRs = when (color) {
+            "yellow" -> R.color.yellow_acc
+            "green" -> R.color.green
+            "grey" -> R.color.grey_30
+            else -> R.color.yellow_acc
         }
+        loginBtn.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), colorRs))
+        loginBtn.setText(text)
+        loginBtn.isEnabled = state
+        loginBtn.isClickable = state
+
+        //fields
+        var fieldColor = when (state) {
+            true -> R.color.white_acc
+            else -> R.color.grey_30
+        }
+        txtPassword.isEnabled = state
+        txtUsername.isEnabled = state
+        txtPassword.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
+        txtUsername.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
     }
 }

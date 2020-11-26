@@ -146,13 +146,13 @@
 
             <Button
                 android:id="@+id/btnLogIn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="118dp"
+                android:layout_height="50dp"
                 android:backgroundTint="@color/yellow_acc"
                 android:clickable="true"
                 android:contextClickable="true"
                 android:focusable="true"
-                android:text="Submit"
+                android:text="@string/submit_btn"
                 android:textColor="@color/white_acc"
                 android:textSize="20sp"
                 android:visibility="visible"
