@@ -8,7 +8,7 @@ import hr.foi.academiclifestyle.auth.LoginFragment
 import hr.foi.academiclifestyle.auth.RegisterFragment
 
 
-class LoginActivity: AppCompatActivity()  {
+class AuthActivity: AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -26,9 +26,7 @@ class LoginActivity: AppCompatActivity()  {
         else
              fragment = LoginFragment()
         val fragmentTransaction= supportFragmentManager.beginTransaction()
-        fragmentTransaction.remove(supportFragmentManager.findFragmentByTag("LoginContainer")!!)
-        fragmentTransaction.replace(R.id.loginContainer, fragment, "LoginContainer");
-        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.replace(R.id.loginContainer, fragment, "LoginContainer")
         fragmentTransaction.commit()
     }
 

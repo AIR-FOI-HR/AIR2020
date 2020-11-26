@@ -1,19 +1,22 @@
 package hr.foi.academiclifestyle.auth
 
 import android.text.Editable
+import android.text.TextUtils
 import android.util.Log
-import android.widget.Toast
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import hr.foi.academiclifestyle.LoginActivity
 import hr.foi.academiclifestyle.data.models.LoginRequest
-import hr.foi.academiclifestyle.data.models.AuthResponse
 import hr.foi.academiclifestyle.data.models.User
 import hr.foi.academiclifestyle.database.DatabaseApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class LoginViewModel : ViewModel() {
 
@@ -21,41 +24,58 @@ class LoginViewModel : ViewModel() {
     val responseType: LiveData<Int> get() = _responseType
 
     private val _loginResponse = MutableLiveData<User>()
-    val response: LiveData<User> get() = _loginResponse
+    val responseLogin: LiveData<User> get() = _loginResponse
 
     private val _usernameTxt = MutableLiveData<String>()
-    val username: LiveData<String> get() = _usernameTxt
+    val usernameLogin: LiveData<String> get() = _usernameTxt
 
     private val _passwordTxt = MutableLiveData<String>()
-    val password: LiveData<String> get() = _passwordTxt
+    val passwordLogin: LiveData<String> get() = _passwordTxt
+
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     fun sendLoginData() {
         if (_usernameTxt.value == null || _usernameTxt.value == "" ||
             _passwordTxt.value == null || _passwordTxt.value == "") {
-            Log.i("loginCheck", "Failure")
             _responseType.value = 1
         } else {
-            Log.i("loginCheck", "Success")
             //construct LoginRequest
             val loginRequest: LoginRequest = LoginRequest(_usernameTxt.value.toString(), _passwordTxt.value.toString())
 
             //send request
-            DatabaseApi.retrofitService.postLogin(loginRequest).enqueue(object: Callback<AuthResponse> {
-                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                    Log.i("ApiResponse", "Failure: " + t.message)
-                    _responseType.value = 2
-                }
-
-                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                    if(response.code() == 200 && response.body()!!.jwt !="")
-                     {
-                        Log.i("ApiResponse", "Success!")
-                            val user = User(response.body()!!.user!!.username, response.body()!!.user!!.email, true)
-                            _loginResponse.value = user
+            coroutineScope.launch {
+                val postLoginDeferred = DatabaseApi.retrofitService.postLogin(loginRequest)
+                try {
+                    val response = postLoginDeferred.await()
+                    if (response.jwt != "") {
+                        val user = User(response.user!!.username, response.user!!.email, true)
+                        _loginResponse.value = user
                     }
+                } catch (ex: Exception) {
+                    if (ex is SocketTimeoutException)
+                        _responseType.value = 3
+                    else if (ex is UnknownHostException)
+                        _responseType.value = 3
+                    else if (ex is HttpException)
+                        _responseType.value = 2
                 }
-            })
+            }
         }
+    }
+
+    //cancel request call if the view closes
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    //reset the events after they have been called
+    fun resetEvents(event: Int) {
+        if (event == 1)
+            _responseType.value = null
+        else
+            _loginResponse.value = null
     }
 
     fun setUsername(s: Editable){

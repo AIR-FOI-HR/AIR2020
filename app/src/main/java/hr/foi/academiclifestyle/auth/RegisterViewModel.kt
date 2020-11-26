@@ -11,9 +11,17 @@ import androidx.lifecycle.ViewModel
 import hr.foi.academiclifestyle.data.models.AuthResponse
 import hr.foi.academiclifestyle.data.models.RegisterRequest
 import hr.foi.academiclifestyle.database.DatabaseApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.net.Socket
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 
 class RegisterViewModel:ViewModel() {
@@ -22,7 +30,7 @@ class RegisterViewModel:ViewModel() {
     val responseType: LiveData<Int> get() = _responseType
 
     private val _registerValid = MutableLiveData<Boolean>()
-    val response: LiveData<Boolean> get() = _registerValid
+    val responseRegister: LiveData<Boolean> get() = _registerValid
 
     private val _fullNameTxt = MutableLiveData<String>()
     val fulname: LiveData<String> get() = _fullNameTxt
@@ -36,41 +44,59 @@ class RegisterViewModel:ViewModel() {
     private val _password = MutableLiveData<String>()
     val password: LiveData<String> get() = _password
 
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+
     fun sendRegisterData(){
         if (_fullNameTxt.value == null || _fullNameTxt.value == "" || _username.value == null || _username.value == ""
                 || _email.value == null || _email.value == "" || _password.value == null || _password.value == "") {
-            Log.i("registerCheck", "Failure")
             _responseType.value = 1
         }
         else if (!isValidEmail(_email.value.toString())) {
             _responseType.value = 2
         }
         else{
-
-            Log.i("registerCheck", "Success")
             //construct LoginRequest
             val registerRequest: RegisterRequest = RegisterRequest(_username.value.toString(), _password.value.toString(), _email.value.toString())
 
             //send request
-            DatabaseApi.retrofitService.postRegister(registerRequest).enqueue(object: Callback<AuthResponse> {
-                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                    Log.i("ApiResponse", "Failure: " + t.message)
-                    _responseType.value = 3
-                }
-
-                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                    if(response.code() == 200 && response.body()!!.jwt !="")
-                    {
-                        Log.i("ApiResponse", "Success!")
+            coroutineScope.launch {
+                val postRegisterDeferred = DatabaseApi.retrofitService.postRegister(registerRequest)
+                try {
+                    val response = postRegisterDeferred.await()
+                    if (response.jwt != "") {
                         _registerValid.value = true
                         _responseType.value = 4
                     }
-                    else{
+                } catch (ex: Exception) {
+                    if (ex is SocketTimeoutException)
+                        _responseType.value = 3
+                    else if (ex is UnknownHostException)
+                        _responseType.value = 3
+                    else if (ex is HttpException)
                         _responseType.value = 5
-                    }
                 }
-            })
+            }
         }
+    }
+
+    //cancel request call if the view closes
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+    //reset the events after they have been called
+    fun resetEvents(event: Int) {
+        if (event == 1)
+            _responseType.value = null
+        else
+            _registerValid.value = null
+    }
+
+    fun resetFields() {
+        _fullNameTxt.value = ""
+        _username.value = ""
+        _email.value = ""
     }
 
     private fun isValidEmail(email: String): Boolean {
