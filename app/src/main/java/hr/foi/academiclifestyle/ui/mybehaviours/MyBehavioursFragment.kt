@@ -1,7 +1,9 @@
-package hr.foi.academiclifestyle.myclasses
+package hr.foi.academiclifestyle.ui.mybehaviours
 
 import android.content.res.ColorStateList
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,32 +12,30 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import hr.foi.academiclifestyle.MainActivity
+import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
-import hr.foi.academiclifestyle.databinding.FragmentMyclassesBinding
+import hr.foi.academiclifestyle.databinding.FragmentMybehavioursBinding
 
-class MyClassesFragment : Fragment() {
+class MyBehavioursFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MyClassesFragment()
+        fun newInstance() = MyBehavioursFragment()
     }
 
-    private lateinit var viewModel: MyClassesViewModel
+    private lateinit var viewModel: MyBehavioursViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMyclassesBinding>(inflater, R.layout.fragment_myclasses, container, false)
+        val binding = DataBindingUtil.inflate<FragmentMybehavioursBinding>(inflater, R.layout.fragment_mybehaviours, container, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MyClassesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MyBehavioursViewModel::class.java)
         // TODO: Use the ViewModel
         setThemeOptions()
     }
@@ -44,10 +44,10 @@ class MyClassesFragment : Fragment() {
         val imageView = (activity as MainActivity?)?.findViewById<ImageView>(R.id.toolbarlogo)
         val toolbar = (activity as MainActivity?)?.findViewById<Toolbar>(R.id.toolbar)
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
-        imageView?.setImageResource(R.drawable.ic_clock)
-        toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary));
-        navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
+        imageView?.setImageResource(R.drawable.ic_bicycle)
+        toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary))
+        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary));
+        navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary))
 
         setNavigationColors()
     }
@@ -58,7 +58,7 @@ class MyClassesFragment : Fragment() {
 
         val colors = intArrayOf(
                 (activity as MainActivity).getColor(R.color.grey_80), //unchecked
-                (activity as MainActivity).getColor(R.color.yellow_primary), //checked
+                (activity as MainActivity).getColor(R.color.red_primary), //checked
                 (activity as MainActivity).getColor(R.color.grey_80)) //default
 
         val navigationViewColorStateList = ColorStateList(states, colors)

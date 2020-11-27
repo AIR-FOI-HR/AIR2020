@@ -18,36 +18,35 @@
             android:background="@color/foi_red"
             >
 
-            <ImageView
-                android:id="@+id/loginLogo"
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_launcher_foreground"
+            <RelativeLayout
+                android:id="@+id/relativeHeadbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0">
 
-            <TextView
-                android:id="@+id/applicationName"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/app_name"
-                android:textColor="@color/white_acc"
-                android:textSize="23sp"
-                android:typeface="normal"
-                app:layout_constraintBottom_toBottomOf="@id/loginLogo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/loginLogo"
+                <ImageView
+                    android:id="@+id/logoRegister"
+                    android:layout_width="110dp"
+                    android:layout_height="?attr/actionBarSize"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/ic_launcher_foreground" />
 
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                <TextView
+                    android:id="@+id/applicationNameRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:fontFamily="sans-serif"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white_acc"
+                    android:textSize="23sp"
+                    android:typeface="normal" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/loginTextView"
@@ -57,6 +56,7 @@
                 android:contextClickable="true"
                 android:lineSpacingExtra="0sp"
                 android:paddingTop="10dp"
+                android:paddingBottom="2dp"
                 android:text="Login"
                 android:textColor="@color/white_acc"
                 android:textSize="22sp"
@@ -64,7 +64,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.13"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/applicationName"
+                app:layout_constraintTop_toBottomOf="@+id/relativeHeadbar"
                 app:layout_constraintVertical_bias="0.471" />
 
             <TextView
@@ -75,6 +75,7 @@
                 android:contextClickable="true"
                 android:focusable="true"
                 android:paddingTop="10dp"
+                android:paddingBottom="2dp"
                 android:text="Register"
                 android:textColor="@color/white_acc"
                 android:textSize="22sp"
@@ -82,13 +83,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.87"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/applicationName"
+                app:layout_constraintTop_toBottomOf="@+id/relativeHeadbar"
                 app:layout_constraintVertical_bias="0.471" />
 
             <View
                 android:id="@+id/loginDivider"
                 android:layout_width="0dp"
-                android:layout_height="5dp"
+                android:layout_height="3dp"
                 android:background="@color/yellow_acc"
                 android:backgroundTint="@color/yellow_acc"
                 app:layout_constraintBottom_toTopOf="@+id/txtUsernameInput"
@@ -117,8 +118,6 @@
                 app:layout_constraintEnd_toEndOf="@+id/registertextView"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/loginTextView"
-
-
                 app:layout_constraintTop_toBottomOf="@+id/loginTextView"
                 app:layout_constraintVertical_bias="0.2" />
 
@@ -141,8 +140,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/registertextView"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/loginTextView"
-                app:layout_constraintTop_toBottomOf="@+id/loginDivider"
-                app:layout_constraintVertical_bias="0.4" />
+                app:layout_constraintTop_toBottomOf="@+id/loginTextView"
+                app:layout_constraintVertical_bias="0.43" />
 
             <Button
                 android:id="@+id/btnLogIn"
@@ -154,7 +153,7 @@
                 android:focusable="true"
                 android:text="@string/submit_btn"
                 android:textColor="@color/white_acc"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -169,10 +168,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@+id/loginTextView"
+                app:layout_constraintBottom_toTopOf="@+id/registertextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/applicationName"
+                app:layout_constraintTop_toBottomOf="@+id/relativeHeadbar"
                 app:srcCompat="@drawable/login_picture" />
 
             <CheckBox

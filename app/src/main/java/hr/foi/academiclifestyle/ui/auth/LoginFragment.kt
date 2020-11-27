@@ -1,6 +1,7 @@
-package hr.foi.academiclifestyle.auth
+package hr.foi.academiclifestyle.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import hr.foi.academiclifestyle.AuthActivity
-import hr.foi.academiclifestyle.MainActivity
+import hr.foi.academiclifestyle.ui.AuthActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentLoginBinding
 
@@ -99,13 +99,13 @@ class LoginFragment : Fragment() {
         loginBtn.isClickable = state
 
         //fields
-        var fieldColor = when (state) {
-            true -> R.color.white_acc
-            else -> R.color.grey_30
+        var fieldDrawable = when (state) {
+            true -> R.drawable.edit_text
+            else -> R.drawable.edit_text_disabled
         }
         txtPassword.isEnabled = state
         txtUsername.isEnabled = state
-        txtPassword.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
-        txtUsername.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
+        txtPassword.setBackgroundResource(fieldDrawable)
+        txtUsername.setBackgroundResource(fieldDrawable)
     }
 }

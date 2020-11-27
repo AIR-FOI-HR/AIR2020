@@ -1,11 +1,12 @@
-package hr.foi.academiclifestyle
+package hr.foi.academiclifestyle.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import hr.foi.academiclifestyle.auth.LoginFragment
-import hr.foi.academiclifestyle.auth.RegisterFragment
+import hr.foi.academiclifestyle.R
+import hr.foi.academiclifestyle.ui.auth.LoginFragment
+import hr.foi.academiclifestyle.ui.auth.RegisterFragment
 
 
 class AuthActivity: AppCompatActivity()  {
@@ -19,7 +20,7 @@ class AuthActivity: AppCompatActivity()  {
         transaction.commit()
     }
 
-    fun switchFragment(type: Int){
+    fun switchFragment(type: Int) {
         lateinit var fragment:Fragment
         if (type == 1)
              fragment = RegisterFragment()

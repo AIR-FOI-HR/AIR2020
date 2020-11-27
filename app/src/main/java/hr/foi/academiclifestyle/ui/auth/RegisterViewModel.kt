@@ -1,25 +1,19 @@
-package hr.foi.academiclifestyle.auth
+package hr.foi.academiclifestyle.ui.auth
 
 
 import android.text.Editable
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import hr.foi.academiclifestyle.data.models.AuthResponse
 import hr.foi.academiclifestyle.data.models.RegisterRequest
-import hr.foi.academiclifestyle.database.DatabaseApi
+import hr.foi.academiclifestyle.data.source.DatabaseApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
-import java.net.Socket
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -82,9 +76,10 @@ class RegisterViewModel:ViewModel() {
 
     //cancel request call if the view closes
     override fun onCleared() {
-        super.onCleared()
         viewModelJob.cancel()
+        super.onCleared()
     }
+
     //reset the events after they have been called
     fun resetEvents(event: Int) {
         if (event == 1)

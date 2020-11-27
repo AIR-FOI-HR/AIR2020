@@ -1,4 +1,4 @@
-package hr.foi.academiclifestyle.database
+package hr.foi.academiclifestyle.data.source
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
@@ -7,7 +7,6 @@ import hr.foi.academiclifestyle.data.models.LoginRequest
 import hr.foi.academiclifestyle.data.models.AuthResponse
 import hr.foi.academiclifestyle.data.models.RegisterRequest
 import kotlinx.coroutines.Deferred
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*

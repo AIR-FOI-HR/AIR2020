@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".AuthActivity">
+    tools:context=".ui.AuthActivity">
 
      <FrameLayout
          android:id="@+id/loginContainer"

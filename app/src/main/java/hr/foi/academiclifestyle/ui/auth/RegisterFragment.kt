@@ -1,4 +1,4 @@
-package hr.foi.academiclifestyle.auth
+package hr.foi.academiclifestyle.ui.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import hr.foi.academiclifestyle.AuthActivity
+import hr.foi.academiclifestyle.ui.AuthActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentRegisterBinding
 
@@ -114,17 +114,17 @@ class RegisterFragment : Fragment() {
         registerBtn.isClickable = state
 
         //fields
-        var fieldColor = when (state) {
-            true -> R.color.white_acc
-            else -> R.color.grey_30
+        var fieldDrawable = when (state) {
+            true -> R.drawable.edit_text
+            else -> R.drawable.edit_text_disabled
         }
         txtName.isEnabled = state
         txtUsername.isEnabled = state
         txtEmail.isEnabled = state
         txtPassword.isEnabled = state
-        txtName.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
-        txtUsername.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
-        txtEmail.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
-        txtPassword.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), fieldColor))
+        txtName.setBackgroundResource(fieldDrawable)
+        txtUsername.setBackgroundResource(fieldDrawable)
+        txtEmail.setBackgroundResource(fieldDrawable)
+        txtPassword.setBackgroundResource(fieldDrawable)
     }
 }

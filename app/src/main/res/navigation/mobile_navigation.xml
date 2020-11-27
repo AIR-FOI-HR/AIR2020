@@ -7,30 +7,30 @@
 
     <fragment
         android:id="@+id/ambienceFragment"
-        android:name="hr.foi.academiclifestyle.ambience.AmbienceFragment"
+        android:name="hr.foi.academiclifestyle.ui.ambience.AmbienceFragment"
         android:label="@string/nav_ambience"
         tools:layout="@layout/fragment_ambience" />
     <fragment
         android:id="@+id/myClassesFragment"
-        android:name="hr.foi.academiclifestyle.myclasses.MyClassesFragment"
+        android:name="hr.foi.academiclifestyle.ui.myclasses.MyClassesFragment"
         android:label="@string/nav_myclasses"
         tools:layout="@layout/fragment_myclasses" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="hr.foi.academiclifestyle.home.HomeFragment"
+        android:name="hr.foi.academiclifestyle.ui.home.HomeFragment"
         android:label="@string/nav_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/myBehavioursFragment"
-        android:name="hr.foi.academiclifestyle.mybehaviours.MyBehavioursFragment"
+        android:name="hr.foi.academiclifestyle.ui.mybehaviours.MyBehavioursFragment"
         android:label="@string/nav_mybehaviours"
         tools:layout="@layout/fragment_mybehaviours" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="hr.foi.academiclifestyle.auth.LoginFragment"
+        android:name="hr.foi.academiclifestyle.ui.auth.LoginFragment"
         android:label="LoginFragment" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="hr.foi.academiclifestyle.auth.RegisterFragment"
+        android:name="hr.foi.academiclifestyle.ui.auth.RegisterFragment"
         android:label="RegisterFragment" />
 </navigation>

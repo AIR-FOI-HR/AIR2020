@@ -1,4 +1,4 @@
-package hr.foi.academiclifestyle.home
+package hr.foi.academiclifestyle.ui.home
 
 import androidx.lifecycle.ViewModel
 

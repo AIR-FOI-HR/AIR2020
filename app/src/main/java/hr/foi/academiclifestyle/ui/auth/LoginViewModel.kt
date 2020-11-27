@@ -1,15 +1,13 @@
-package hr.foi.academiclifestyle.auth
+package hr.foi.academiclifestyle.ui.auth
 
 import android.text.Editable
-import android.text.TextUtils
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import hr.foi.academiclifestyle.data.models.LoginRequest
 import hr.foi.academiclifestyle.data.models.User
-import hr.foi.academiclifestyle.database.DatabaseApi
+import hr.foi.academiclifestyle.data.source.DatabaseApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,6 +34,7 @@ class LoginViewModel : ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     fun sendLoginData() {
+        Log.i("CoroutineInfo", coroutineScope.toString())
         if (_usernameTxt.value == null || _usernameTxt.value == "" ||
             _passwordTxt.value == null || _passwordTxt.value == "") {
             _responseType.value = 1
@@ -66,8 +65,8 @@ class LoginViewModel : ViewModel() {
 
     //cancel request call if the view closes
     override fun onCleared() {
-        super.onCleared()
         viewModelJob.cancel()
+        super.onCleared()
     }
 
     //reset the events after they have been called
