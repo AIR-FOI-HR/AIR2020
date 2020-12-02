@@ -1,5 +1,6 @@
 package hr.foi.academiclifestyle.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
@@ -37,6 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         //disable automatic icon tinting
         binding.navView.setItemIconTintList(null);
+        
+        binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {
+            logOut()
+            true
+        }
     }
     //replace up button with nav button
     override fun onSupportNavigateUp(): Boolean {
@@ -51,5 +57,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    fun logOut(){
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

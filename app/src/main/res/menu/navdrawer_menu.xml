@@ -37,5 +37,10 @@
             android:id="@+id/rate_us"
             android:icon="@drawable/ic_person"
             android:title="@string/nav_rating" />
+
+        <item
+            android:id="@+id/log_out"
+            android:icon="@drawable/ic_person"
+            android:title="@string/log_out" />
     </group>
 </menu>
