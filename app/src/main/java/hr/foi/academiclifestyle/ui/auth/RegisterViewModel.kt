@@ -1,14 +1,16 @@
 package hr.foi.academiclifestyle.ui.auth
 
 
+import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import hr.foi.academiclifestyle.data.models.RegisterRequest
-import hr.foi.academiclifestyle.data.source.DatabaseApi
+import androidx.lifecycle.*
+import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.network.model.RegisterRequest
+import hr.foi.academiclifestyle.network.NetworkApi
+import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +20,7 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 
-class RegisterViewModel:ViewModel() {
+class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _responseType = MutableLiveData<Int>()
     val responseType: LiveData<Int> get() = _responseType
@@ -40,6 +42,8 @@ class RegisterViewModel:ViewModel() {
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+    private val database = getDatabase(application)
+    private val repository = MainRepository(database)
 
     fun sendRegisterData(){
         if (_fullNameTxt.value == null || _fullNameTxt.value == "" || _username.value == null || _username.value == ""
@@ -51,14 +55,19 @@ class RegisterViewModel:ViewModel() {
         }
         else{
             //construct LoginRequest
-            val registerRequest: RegisterRequest = RegisterRequest(_username.value.toString(), _password.value.toString(), _email.value.toString())
+            val registerRequest: RegisterRequest =
+                RegisterRequest(
+                    _username.value.toString(),
+                    _password.value.toString(),
+                    _email.value.toString()
+                )
 
             //send request
             coroutineScope.launch {
-                val postRegisterDeferred = DatabaseApi.retrofitService.postRegister(registerRequest)
                 try {
-                    val response = postRegisterDeferred.await()
-                    if (response.jwt != "") {
+                    val valid = repository.registerUser(registerRequest)
+                    Log.i("valid", valid.toString())
+                    if (valid) {
                         _registerValid.value = true
                         _responseType.value = 4
                     }
@@ -69,6 +78,8 @@ class RegisterViewModel:ViewModel() {
                         _responseType.value = 3
                     else if (ex is HttpException)
                         _responseType.value = 5
+                    else
+                        Log.i("error", ex.message.toString())
                 }
             }
         }
@@ -109,4 +120,13 @@ class RegisterViewModel:ViewModel() {
             _password.value = s.toString()
     }
 
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return LoginViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
 }

@@ -3,14 +3,19 @@ package hr.foi.academiclifestyle.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
 import hr.foi.academiclifestyle.R
 
@@ -18,6 +23,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this, MainViewModel.Factory(application)).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +47,14 @@ class MainActivity : AppCompatActivity() {
 
         //disable automatic icon tinting
         binding.navView.setItemIconTintList(null);
-        
+        setupObservers()
+
         binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {
-            logOut()
-            true
+            viewModel.logoutUser()
+            false
         }
     }
+
     //replace up button with nav button
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.mainNavHostFragment)
@@ -59,8 +70,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun logOut(){
+    private fun setupObservers() {
+        viewModel.userDeleted.observe(this, Observer {
+            if (it != null && it) {
+                viewModel.resetEvents(1)
+                switchActivities(false, true)
+            }
+        })
+        viewModel.user?.observe(this, Observer {
+            if (it != null && it.jwtToken != "" && !viewModel.tokenChecked) {
+                viewModel.checkToken(it)
+            }
+        })
+        viewModel.valid.observe(this, Observer {
+            if (it != null && !it)
+                switchActivities(true, false)
+        })
+    }
+
+    private fun switchActivities(showExpireToast: Boolean, preventSleep: Boolean) {
         val intent = Intent(this, AuthActivity::class.java)
+        if (showExpireToast)
+            intent.putExtra("ShowTokenExpToast","True")
+        if (preventSleep) //prevents splash screen delay
+            intent.putExtra("PreventSleep","True")
         startActivity(intent)
         finish()
     }

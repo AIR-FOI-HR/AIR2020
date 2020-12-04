@@ -33,4 +33,8 @@
         android:id="@+id/registerFragment"
         android:name="hr.foi.academiclifestyle.ui.auth.RegisterFragment"
         android:label="RegisterFragment" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="hr.foi.academiclifestyle.ui.auth.SplashFragment"
+        android:label="SplashFragment" />
 </navigation>

@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,8 @@ import hr.foi.academiclifestyle.databinding.FragmentLoginBinding
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider((activity as AuthActivity)).get(LoginViewModel::class.java)
+        val activity = requireNotNull(this.activity) {}
+        ViewModelProvider(this, LoginViewModel.Factory(activity.application)).get(LoginViewModel::class.java)
     }
     private lateinit var loginBtn: Button
     private lateinit var txtUsername: EditText
@@ -49,7 +49,7 @@ class LoginFragment : Fragment() {
 
         loginBtn.setOnClickListener(){
             toggleFields(false, "...", "grey")
-            viewModel.sendLoginData()
+            viewModel.sendLoginData(binding.cBoxRememberMe.isChecked)
         }
 
         binding.txtUsernameInput.doAfterTextChanged {
@@ -60,16 +60,19 @@ class LoginFragment : Fragment() {
             viewModel.setPassword(binding.inputPasswordLogin.text)
         }
 
+        //show token expired toast if needed
+        if ((activity as AuthActivity).intent.getStringExtra("ShowTokenExpToast") == "True")
+            Toast.makeText(activity as AuthActivity?, "Token expired, please Log In!", Toast.LENGTH_SHORT).show()
+
         setupObservers()
         return binding.root
     }
 
     private fun setupObservers(){
         viewModel.responseLogin.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
+            if (it) {
                 toggleFields(false, "✔", "green")
-                if (it.valid)
-                    (activity as AuthActivity?)?.switchActivities()
+                (activity as AuthActivity?)?.switchActivities()
                 viewModel.resetEvents(0)
             }
         })
@@ -89,7 +92,7 @@ class LoginFragment : Fragment() {
     fun toggleFields(state: Boolean, text: String, color: String) {
         val colorRs = when (color) {
             "yellow" -> R.color.yellow_acc
-            "green" -> R.color.green
+            "green" -> R.color.green_acc
             "grey" -> R.color.grey_30
             else -> R.color.yellow_acc
         }
@@ -99,7 +102,7 @@ class LoginFragment : Fragment() {
         loginBtn.isClickable = state
 
         //fields
-        var fieldDrawable = when (state) {
+        val fieldDrawable = when (state) {
             true -> R.drawable.edit_text
             else -> R.drawable.edit_text_disabled
         }
