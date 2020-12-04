@@ -1,4 +1,4 @@
-package hr.foi.academiclifestyle.data.models
+package hr.foi.academiclifestyle.network.model
 
 data class LoginRequest(
     val identifier: String,

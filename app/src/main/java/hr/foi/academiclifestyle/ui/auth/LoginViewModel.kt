@@ -1,28 +1,24 @@
 package hr.foi.academiclifestyle.ui.auth
 
+import android.app.Application
 import android.text.Editable
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import hr.foi.academiclifestyle.data.models.LoginRequest
-import hr.foi.academiclifestyle.data.models.User
-import hr.foi.academiclifestyle.data.source.DatabaseApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import androidx.lifecycle.*
+import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.network.model.LoginRequest
+import hr.foi.academiclifestyle.repository.MainRepository
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _responseType = MutableLiveData<Int>()
     val responseType: LiveData<Int> get() = _responseType
 
-    private val _loginResponse = MutableLiveData<User>()
-    val responseLogin: LiveData<User> get() = _loginResponse
+    private val _loginResponse = MutableLiveData<Boolean>()
+    val responseLogin: LiveData<Boolean> get() = _loginResponse
 
     private val _usernameTxt = MutableLiveData<String>()
     val usernameLogin: LiveData<String> get() = _usernameTxt
@@ -32,25 +28,27 @@ class LoginViewModel : ViewModel() {
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+    private val database = getDatabase(application)
+    private val repository = MainRepository(database)
 
-    fun sendLoginData() {
+    fun sendLoginData(rememberMeChecked : Boolean) {
         Log.i("CoroutineInfo", coroutineScope.toString())
         if (_usernameTxt.value == null || _usernameTxt.value == "" ||
             _passwordTxt.value == null || _passwordTxt.value == "") {
             _responseType.value = 1
         } else {
             //construct LoginRequest
-            val loginRequest: LoginRequest = LoginRequest(_usernameTxt.value.toString(), _passwordTxt.value.toString())
+            val loginRequest: LoginRequest =
+                LoginRequest(
+                    _usernameTxt.value.toString(),
+                    _passwordTxt.value.toString()
+                )
 
             //send request
             coroutineScope.launch {
-                val postLoginDeferred = DatabaseApi.retrofitService.postLogin(loginRequest)
                 try {
-                    val response = postLoginDeferred.await()
-                    if (response.jwt != "") {
-                        val user = User(response.user!!.username, response.user!!.email, true)
-                        _loginResponse.value = user
-                    }
+                    repository.loginUser(loginRequest, rememberMeChecked)
+                    _loginResponse.value = true
                 } catch (ex: Exception) {
                     if (ex is SocketTimeoutException)
                         _responseType.value = 3
@@ -58,6 +56,8 @@ class LoginViewModel : ViewModel() {
                         _responseType.value = 3
                     else if (ex is HttpException)
                         _responseType.value = 2
+                    else
+                        Log.i("CoroutineInfo", ex.message.toString())
                 }
             }
         }
@@ -83,5 +83,15 @@ class LoginViewModel : ViewModel() {
 
     fun setPassword(s: Editable){
         _passwordTxt.value = s.toString()
+    }
+
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return LoginViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
     }
 }

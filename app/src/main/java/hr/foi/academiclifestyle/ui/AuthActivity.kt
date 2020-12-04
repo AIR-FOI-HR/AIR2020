@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.ui.auth.LoginFragment
 import hr.foi.academiclifestyle.ui.auth.RegisterFragment
+import hr.foi.academiclifestyle.ui.auth.SplashFragment
 
 
 class AuthActivity: AppCompatActivity()  {
@@ -14,7 +15,7 @@ class AuthActivity: AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var fragment = LoginFragment()
+        var fragment = SplashFragment()
         val transaction= supportFragmentManager.beginTransaction()
         transaction.replace(R.id.loginContainer, fragment, "LoginContainer")
         transaction.commit()

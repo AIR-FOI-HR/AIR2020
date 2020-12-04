@@ -104,7 +104,7 @@ class RegisterFragment : Fragment() {
     fun toggleFields(state: Boolean, text: String, color: String) {
         val colorRs = when (color) {
             "yellow" -> R.color.yellow_acc
-            "green" -> R.color.green
+            "green" -> R.color.green_acc
             "grey" -> R.color.grey_30
             else -> R.color.yellow_acc
         }
