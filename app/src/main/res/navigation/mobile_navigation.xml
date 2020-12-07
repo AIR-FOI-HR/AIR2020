@@ -37,4 +37,9 @@
         android:id="@+id/splashFragment"
         android:name="hr.foi.academiclifestyle.ui.auth.SplashFragment"
         android:label="SplashFragment" />
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="hr.foi.academiclifestyle.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

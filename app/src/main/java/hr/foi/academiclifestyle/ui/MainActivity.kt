@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         //pass each item individually to app bar so that it's considered a top-level destination (no back button)
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment), drawerLayout)
+                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment,R.id.fragmentSettings), drawerLayout)
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.user?.observe(this, Observer {
             if (it != null && it.jwtToken != "" && !viewModel.tokenChecked) {
-                viewModel.checkToken(it)
+                //viewModel.checkToken(it)
             }
         })
         viewModel.valid.observe(this, Observer {
