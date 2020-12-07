@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         //pass each item individually to app bar so that it's considered a top-level destination (no back button)
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment), drawerLayout)
+                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment,R.id.fragmentSettings), drawerLayout)
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
