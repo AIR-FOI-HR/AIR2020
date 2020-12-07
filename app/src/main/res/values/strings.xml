@@ -11,4 +11,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="submit_btn">Submit</string>
     <string name="log_out">Log Out</string>
+    <string name="txtSettings_first_name">First name</string>
+    <string name="textEditorSettingsFistName">First Name</string>
+    <string name="last_name">Last name</string>
+    <string name="txtSettingsUsername">Username</string>
+    <string name="txtSettingsPassword">Password</string>
+    <string name="year_of_study">Year of study</string>
+    <string name="study">Study</string>
 </resources>

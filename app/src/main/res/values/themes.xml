@@ -21,4 +21,10 @@
     <style name="Theme.AcademicLifestyle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
+    <style name="MyEditTextStyle2" parent="Widget.AppCompat.EditText">
+        <item name="colorControlActivated">@color/foi_red</item>
+        <item name="colorControlNormal">@color/white_acc</item>
+    </style>
+
+
 </resources>

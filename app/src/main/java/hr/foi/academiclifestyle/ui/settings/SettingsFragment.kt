@@ -1,6 +1,7 @@
 package hr.foi.academiclifestyle.ui.settings
 
 import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +39,7 @@ class SettingsFragment: Fragment() {
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         // TODO: Use the ViewModel
         setThemeOptions()
+
     }
 
     fun setThemeOptions() {
