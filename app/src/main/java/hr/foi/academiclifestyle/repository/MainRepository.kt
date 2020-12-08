@@ -8,6 +8,8 @@ import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.LoginRequest
 import hr.foi.academiclifestyle.network.model.RegisterRequest
+import hr.foi.academiclifestyle.network.model.UserRequest
+import hr.foi.academiclifestyle.network.model.UserResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -77,6 +79,13 @@ class MainRepository (private val database: LocalDatabase) {
     suspend fun clearUser () {
         withContext(Dispatchers.IO) {
             database.userDao.clear()
+        }
+    }
+
+    suspend fun updateUser(userRequest: UserRequest) :Boolean{
+        return withContext(Dispatchers.IO) {
+            val response = NetworkApi.networkService.updateUser(userRequest).await()
+            response.jwt != ""
         }
     }
 }

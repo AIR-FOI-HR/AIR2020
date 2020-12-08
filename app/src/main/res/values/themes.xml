@@ -23,7 +23,7 @@
 
     <style name="MyEditTextStyle2" parent="Widget.AppCompat.EditText">
         <item name="colorControlActivated">@color/foi_red</item>
-        <item name="colorControlNormal">@color/white_acc</item>
+        <item name="colorControlNormal">@color/grey_60</item>
     </style>
 
 
