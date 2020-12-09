@@ -20,5 +20,17 @@
 
     <style name="Theme.AcademicLifestyle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- Calendar View theme -->
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/foi_red</item>
+        <item name="colorPrimary">@color/white_acc</item>
+    </style>
 
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/grey_80</item>
+    </style>
+
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/white_acc</item>
+    </style>
 </resources>

@@ -2,8 +2,8 @@ package hr.foi.academiclifestyle.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import hr.foi.academiclifestyle.database.LocalDatabase
+import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.LoginRequest
@@ -15,8 +15,9 @@ class MainRepository (private val database: LocalDatabase) {
 
     //declare all raw data to be used by the app here
     val user: LiveData<User>? = database.userDao.getUser()
+    val events: LiveData<List<Event>>? = database.eventDao.getEvents()
 
-    //declare all functions related to handling data here
+    //User
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
         withContext(Dispatchers.IO) {
             val response = NetworkApi.networkService.postLogin(loginRequest).await()
@@ -26,11 +27,11 @@ class MainRepository (private val database: LocalDatabase) {
             if (response.jwt != "") {
                 val user = User (
                     response.user!!.id,
-                    response.user!!.name,
-                    response.user!!.surname,
-                    response.user!!.email,
-                    response.user!!.year,
-                    response.user!!.program,
+                    response.user.name,
+                    response.user.surname,
+                    response.user.email,
+                    response.user.year,
+                    response.user.program!!.id,
                     "",
                     jwtToken
                 )
@@ -59,7 +60,7 @@ class MainRepository (private val database: LocalDatabase) {
                         response.surname,
                         response.email,
                         response.year,
-                        response.program,
+                        response.program!!.id,
                         "",
                         token
                 )
@@ -77,6 +78,33 @@ class MainRepository (private val database: LocalDatabase) {
     suspend fun clearUser () {
         withContext(Dispatchers.IO) {
             database.userDao.clear()
+        }
+    }
+
+    //Events
+    suspend fun getEvents(day: String, programId: Int) : Boolean {
+        return withContext(Dispatchers.IO) {
+            val eventList = NetworkApi.networkService.getEventsForDayAndProgram(programId = programId, day = day).await()
+
+            if (eventList.isNotEmpty()) {
+                database.eventDao.clearEvents()
+                for (event in eventList) {
+                    //TODO add date mapping and get status from users
+                    val eventRes = Event (
+                            0,
+                            event.day,
+                            0L,
+                            event.Name,
+                            event.start_time,
+                            event.end_time,
+                            0
+                    )
+                    database.eventDao.insertEvent(eventRes)
+                }
+            }
+
+            //return true to signify all inserts are done
+            true
         }
     }
 }

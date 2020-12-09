@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import hr.foi.academiclifestyle.database.dao.EventDao
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.database.dao.UserDao
+import hr.foi.academiclifestyle.database.model.Event
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Event::class], version = 2, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
     abstract val userDao: UserDao
+    abstract val eventDao: EventDao
 }
 
 private lateinit var INSTANCE: LocalDatabase

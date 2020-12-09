@@ -17,7 +17,7 @@ data class User (
 
     val year: String? = "",
 
-    val program: String? = "",
+    val program: Int? = 0,
 
     @ColumnInfo(name = "profile_picture")
     val profilePicture: String? = "",

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_acc"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/semesterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Semestar:"
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btnLeftSem"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contextClickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txtSemNumber"
+                    app:layout_constraintHorizontal_bias="0.841"
+                    app:layout_constraintStart_toEndOf="@+id/semesterText"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ImageButton
+                    android:id="@+id/btnRightSem"
+                    android:layout_width="48dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contextClickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.083"
+                    app:layout_constraintStart_toEndOf="@+id/txtSemNumber"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/txtSemNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/white_acc"
+                android:layout_marginTop="10dp"
+                android:stretchColumns="*">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="2dp"
+                        android:background="@color/yellow_primary"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:text="SUBJECT"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:textColor="@color/yellow_primary"
+                        android:gravity="center_vertical"
+                        android:layout_weight="3"/>
+
+                    <TextView
+                        android:text="MY ATTENDANCE"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:textColor="@color/yellow_primary"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1.5"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:textColor="@color/grey_80"
+                        android:gravity="center_vertical"
+                        android:layout_weight="3"/>
+
+                    <TextView
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:textColor="@color/grey_80"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1.5"/>
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

@@ -60,10 +60,6 @@ class LoginFragment : Fragment() {
             viewModel.setPassword(binding.inputPasswordLogin.text)
         }
 
-        //show token expired toast if needed
-        if ((activity as AuthActivity).intent.getStringExtra("ShowTokenExpToast") == "True")
-            Toast.makeText(activity as AuthActivity?, "Token expired, please Log In!", Toast.LENGTH_SHORT).show()
-
         setupObservers()
         return binding.root
     }

@@ -30,7 +30,7 @@ data class UserResponse (
     @field:Json(name = "@year")
     val year: String? = "",
     @field:Json(name = "@program")
-    val program: String? = "",
+    val program: Program? = null,
     @field:Json(name = "@profile_picture")
     val profile_picture: String? = ""
 )

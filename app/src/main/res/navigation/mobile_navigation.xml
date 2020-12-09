@@ -37,4 +37,16 @@
         android:id="@+id/splashFragment"
         android:name="hr.foi.academiclifestyle.ui.auth.SplashFragment"
         android:label="SplashFragment" />
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="hr.foi.academiclifestyle.ui.myclasses.ScheduleFragment"
+        android:label="ScheduleFragment" />
+    <fragment
+        android:id="@+id/attendanceFragment"
+        android:name="hr.foi.academiclifestyle.ui.myclasses.AttendanceFragment"
+        android:label="AttendanceFragment" />
+    <fragment
+        android:id="@+id/statsGoalsFragment"
+        android:name="hr.foi.academiclifestyle.ui.myclasses.StatsGoalsFragment"
+        android:label="StatsGoalsFragment" />
 </navigation>

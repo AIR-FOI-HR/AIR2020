@@ -5,13 +5,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class MyClassesViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
+class AttendanceViewModel(application: Application) : AndroidViewModel(application) {
+
+
+
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(MyClassesViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(AttendanceViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return MyClassesViewModel(app) as T
+                return AttendanceViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

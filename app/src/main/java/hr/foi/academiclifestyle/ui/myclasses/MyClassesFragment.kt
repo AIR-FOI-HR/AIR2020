@@ -1,43 +1,123 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.Adapter
 import android.widget.ImageView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentMyclassesBinding
+import hr.foi.academiclifestyle.ui.myclasses.adapters.TabsPagerAdapter
 
 class MyClassesFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MyClassesFragment()
+    private val viewModel: MyClassesViewModel by lazy {
+        val activity = requireNotNull(this.activity) {}
+        ViewModelProvider(this, MyClassesViewModel.Factory(activity.application)).get(MyClassesViewModel::class.java)
     }
-
-    private lateinit var viewModel: MyClassesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = DataBindingUtil.inflate<FragmentMyclassesBinding>(inflater, R.layout.fragment_myclasses, container, false)
-        return binding.root
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MyClassesViewModel::class.java)
-        // TODO: Use the ViewModel
+        // fix toggle animation for navView
+        val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
+        val toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        // -- Setup tabbed layout -- //
+        val tabLayout = binding.tabLayout
+        val tabsViewpager = binding.viewPager
+        // Tabs Customization
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor((activity as MainActivity), R.color.yellow_primary))
+        tabLayout.setBackgroundColor(ContextCompat.getColor((activity as MainActivity), R.color.yellow_secondary))
+        tabLayout.tabTextColors = ContextCompat.getColorStateList((activity as MainActivity), android.R.color.white)
+
+        // Number Of Tabs
+        val numberOfTabs = 3
+
+        // Show all Tabs in screen
+        tabLayout.tabMode = TabLayout.MODE_FIXED
+
+        // Set the ViewPager Adapter
+        val adapter = TabsPagerAdapter((activity as MainActivity).supportFragmentManager, lifecycle, numberOfTabs)
+        tabsViewpager.adapter = adapter
+
+        // Set to not remove the cached fragments
+        tabsViewpager.offscreenPageLimit = 3
+
+        // This is necessary to fix content height between fragments
+        tabsViewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val view : View? = when (position) {
+                    0 -> adapter.fragments[0].view
+                    1 -> adapter.fragments[1].view
+                    2 -> adapter.fragments[2].view
+                    else -> adapter.fragments[0].view
+                }
+                view?.let {
+                    updatePagerHeightForChild(view, tabsViewpager)
+                }
+            }
+
+            private fun updatePagerHeightForChild(view: View, pager: ViewPager2) {
+                view.post {
+                    val wMeasureSpec =
+                            View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                    val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    view.measure(wMeasureSpec, hMeasureSpec)
+
+                    if (pager.layoutParams.height != view.measuredHeight) {
+                        pager.layoutParams = (pager.layoutParams)
+                                .also { lp ->
+                                    lp.height = view.measuredHeight
+                                }
+                    }
+                }
+            }
+        })
+
+        // Link the TabLayout and the ViewPager2 together and set titles
+        TabLayoutMediator(tabLayout, tabsViewpager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "Schedule"
+                }
+                1 -> {
+                    tab.text = "Attendance"
+                }
+                2 -> {
+                    tab.text = "Stats & Goals"
+                }
+            }
+        }.attach()
+
         setThemeOptions()
+        return binding.root
     }
 
     fun setThemeOptions() {
