@@ -20,6 +20,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
@@ -36,12 +38,13 @@ class MyClassesFragment : Fragment() {
         val activity = requireNotNull(this.activity) {}
         ViewModelProvider(this, MyClassesViewModel.Factory(activity.application)).get(MyClassesViewModel::class.java)
     }
+    private lateinit var binding: FragmentMyclassesBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMyclassesBinding>(inflater, R.layout.fragment_myclasses, container, false)
+        binding = DataBindingUtil.inflate<FragmentMyclassesBinding>(inflater, R.layout.fragment_myclasses, container, false)
 
         // fix toggle animation for navView
         val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
@@ -49,9 +52,51 @@ class MyClassesFragment : Fragment() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // -- Setup tabbed layout -- //
-        val tabLayout = binding.tabLayout
-        val tabsViewpager = binding.viewPager
+        setThemeOptions()
+        setObservers()
+
+        return binding.root
+    }
+
+    fun setObservers() {
+        viewModel.user?.observe(viewLifecycleOwner, Observer {
+            if (it?.program != null && it.program != 0) {
+                binding.classesMain.visibility = View.VISIBLE
+                createTabLayout(binding.tabLayout, binding.viewPager)
+            } else {
+                binding.classesWarning.visibility = View.VISIBLE
+            }
+        })
+    }
+
+    fun setThemeOptions() {
+        val imageView = (activity as MainActivity?)?.findViewById<ImageView>(R.id.toolbarlogo)
+        val toolbar = (activity as MainActivity?)?.findViewById<Toolbar>(R.id.toolbar)
+        val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
+        imageView?.setImageResource(R.drawable.ic_clock)
+        toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
+        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary));
+        navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
+
+        setNavigationColors()
+    }
+
+    fun setNavigationColors() {
+        val navView = (activity as MainActivity?)?.findViewById<NavigationView>(R.id.navView)
+        val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked), intArrayOf())
+
+        val colors = intArrayOf(
+                (activity as MainActivity).getColor(R.color.grey_80), //unchecked
+                (activity as MainActivity).getColor(R.color.yellow_primary), //checked
+                (activity as MainActivity).getColor(R.color.grey_80)) //default
+
+        val navigationViewColorStateList = ColorStateList(states, colors)
+
+        navView?.setItemTextColor(navigationViewColorStateList)
+        navView?.setItemIconTintList(navigationViewColorStateList)
+    }
+
+    fun createTabLayout(tabLayout: TabLayout, tabsViewpager: ViewPager2) {
         // Tabs Customization
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor((activity as MainActivity), R.color.yellow_primary))
         tabLayout.setBackgroundColor(ContextCompat.getColor((activity as MainActivity), R.color.yellow_secondary))
@@ -115,35 +160,5 @@ class MyClassesFragment : Fragment() {
                 }
             }
         }.attach()
-
-        setThemeOptions()
-        return binding.root
-    }
-
-    fun setThemeOptions() {
-        val imageView = (activity as MainActivity?)?.findViewById<ImageView>(R.id.toolbarlogo)
-        val toolbar = (activity as MainActivity?)?.findViewById<Toolbar>(R.id.toolbar)
-        val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
-        imageView?.setImageResource(R.drawable.ic_clock)
-        toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary));
-        navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
-
-        setNavigationColors()
-    }
-
-    fun setNavigationColors() {
-        val navView = (activity as MainActivity?)?.findViewById<NavigationView>(R.id.navView)
-        val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked), intArrayOf())
-
-        val colors = intArrayOf(
-                (activity as MainActivity).getColor(R.color.grey_80), //unchecked
-                (activity as MainActivity).getColor(R.color.yellow_primary), //checked
-                (activity as MainActivity).getColor(R.color.grey_80)) //default
-
-        val navigationViewColorStateList = ColorStateList(states, colors)
-
-        navView?.setItemTextColor(navigationViewColorStateList)
-        navView?.setItemIconTintList(navigationViewColorStateList)
     }
 }

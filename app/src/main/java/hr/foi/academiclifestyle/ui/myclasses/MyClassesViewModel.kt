@@ -4,9 +4,16 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.repository.MainRepository
 
 class MyClassesViewModel(application: Application) : AndroidViewModel(application) {
-    // TODO: Implement the ViewModel
+
+    private val database = getDatabase(application)
+    private val repository = MainRepository(database)
+
+    var user = repository.user
+
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MyClassesViewModel::class.java)) {

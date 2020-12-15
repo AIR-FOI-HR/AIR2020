@@ -25,13 +25,14 @@ class MainRepository (private val database: LocalDatabase) {
             if (rememberUser)
                 jwtToken = response.jwt
             if (response.jwt != "") {
+                val program = response.user?.program?.id
                 val user = User (
                     response.user!!.id,
                     response.user.name,
                     response.user.surname,
                     response.user.email,
                     response.user.year,
-                    response.user.program!!.id,
+                    program,
                     "",
                     jwtToken
                 )
@@ -54,13 +55,14 @@ class MainRepository (private val database: LocalDatabase) {
 
             //either update user or clear
             if (response.id > 0) {
+                val program = response.program?.id
                 val userRes = User (
                         response.id,
                         response.name,
                         response.surname,
                         response.email,
                         response.year,
-                        response.program!!.id,
+                        program,
                         "",
                         token
                 )
@@ -82,16 +84,18 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Events
-    suspend fun getEvents(day: String, programId: Int) : Boolean {
+    suspend fun updateEvents(day: String, programId: Int) : Boolean {
         return withContext(Dispatchers.IO) {
             val eventList = NetworkApi.networkService.getEventsForDayAndProgram(programId = programId, day = day).await()
 
+            database.eventDao.clearEvents()
             if (eventList.isNotEmpty()) {
-                database.eventDao.clearEvents()
+                var events: MutableList<Event> = mutableListOf()
                 for (event in eventList) {
-                    //TODO add date mapping and get status from users
+                    //TODO fetch and add status according to user presence
+                    //TODO the current date and the presence of the user should be checked to determine the status of an event
                     val eventRes = Event (
-                            0,
+                            event.id,
                             event.day,
                             0L,
                             event.Name,
@@ -99,11 +103,10 @@ class MainRepository (private val database: LocalDatabase) {
                             event.end_time,
                             0
                     )
-                    database.eventDao.insertEvent(eventRes)
+                    events.add(eventRes)
                 }
+                database.eventDao.insertEvents(events)
             }
-
-            //return true to signify all inserts are done
             true
         }
     }

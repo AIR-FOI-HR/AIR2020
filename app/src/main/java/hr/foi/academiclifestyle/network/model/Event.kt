@@ -4,6 +4,8 @@ import com.squareup.moshi.Json
 import hr.foi.academiclifestyle.database.model.User
 
 data class Event (
+    @field:Json(name = "@id")
+    val id: Int = 0,
     @field:Json(name = "@name")
     val Name: String = "",
     @field:Json(name = "@event_type")

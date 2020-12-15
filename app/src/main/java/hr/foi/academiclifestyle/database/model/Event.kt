@@ -8,11 +8,11 @@ import java.util.*
 @Entity(tableName = "event")
 data class Event (
         @PrimaryKey(autoGenerate = true)
-        var eventId: Long = 0L,
+        var eventId: Int = 0,
 
         val day: String? = "",
 
-        val date: Long = 0L,
+        val date: Long? = 0L,
 
         val name: String? = "",
 
@@ -22,5 +22,5 @@ data class Event (
         @ColumnInfo(name = "end_time")
         val endTime: String? = "",
 
-        val status: Int = 0
+        val status: Int? = 0
 )

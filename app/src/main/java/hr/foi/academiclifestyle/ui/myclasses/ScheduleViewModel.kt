@@ -19,8 +19,11 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     //events & livedata
     private val _eventsUpdated = MutableLiveData<Boolean>()
     val eventsUpdated: LiveData<Boolean> get() = _eventsUpdated
+
     var events = repository.events
     var user = repository.user
+
+    var firstCall: Boolean = false
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
@@ -44,9 +47,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             } else
                 currentDay = day
             if (program == 0)
-                _eventsUpdated.value = repository.getEvents(currentDay, user?.value?.program!!)
+                _eventsUpdated.value = repository.updateEvents(currentDay, user?.value?.program!!)
             else
-                _eventsUpdated.value = repository.getEvents(currentDay, program)
+                _eventsUpdated.value = repository.updateEvents(currentDay, program)
         }
     }
 

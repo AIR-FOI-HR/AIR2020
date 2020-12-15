@@ -12,5 +12,5 @@ data class Room (
     @field:Json(name = "@building")
     val building: Int? = 0,
     @field:Json(name = "@sensor")
-    val sensor: String = ""
+    val sensor: String? = ""
 )

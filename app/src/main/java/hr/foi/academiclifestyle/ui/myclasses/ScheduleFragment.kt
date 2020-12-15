@@ -1,30 +1,37 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
 import android.R.attr.outAnimation
+import android.R.attr.start
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import hr.foi.academiclifestyle.R
+import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.databinding.FragmentMyclassesScheduleBinding
+import hr.foi.academiclifestyle.dimens.ScheduleEvent
 import hr.foi.academiclifestyle.ui.MainActivity
+import hr.foi.academiclifestyle.ui.myclasses.adapters.RecyclerAdapter
 import org.threeten.bp.LocalDate
 
 
-class ScheduleFragment : Fragment() {
+class ScheduleFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     private val viewModel: ScheduleViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
         ViewModelProvider(this, ScheduleViewModel.Factory(activity.application)).get(ScheduleViewModel::class.java)
     }
 
+    private lateinit var binding: FragmentMyclassesScheduleBinding
     private lateinit var progressBarHolder: FrameLayout
     private lateinit var inAnimation: AlphaAnimation
     private lateinit var outAnimation: AlphaAnimation
@@ -34,24 +41,31 @@ class ScheduleFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMyclassesScheduleBinding>(inflater, R.layout.fragment_myclasses_schedule, container, false)
+        binding = DataBindingUtil.inflate<FragmentMyclassesScheduleBinding>(inflater, R.layout.fragment_myclasses_schedule, container, false)
 
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
 
         // Call getEvents each time the user picks a date
-        // A mask will be used here to prevent rapid calls
+        // A mask is used here to prevent rapid calls
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            inAnimation = AlphaAnimation(0f, 1f)
-            inAnimation.setDuration(200)
-            progressBarHolder.animation = inAnimation
-            progressBarHolder.visibility = View.VISIBLE
-
-            var date : LocalDate = LocalDate.of(year, month, dayOfMonth)
-            val currentDay : String = date.dayOfWeek.plus(2L).toString().toLowerCase()
+            startAnimation()
+            var date : LocalDate = LocalDate.of(year, month+1, dayOfMonth)
+            val currentDay : String = date.dayOfWeek.toString().toLowerCase()
             viewModel.getEvents(currentDay, 0)
         }
+
+        // Setup the recycler
+        val scheduleList = createScheduleList(listOf())
+        binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+        binding.scheduleRecycler.layoutManager = LinearLayoutManager((activity as MainActivity))
+        binding.scheduleRecycler.setHasFixedSize(true)
+
         setupObservers()
         return binding.root
+    }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText((activity as MainActivity), "Position: $position", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupObservers() {
@@ -61,14 +75,74 @@ class ScheduleFragment : Fragment() {
             }
         })
         viewModel.eventsUpdated.observe(viewLifecycleOwner, Observer {
+            // used only for updating the animation
             if (it != null) {
-                outAnimation = AlphaAnimation(1f, 0f)
-                outAnimation.setDuration(200)
-                progressBarHolder.animation = outAnimation
-                progressBarHolder.visibility = View.GONE
+                finishAnimation()
                 viewModel.resetEvents()
-                //TODO add call for a function assigning values to view
             }
         })
+        viewModel.events?.observe(viewLifecycleOwner, Observer {
+            // not pretty but it works (should probably replace finding views with binding somehow)
+            if (it != null && viewModel.firstCall) {
+                if (it.isNotEmpty()) {
+                    val scheduleList = createScheduleList(it)
+                    binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+                } else {
+                    val scheduleList = createScheduleList(listOf())
+                    binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+                }
+            } else
+                // used to prevent double refresh on first fragment show
+                viewModel.firstCall = true
+        })
+    }
+
+    // this method will always return a list with a fixed amount of elements
+    private fun createScheduleList(eventList: List<Event>) : List<ScheduleEvent>{
+        val scheduleList: MutableList<ScheduleEvent> = mutableListOf()
+        for (i in 7..20) {
+            var numStart: String = i.toString()
+            var numEnd: String = (i + 1).toString()
+            if (i < 10)
+                numStart = "0$numStart"
+            if (i+1 < 10)
+                numEnd = "0$numEnd"
+
+            // variables
+            var time = "$numStart-$numEnd"
+            var name = "-"
+            var status = 0
+
+            val event = eventList.find {
+                var found = false
+                if (it.startTime != null && it.endTime != null) {
+                    val start = it.startTime.split(":")[0].toInt()
+                    val end = it.endTime.split(":")[0].toInt()
+                    if (i in start until end)
+                        found = true
+                }
+                found
+            }
+            if (event != null) {
+                name = event.name!!
+                status = 2 //event.status!! - revert this once status is done
+            }
+            scheduleList.add(ScheduleEvent(time, name, status))
+        }
+        return scheduleList
+    }
+
+    private fun startAnimation() {
+        inAnimation = AlphaAnimation(0f, 1f)
+        inAnimation.setDuration(200)
+        progressBarHolder.animation = inAnimation
+        progressBarHolder.visibility = View.VISIBLE
+    }
+
+    private fun finishAnimation() {
+        outAnimation = AlphaAnimation(1f, 0f)
+        outAnimation.setDuration(200)
+        progressBarHolder.animation = outAnimation
+        progressBarHolder.visibility = View.GONE
     }
 }
