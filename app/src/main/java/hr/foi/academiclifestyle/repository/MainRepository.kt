@@ -17,6 +17,7 @@ class MainRepository (private val database: LocalDatabase) {
 
     //declare all raw data to be used by the app here
     val user: LiveData<User>? = database.userDao.getUser()
+    val user1 =database.userDao.getUser()
 
     //declare all functions related to handling data here
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
@@ -84,8 +85,10 @@ class MainRepository (private val database: LocalDatabase) {
 
     suspend fun updateUser(userRequest: UserRequest) :Boolean{
         return withContext(Dispatchers.IO) {
-            val response = NetworkApi.networkService.updateUser(userRequest).await()
-            response.jwt != ""
+            Log.i("Token", user1!!.value!!.jwtToken.toString())
+            val response = NetworkApi.networkService.updateUser("Bearer ${user1!!.value!!.jwtToken}",userRequest).await()
+
+            response.logToken != ""
         }
     }
 }

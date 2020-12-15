@@ -2,13 +2,13 @@ package hr.foi.academiclifestyle.ui.settings
 
 import android.app.Application
 import android.graphics.Picture
+import android.text.Editable
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.network.model.UserRequest
 import hr.foi.academiclifestyle.repository.MainRepository
+import hr.foi.academiclifestyle.ui.auth.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,6 +18,7 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+
 
     private val _responseType = MutableLiveData<Int>()
     val responseType :LiveData<Int> get() =_responseType
@@ -48,10 +49,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
-
+    private val user =repository.user
 
     fun updateUser() {
-        Log.i("CoroutineInfo", coroutineScope.toString())
         if (_firstName.value == null || _firstName.value == "" ||
                 _lastName.value == null || _lastName.value == "" ||
                 _study.value == null || _study.value == "" ||
@@ -89,4 +89,40 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
+
+    fun setFirstName(s: Editable){
+        _firstName.value = s.toString()
+    }
+
+    fun setLastName(s: Editable){
+        _lastName.value = s.toString()
+    }
+
+    fun setPassword(s: Editable){
+        _password.value = s.toString()
+    }
+
+    fun setUserName(s: Editable){
+        _username.value = s.toString()
+    }
+
+    fun setStudy(s: Editable){
+        _study.value = s.toString()
+    }
+
+    fun setYearOfStudy(s: Editable){
+        _yearOfStudy.value = s.toString().toInt()
+    }
+
+
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return SettingsViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
 }
+
