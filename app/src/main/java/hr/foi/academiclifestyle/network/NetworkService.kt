@@ -27,6 +27,9 @@ interface DatabaseApiService {
 
     @GET("events")
     fun getEventsForDayAndProgram(@Query("subject.program") programId: Int, @Query("day") day: String): Deferred<List<Event>>
+
+    @GET("subjects")
+    fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
 }
 
 object NetworkApi {

@@ -1,10 +1,7 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
-import android.R.attr.outAnimation
-import android.R.attr.start
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +17,12 @@ import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.databinding.FragmentMyclassesScheduleBinding
 import hr.foi.academiclifestyle.dimens.ScheduleEvent
 import hr.foi.academiclifestyle.ui.MainActivity
-import hr.foi.academiclifestyle.ui.myclasses.adapters.RecyclerAdapter
+import hr.foi.academiclifestyle.ui.myclasses.adapters.ScheduleRecyclerAdapter
+import hr.foi.academiclifestyle.util.CustomDialog
 import org.threeten.bp.LocalDate
 
 
-class ScheduleFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
+class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener {
 
     private val viewModel: ScheduleViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
@@ -56,7 +54,7 @@ class ScheduleFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         // Setup the recycler
         val scheduleList = createScheduleList(listOf())
-        binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+        binding.scheduleRecycler.adapter = ScheduleRecyclerAdapter(scheduleList, this)
         binding.scheduleRecycler.layoutManager = LinearLayoutManager((activity as MainActivity))
         binding.scheduleRecycler.setHasFixedSize(true)
 
@@ -64,8 +62,9 @@ class ScheduleFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         return binding.root
     }
 
-    override fun onItemClick(position: Int) {
-        Toast.makeText((activity as MainActivity), "Position: $position", Toast.LENGTH_SHORT).show()
+    override fun onItemClick(position: Int, event: ScheduleEvent) {
+        val dialog: CustomDialog = CustomDialog()
+        dialog.showDialog((activity as MainActivity), event)
     }
 
     private fun setupObservers() {
@@ -82,14 +81,13 @@ class ScheduleFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
             }
         })
         viewModel.events?.observe(viewLifecycleOwner, Observer {
-            // not pretty but it works (should probably replace finding views with binding somehow)
             if (it != null && viewModel.firstCall) {
                 if (it.isNotEmpty()) {
                     val scheduleList = createScheduleList(it)
-                    binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+                    binding.scheduleRecycler.adapter = ScheduleRecyclerAdapter(scheduleList, this)
                 } else {
                     val scheduleList = createScheduleList(listOf())
-                    binding.scheduleRecycler.adapter = RecyclerAdapter(scheduleList, this)
+                    binding.scheduleRecycler.adapter = ScheduleRecyclerAdapter(scheduleList, this)
                 }
             } else
                 // used to prevent double refresh on first fragment show

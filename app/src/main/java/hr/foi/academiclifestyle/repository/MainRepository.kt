@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
 import hr.foi.academiclifestyle.database.model.Event
+import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.LoginRequest
@@ -16,6 +17,7 @@ class MainRepository (private val database: LocalDatabase) {
     //declare all raw data to be used by the app here
     val user: LiveData<User>? = database.userDao.getUser()
     val events: LiveData<List<Event>>? = database.eventDao.getEvents()
+    val subjects: LiveData<List<Subject>>? = database.subjectDao.getSubjects()
 
     //User
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
@@ -108,6 +110,31 @@ class MainRepository (private val database: LocalDatabase) {
                 database.eventDao.insertEvents(events)
             }
             true
+        }
+    }
+
+    //Subjects
+    suspend fun updateSubjects(programId: Int, semester: Int) {
+        withContext(Dispatchers.IO) {
+            val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = semester).await()
+
+            database.subjectDao.clearSubjects()
+            if (subjectList.isNotEmpty()) {
+                var subjects: MutableList<Subject> = mutableListOf()
+                for (subject in subjectList) {
+                    //TODO fetch and correct percentage
+                    val subjectRes = Subject (
+                            subject.id,
+                            subject.Name,
+                            subject.program?.shortName,
+                            semester,
+                            programId,
+                            "0%"
+                    )
+                    subjects.add(subjectRes)
+                }
+                database.subjectDao.insertSubjects(subjects)
+            }
         }
     }
 }

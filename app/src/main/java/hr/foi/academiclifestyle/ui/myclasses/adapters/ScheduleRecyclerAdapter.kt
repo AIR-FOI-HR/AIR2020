@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.dimens.ScheduleEvent
 
-class RecyclerAdapter(private val eventList: List<ScheduleEvent>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.ScheduleViewHolder>() {
+class ScheduleRecyclerAdapter(private val eventList: List<ScheduleEvent>, private val listener: OnItemClickListener) : RecyclerView.Adapter<ScheduleRecyclerAdapter.ScheduleViewHolder>() {
 
     inner class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val txtTime: TextView = itemView.findViewById(R.id.txtTime)
@@ -23,14 +23,14 @@ class RecyclerAdapter(private val eventList: List<ScheduleEvent>, private val li
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(position)
+                listener.onItemClick(position, eventList[position])
             }
         }
     }
 
     // this is implemented in the schedule fragment
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Int, event: ScheduleEvent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
