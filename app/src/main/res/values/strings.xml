@@ -19,4 +19,5 @@
     <string name="txtSettingsPassword">Password</string>
     <string name="year_of_study">Year of study</string>
     <string name="study">Study</string>
+    <string name="saveSettings">Save</string>
 </resources>

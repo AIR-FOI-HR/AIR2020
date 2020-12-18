@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.user?.observe(this, Observer {
             if (it != null && it.jwtToken != "" && !viewModel.tokenChecked) {
-                //viewModel.checkToken(it)
+                viewModel.checkToken(it)
             }
         })
         viewModel.valid.observe(this, Observer {

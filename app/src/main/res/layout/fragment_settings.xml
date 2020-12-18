@@ -4,8 +4,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment"
+        android:layout_height="match_parent"
+        tools:context=".ui.settings.SettingsFragment"
         android:layout_margin="10dp"
         >
 
@@ -220,7 +220,24 @@
                 android:layout_height="match_parent"
                 android:text="Choose image"
                 android:textColor="@color/white_acc"
-                android:textSize="20sp"
+                android:textSize="18sp"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            >
+
+            <Button
+                android:id="@+id/btnSaveSettings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/saveSettings"
+                android:textColor="@color/white_acc"
+                android:textSize="18sp"
 
                 />
         </RelativeLayout>

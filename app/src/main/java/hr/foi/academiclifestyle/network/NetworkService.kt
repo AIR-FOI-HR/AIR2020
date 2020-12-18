@@ -25,6 +25,10 @@ interface DatabaseApiService {
     @GET("users/me")
     fun getUserByToken(@Header("Authorization") authorization: String): Deferred<UserResponse>
 
+    @PUT("users/me")
+    fun updateUser(@Header("Authorization") authorization: String,
+                   @Body body: UserRequest?) : Deferred<UserResponse>
+  
     @GET("events")
     fun getEventsForDayAndProgram(@Query("subject.program") programId: Int, @Query("day") day: String): Deferred<List<Event>>
 
