@@ -1,8 +1,11 @@
 package hr.foi.academiclifestyle.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -13,8 +16,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
-import hr.foi.academiclifestyle.databinding.ActivityMainBinding
 import hr.foi.academiclifestyle.R
+import hr.foi.academiclifestyle.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -43,7 +47,13 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         //disable automatic icon tinting
-        binding.navView.setItemIconTintList(null);
+        binding.navView.setItemIconTintList(null)
+
+        //set the animated drawer toggle
+        var toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
         setupObservers()
 
         binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {

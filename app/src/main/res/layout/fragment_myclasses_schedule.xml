@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_20"
+            android:orientation="vertical">
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/calendar_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:firstDayOfWeek="2"
+                android:theme="@style/CalenderViewCustom"
+                android:dateTextAppearance="@style/CalenderViewDateCustomText"
+                android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_acc"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:stretchColumns="*">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <TextView
+                            android:text="TIME"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/yellow_primary"
+                            android:gravity="center_vertical"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:text="SUBJECT"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/yellow_primary"
+                            android:gravity="center_vertical"
+                            android:layout_weight="3"/>
+
+                        <TextView
+                            android:text="ATTENDANCE"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/yellow_primary"
+                            android:gravity="center_vertical"
+                            android:layout_weight="1.5"/>
+                    </TableRow>
+                </TableLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_acc">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/scheduleRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:clipToPadding="false"
+                        tools:listitem="@layout/schedule_item"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

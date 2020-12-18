@@ -15,6 +15,7 @@
     <color name="grey_30">#FFE5E5E5</color>
     <color name="grey_60">#FF818186</color>
     <color name="grey_80">#FF545457</color>
+    <color name="white_mask">#33FFFFFF</color>
 
     <!-- ambience -->
     <color name="green_primary">#FF7B8501</color>

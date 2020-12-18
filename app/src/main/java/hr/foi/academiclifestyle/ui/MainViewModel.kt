@@ -33,8 +33,15 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
     fun checkToken(user: User) {
         tokenChecked = true
         coroutineScope.launch {
-            val validRes = repository.checkUserToken(user.jwtToken!!)
-            _valid.value = validRes
+            try {
+                Log.i("usertoken", user.jwtToken!!)
+                val validRes = repository.checkUserToken(user.jwtToken!!)
+                _valid.value = validRes
+            } catch (ex: Exception) {
+                //TODO add handling for no connection
+                repository.clearUser()
+                _valid.value = false
+            }
         }
     }
 

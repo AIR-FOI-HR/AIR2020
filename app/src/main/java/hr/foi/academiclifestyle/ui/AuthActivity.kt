@@ -2,6 +2,7 @@ package hr.foi.academiclifestyle.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import hr.foi.academiclifestyle.R
@@ -19,6 +20,10 @@ class AuthActivity: AppCompatActivity()  {
         val transaction= supportFragmentManager.beginTransaction()
         transaction.replace(R.id.loginContainer, fragment, "LoginContainer")
         transaction.commit()
+
+        //show token expired toast if needed
+        if (intent.getStringExtra("ShowTokenExpToast") == "True")
+            Toast.makeText(this, "Token expired, please Log In!", Toast.LENGTH_SHORT).show()
     }
 
     fun switchFragment(type: Int) {

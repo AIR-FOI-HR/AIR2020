@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_frame">
+
+    <TextView
+        android:id="@+id/txtDTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:height="40dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtDPresence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Presence recorded at: -"
+        android:textSize="16dp"
+        android:layout_below="@+id/txtDTitle"/>
+
+    <TextView
+        android:id="@+id/txtDInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Would you like to retry recording the presence?"
+        android:textSize="16dp"
+        android:layout_below="@+id/txtDPresence"/>
+
+    <!-- stateListAnimator removes button emboss and shadow, works only on API >= 21 -->
+    <Button
+        android:id="@+id/btnDConfirm"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/yellow_acc"
+        android:clickable="true"
+        android:contextClickable="true"
+        android:focusable="true"
+        android:text="RETRY"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/white_acc"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/txtDInfo"
+        android:stateListAnimator="@null"/>
+
+</RelativeLayout>

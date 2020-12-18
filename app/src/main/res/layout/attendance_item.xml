@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <TableRow
+        android:id="@+id/attendanceRow"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <TextView
+            android:id="@+id/txtSubjectName"
+            android:text="-"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:textColor="@color/grey_80"
+            android:gravity="center_vertical"
+            android:layout_weight="3"/>
+
+        <TextView
+            android:id="@+id/txtPercentage"
+            android:text="-"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:textColor="@color/grey_80"
+            android:gravity="center_horizontal"
+            android:layout_weight="1.5"/>
+    </TableRow>
+</RelativeLayout>
