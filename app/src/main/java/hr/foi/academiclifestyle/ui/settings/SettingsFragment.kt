@@ -2,6 +2,7 @@ package hr.foi.academiclifestyle.ui.settings
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.ui.MainActivity
@@ -22,11 +24,6 @@ import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
 
 
 class SettingsFragment: Fragment() {
-
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
-
 
     private val viewModel: SettingsViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
@@ -59,7 +56,7 @@ class SettingsFragment: Fragment() {
         btnUpdateUser = binding.btnSaveSettings
 
 
-        //Update users on button event clikc
+        //Update users on button event click
         btnUpdateUser.setOnClickListener(){
             viewModel.updateUser()
         }
@@ -82,13 +79,14 @@ class SettingsFragment: Fragment() {
         }
 
         txtStudy.doAfterTextChanged {
-            viewModel.setUserName(binding.editTextStudy.text)
+            viewModel.setStudy(binding.editTextStudy.text)
         }
 
         txtYearOfStudy.doAfterTextChanged {
             viewModel.setYearOfStudy(binding.editTextYearOfStudy.text)
         }
 
+        setupObservers()
         return binding.root
     }
 
@@ -96,8 +94,15 @@ class SettingsFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
         //viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         // TODO: Use the ViewModel
+
         setThemeOptions()
 
+    }
+
+    private fun setupObservers(){
+        viewModel.user?.observe(viewLifecycleOwner, Observer {
+            Log.i("UserExists",it?.email!!)
+        })
     }
 
     fun setThemeOptions() {
@@ -126,4 +131,5 @@ class SettingsFragment: Fragment() {
         navView?.setItemTextColor(navigationViewColorStateList)
         navView?.setItemIconTintList(navigationViewColorStateList)
     }
+
 }

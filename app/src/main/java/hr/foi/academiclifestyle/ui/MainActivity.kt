@@ -3,8 +3,6 @@ package hr.foi.academiclifestyle.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -15,7 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
-import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
 import hr.foi.academiclifestyle.R
 

@@ -6,6 +6,7 @@ import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.model.UserRequest
 import hr.foi.academiclifestyle.repository.MainRepository
 import hr.foi.academiclifestyle.ui.auth.LoginViewModel
@@ -46,10 +47,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
 
     private var viewModelJob = Job()
-    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
-    private val user =repository.user
+
+    val user =repository.user
 
     fun updateUser() {
         if (_firstName.value == null || _firstName.value == "" ||
@@ -58,7 +60,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 _yearOfStudy.value == null || _yearOfStudy.value == 0
 
         ) {
-            _responseType.value = 1
+
         } else {
             //construct UserRequest
             val userRequest: UserRequest =
@@ -67,7 +69,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                             _lastName.value.toString(),
                             _password.value.toString(),
                             _username.value.toString(),
-                            _study.value.toString(),
+                            //_study.value.toString(),
                             _yearOfStudy.value!!.toInt()
                            // _picture.value.toString()
                     )
@@ -75,8 +77,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             //send request
             coroutineScope.launch {
                 try {
-                    repository.updateUser(userRequest)
-                } catch (ex: Exception) {
+                     repository.updateUser(userRequest, user?.value?.jwtToken!!)
+               } catch (ex: Exception) {
                     if (ex is SocketTimeoutException)
                         _responseType.value = 3
                     else if (ex is UnknownHostException)
@@ -84,11 +86,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     else if (ex is HttpException)
                         _responseType.value = 2
                     else
-                        Log.i("CoroutineInfo", ex.message.toString())
+                        Log.i("CoroutineInfo error", ex.message.toString())
                 }
             }
         }
     }
+
 
     fun setFirstName(s: Editable){
         _firstName.value = s.toString()
@@ -113,7 +116,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setYearOfStudy(s: Editable){
         _yearOfStudy.value = s.toString().toInt()
     }
-
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

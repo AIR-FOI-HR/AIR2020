@@ -27,8 +27,7 @@ interface DatabaseApiService {
 
     @PUT("users/me")
     fun updateUser(@Header("Authorization") authorization: String,
-                   @Body body: UserRequest)
-                   : Deferred<UserResponse>
+                   @Body body: UserRequest?) : Deferred<UserResponse>
 
 }
 

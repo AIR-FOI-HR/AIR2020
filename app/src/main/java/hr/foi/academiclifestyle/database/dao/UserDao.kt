@@ -20,4 +20,5 @@ interface UserDao {
 
     @Query("SELECT * FROM user ORDER BY userId DESC LIMIT 1")
     fun getUser(): LiveData<User>?
+
 }
