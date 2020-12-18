@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.settings.SettingsFragment"
+        android:layout_margin="10dp"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingsFirstName"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+
+                android:text="@string/txtSettings_first_name"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp"
+                />
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:ems="10"
+                android:filterTouchesWhenObscured="true"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:labelFor="@id/txtSettingsFirstName"
+                android:textColor="@color/grey_80"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingsLastName"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/last_name"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editTextTextPersonLastName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:ems="10"
+                android:inputType="textPersonName|text"
+                android:labelFor="@id/txtSettingsLastName"
+                android:textColor="@color/grey_60"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingUsername"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/txtSettingsUsername"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editTextTextUsername"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:ems="10"
+                android:inputType="text"
+                android:labelFor="@id/txtSettingUsername"
+                android:textColor="@color/grey_60"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingsPassword"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/txtSettingsPassword"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editTextTextPasword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:labelFor="@id/txtSettingsPassword"
+                android:textColor="@color/grey_60"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingsStudy"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/study"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editTextStudy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:labelFor="@id/txtSettingsStudy"
+                android:textColor="@color/grey_60"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSettingsYearOfStudy"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:text="@string/year_of_study"
+                android:textColor="@color/grey_60"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editTextYearOfStudy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:labelFor="@id/txtSettingsYearOfStudy"
+                android:textColor="@color/grey_60"
+                android:textSize="20sp"
+                android:theme="@style/MyEditTextStyle2"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            >
+
+            <Button
+                android:id="@+id/btnSettingsChooseImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Choose image"
+                android:textColor="@color/white_acc"
+                android:textSize="20sp"
+
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+
+</layout>

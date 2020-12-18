@@ -12,4 +12,11 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="myclasses_warning">Make sure to set your study program in the settings before using this module</string>
+    <string name="txtSettings_first_name">First name</string>
+    <string name="textEditorSettingsFistName">First Name</string>
+    <string name="last_name">Last name</string>
+    <string name="txtSettingsUsername">Username</string>
+    <string name="txtSettingsPassword">Password</string>
+    <string name="year_of_study">Year of study</string>
+    <string name="study">Study</string>
 </resources>
