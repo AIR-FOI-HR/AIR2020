@@ -32,7 +32,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = MainRepository(database)
 
     fun sendLoginData(rememberMeChecked : Boolean) {
-        Log.i("CoroutineInfo", coroutineScope.toString())
         if (_usernameTxt.value == null || _usernameTxt.value == "" ||
             _passwordTxt.value == null || _passwordTxt.value == "") {
             _responseType.value = 1
