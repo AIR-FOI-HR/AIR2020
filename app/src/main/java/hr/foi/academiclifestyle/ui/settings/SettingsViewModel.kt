@@ -92,6 +92,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    //cancel request call if the view closes
+    override fun onCleared() {
+        viewModelJob.cancel()
+        super.onCleared()
+    }
 
     fun setFirstName(s: Editable){
         _firstName.value = s.toString()

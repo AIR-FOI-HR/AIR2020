@@ -101,7 +101,6 @@ class SettingsFragment: Fragment() {
 
     private fun setupObservers(){
         viewModel.user?.observe(viewLifecycleOwner, Observer {
-            Log.i("UserExists",it?.email!!)
         })
     }
 

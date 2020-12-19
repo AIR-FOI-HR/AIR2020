@@ -33,6 +33,12 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
+    //cancel request call if the view closes
+    override fun onCleared() {
+        viewModelJob.cancel()
+        super.onCleared()
+    }
+
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AttendanceViewModel::class.java)) {

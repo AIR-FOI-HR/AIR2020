@@ -11,7 +11,7 @@ import hr.foi.academiclifestyle.database.dao.UserDao
 import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Subject
 
-@Database(entities = [User::class, Event::class, Subject::class], version = 4, exportSchema = false)
+@Database(entities = [User::class, Event::class, Subject::class], version = 5, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
     abstract val userDao: UserDao
     abstract val eventDao: EventDao

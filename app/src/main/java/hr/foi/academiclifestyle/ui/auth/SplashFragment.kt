@@ -44,9 +44,17 @@ class SplashFragment : Fragment() {
             val doSleep = (activity as AuthActivity).intent.getStringExtra("PreventSleep") == "True"
             if (!doSleep)
                 Thread.sleep(500) //this is the cause of skipped frames!
-            if (it != null && it.jwtToken != "") {
+            if (it != null && it.jwtToken != "" && it.rememberMe) {
                 (activity as AuthActivity?)?.switchActivities()
+            } else if (it != null) {
+                viewModel.clearUser()
             } else {
+                (activity as AuthActivity?)?.switchFragment(0)
+            }
+        })
+        viewModel.userDeleted.observe(viewLifecycleOwner, Observer {
+            if (it != null && it) {
+                viewModel.resetEvents()
                 (activity as AuthActivity?)?.switchFragment(0)
             }
         })

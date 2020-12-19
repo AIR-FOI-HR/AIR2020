@@ -34,7 +34,6 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
         tokenChecked = true
         coroutineScope.launch {
             try {
-                Log.i("usertoken", user.jwtToken!!)
                 val validRes = repository.checkUserToken(user.jwtToken!!)
                 _valid.value = validRes
             } catch (ex: Exception) {

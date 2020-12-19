@@ -25,9 +25,9 @@ class MainRepository (private val database: LocalDatabase) {
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
         withContext(Dispatchers.IO) {
             val response = NetworkApi.networkService.postLogin(loginRequest).await()
-            var jwtToken : String = ""
+            var rememberMe : Boolean = false
             if (rememberUser)
-                jwtToken = response.jwt
+                rememberMe = true
             if (response.jwt != "") {
                 val program = response.user?.program?.id
                 val user = User (
@@ -38,7 +38,8 @@ class MainRepository (private val database: LocalDatabase) {
                     response.user.year,
                     program,
                     "",
-                    jwtToken
+                    response.jwt,
+                    rememberMe
                 )
                 database.userDao.clear()
                 database.userDao.insert(user)
@@ -68,7 +69,8 @@ class MainRepository (private val database: LocalDatabase) {
                         response.year,
                         program,
                         "",
-                        token
+                        token,
+                        true
                 )
                 database.userDao.clear()
                 //comment out the next line and return false to simulate token expiration

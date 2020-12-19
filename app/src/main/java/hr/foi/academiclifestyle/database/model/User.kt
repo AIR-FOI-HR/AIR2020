@@ -23,5 +23,7 @@ data class User (
     val profilePicture: String? = "",
 
     @ColumnInfo(name = "jwt_token")
-    val jwtToken: String? = ""
+    val jwtToken: String? = "",
+
+    val rememberMe: Boolean = false
 )
