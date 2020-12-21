@@ -1,9 +1,14 @@
 package hr.foi.academiclifestyle.ui.settings
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.graphics.Picture
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.util.Log
+import androidx.core.graphics.drawable.toAdaptiveIcon
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.database.model.User
@@ -30,20 +35,20 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _lastName = MutableLiveData<String>()
     val lastName: LiveData<String> get() = _lastName
 
-    private val _password = MutableLiveData<String>()
-    val password: LiveData<String> get() = _password
+    private val _email = MutableLiveData<String>()
+    val email: LiveData<String> get() = _email
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String> get() = _username
 
-    private val _study = MutableLiveData<String>()
-    val study: LiveData<String> get() = _study
+    private val _study = MutableLiveData<Int>()
+    val study: LiveData<Int> get() = _study
 
     private val _yearOfStudy = MutableLiveData<Int>()
     val yearOfStudy: LiveData<Int> get() = _yearOfStudy
 
-    private val _picture = MutableLiveData<Picture>()
-    val picture: LiveData<Picture> get() = _picture
+    private val _picture = MutableLiveData<Bitmap>()
+    val picture: LiveData<Bitmap> get() = _picture
 
 
     private var viewModelJob = Job()
@@ -54,30 +59,23 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val user =repository.user
 
     fun updateUser() {
-        if (_firstName.value == null || _firstName.value == "" ||
-                _lastName.value == null || _lastName.value == "" ||
-                _study.value == null || _study.value == "" ||
-                _yearOfStudy.value == null || _yearOfStudy.value == 0
 
-        ) {
-
-        } else {
             //construct UserRequest
             val userRequest: UserRequest =
                     UserRequest(
                             _firstName.value.toString(),
                             _lastName.value.toString(),
-                            _password.value.toString(),
-                            _username.value.toString(),
-                            //_study.value.toString(),
+                            _study.value!!.toInt(),
                             _yearOfStudy.value!!.toInt()
-                           // _picture.value.toString()
+                           // _picture.value!!
                     )
 
             //send request
             coroutineScope.launch {
                 try {
-                     repository.updateUser(userRequest, user?.value?.jwtToken!!)
+                     repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
+                    _responseType.value = 1
+
                } catch (ex: Exception) {
                     if (ex is SocketTimeoutException)
                         _responseType.value = 3
@@ -88,7 +86,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     else
                         Log.i("CoroutineInfo error", ex.message.toString())
                 }
-            }
+
         }
     }
 
@@ -106,21 +104,33 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         _lastName.value = s.toString()
     }
 
-    fun setPassword(s: Editable){
-        _password.value = s.toString()
+    fun setEmail(s: Editable){
+        _email.value = s.toString()
     }
 
     fun setUserName(s: Editable){
         _username.value = s.toString()
     }
 
-    fun setStudy(s: Editable){
-        _study.value = s.toString()
+    fun setStudy(s: Int){
+        try{
+        _study.value = s.toString().toInt()
+        } catch(ex :Exception){}
     }
 
     fun setYearOfStudy(s: Editable){
-        _yearOfStudy.value = s.toString().toInt()
+        try {
+            _yearOfStudy.value = s.toString().toInt()
+        }catch(ex: Exception){}
     }
+
+    fun setPicture(s : Bitmap){
+        try{
+        _picture.value = s}
+        catch(ex : Exception){}
+    }
+
+
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

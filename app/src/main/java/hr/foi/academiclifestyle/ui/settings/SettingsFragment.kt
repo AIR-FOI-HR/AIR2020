@@ -1,29 +1,45 @@
 package hr.foi.academiclifestyle.ui.settings
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
+import hr.foi.academiclifestyle.ui.MainActivity
+
+import android.Manifest.*
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build.*
+import android.util.Base64
+import android.widget.Toast
+import androidx.core.view.drawToBitmap
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.util.jar.Manifest
 
 
-class SettingsFragment: Fragment() {
+class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
     private val viewModel: SettingsViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
@@ -33,14 +49,17 @@ class SettingsFragment: Fragment() {
     private lateinit var txtFirstName: EditText
     private lateinit var txtLastName: EditText
     private lateinit var txtUsername: EditText
-    private lateinit var txtPassword: EditText
-    private lateinit var txtStudy: EditText
+    private lateinit var txtEmail: EditText
     private lateinit var txtYearOfStudy: EditText
     private lateinit var btnUpdateUser : Button
+    private lateinit var btnChoosePicture : Button
+    private lateinit var program :Spinner
+    private lateinit var image : ImageView
+    private lateinit var bitmapImage : Bitmap
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val binding = DataBindingUtil.inflate<FragmentSettingsBinding>(inflater, R.layout.fragment_settings, container, false)
 
@@ -50,11 +69,27 @@ class SettingsFragment: Fragment() {
         txtFirstName = binding.editTextTextPersonName
         txtLastName = binding.editTextTextPersonLastName
         txtUsername = binding.editTextTextUsername
-        txtPassword = binding.editTextTextPasword
-        txtStudy = binding.editTextStudy
+        txtEmail = binding.editTextTextEmail
         txtYearOfStudy = binding.editTextYearOfStudy
         btnUpdateUser = binding.btnSaveSettings
+        btnChoosePicture = binding.btnSettingsChooseImage
+        program = binding.spinner
+        image = binding.imageView
 
+
+        //Create spinner
+        ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.programs_array,
+                R.layout.spinner_programs
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(R.layout.spinner_drop_down)
+            // Apply the adapter to the spinner
+            program.adapter = adapter
+
+            program.onItemSelectedListener = this
+        }
 
         //Update users on button event click
         btnUpdateUser.setOnClickListener(){
@@ -70,37 +105,72 @@ class SettingsFragment: Fragment() {
             viewModel.setLastName(binding.editTextTextPersonLastName.text)
         }
 
-        txtPassword.doAfterTextChanged {
-            viewModel.setPassword(binding.editTextTextPasword.text)
+        txtEmail.doAfterTextChanged {
+            viewModel.setEmail(binding.editTextTextEmail.text)
         }
 
         txtUsername.doAfterTextChanged {
             viewModel.setUserName(binding.editTextTextUsername.text)
         }
 
-        txtStudy.doAfterTextChanged {
-            viewModel.setStudy(binding.editTextStudy.text)
-        }
-
         txtYearOfStudy.doAfterTextChanged {
             viewModel.setYearOfStudy(binding.editTextYearOfStudy.text)
         }
 
+
+        //Choose picture
+        btnChoosePicture.setOnClickListener(){
+                pickImageFromGallery();
+            }
+
+
+
         setupObservers()
+        setThemeOptions()
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        //viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
-        // TODO: Use the ViewModel
-
-        setThemeOptions()
-
-    }
 
     private fun setupObservers(){
         viewModel.user?.observe(viewLifecycleOwner, Observer {
+            if(it != null) {
+                if (it.name != null) {
+                    txtFirstName.text = Editable.Factory.getInstance().newEditable(it.name)
+                }
+                if (it.surname != null) {
+                    txtLastName.text = Editable.Factory.getInstance().newEditable(it.surname)
+                }
+
+                if (it.username != null) {
+                    txtUsername.text = Editable.Factory.getInstance().newEditable(it.username)
+                }
+                if (it.email != null) {
+                    txtEmail.text = Editable.Factory.getInstance().newEditable(it.email)
+                }
+
+                if (it.program != null) {
+                    if (it.program == 1) {
+                        program.setSelection(0)
+                    } else {
+                        program.setSelection(1)
+                    }
+                }
+
+                if (it.year != null) {
+                    txtYearOfStudy.text =
+                        Editable.Factory.getInstance().newEditable(it.year.toString())
+                }
+            }
+
+
+        })
+
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                1 -> Toast.makeText(activity as MainActivity?, "Profile updated!", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(activity as MainActivity?, "You dont have permission!", Toast.LENGTH_SHORT).show()
+                3 -> Toast.makeText(activity as MainActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
@@ -121,14 +191,79 @@ class SettingsFragment: Fragment() {
         val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked), intArrayOf())
 
         val colors = intArrayOf(
-            (activity as MainActivity).getColor(R.color.grey_80), //unchecked
-            (activity as MainActivity).getColor(R.color.grey_60), //checked
-            (activity as MainActivity).getColor(R.color.grey_80)) //default
+                (activity as MainActivity).getColor(R.color.grey_80), //unchecked
+                (activity as MainActivity).getColor(R.color.grey_60), //checked
+                (activity as MainActivity).getColor(R.color.grey_80)) //default
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
         navView?.setItemTextColor(navigationViewColorStateList)
         navView?.setItemIconTintList(navigationViewColorStateList)
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val text: String = parent?.getItemAtPosition(position).toString()
+
+        if(text == "Informacijski i poslovni sustavi"){
+            viewModel.setStudy(1)
+        }
+
+        if(text == "Informacijsko i programsko inženjerstvo"){
+            viewModel.setStudy(2)
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        val text: String = parent.toString()
+
+        if(text == "Informacijski i poslovni sustavi"){
+            viewModel.setStudy(1)
+        }
+
+        if(text == "Informacijsko i programsko inženjerstvo"){
+            viewModel.setStudy(2)
+        }
+    }
+
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+        image.visibility = View.VISIBLE
+
+    }
+
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000;
+        //Permission code
+        private val PERMISSION_CODE = 1001;
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            PERMISSION_CODE -> {
+                if (grantResults.size >0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED){
+                    //permission from popup granted
+                    pickImageFromGallery()
+                }
+                else{
+
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            image.setImageURI(data?.data)
+            try {
+                viewModel.setPicture(image.drawToBitmap())
+            }catch(ex :Exception){}
+        }
     }
 
 }

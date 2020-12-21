@@ -38,13 +38,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:autofillHints=""
                 android:ems="10"
-                android:filterTouchesWhenObscured="true"
-                android:focusableInTouchMode="true"
+                android:focusable="auto"
                 android:inputType="text"
                 android:labelFor="@id/txtSettingsFirstName"
-                android:textColor="@color/grey_80"
+                android:textColor="@color/grey_60"
                 android:textSize="20sp"
                 android:theme="@style/MyEditTextStyle2" />
 
@@ -72,14 +70,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:autofillHints=""
                 android:ems="10"
-                android:inputType="textPersonName|text"
+                android:inputType="text"
                 android:labelFor="@id/txtSettingsLastName"
                 android:textColor="@color/grey_60"
                 android:textSize="20sp"
-                android:theme="@style/MyEditTextStyle2"
-                />
+                android:theme="@style/MyEditTextStyle2" />
 
         </LinearLayout>
 
@@ -104,14 +100,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:autofillHints=""
                 android:ems="10"
-                android:inputType="text"
+                android:enabled="false"
                 android:labelFor="@id/txtSettingUsername"
                 android:textColor="@color/grey_60"
                 android:textSize="20sp"
-                android:theme="@style/MyEditTextStyle2"
-                />
+                android:theme="@style/MyEditTextStyle2" />
 
         </LinearLayout>
 
@@ -123,26 +117,26 @@
             >
 
             <TextView
-                android:id="@+id/txtSettingsPassword"
+                android:id="@+id/txtSettingsEmail"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="@string/txtSettingsPassword"
+                android:text="Email"
                 android:textColor="@color/grey_60"
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/editTextTextPasword"
+                android:id="@+id/editTextTextEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
+                android:editable="false"
                 android:ems="10"
-                android:inputType="text"
-                android:labelFor="@id/txtSettingsPassword"
+                android:enabled="false"
+                android:labelFor="@id/txtSettingsEmail"
                 android:textColor="@color/grey_60"
                 android:textSize="20sp"
-                android:theme="@style/MyEditTextStyle2"
-                />
+                android:theme="@style/MyEditTextStyle2" />
 
         </LinearLayout>
 
@@ -154,25 +148,32 @@
             >
 
             <TextView
+
                 android:id="@+id/txtSettingsStudy"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
+
+                android:layout_gravity="center_vertical"
                 android:text="@string/study"
                 android:textColor="@color/grey_60"
                 android:textSize="22sp" />
 
-            <EditText
-                android:id="@+id/editTextStudy"
+
+            <Spinner
+                android:id="@+id/spinner"
+                style="@style/MyEditTextStyle2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:labelFor="@id/txtSettingsStudy"
-                android:textColor="@color/grey_60"
-                android:textSize="20sp"
-                android:theme="@style/MyEditTextStyle2"
+                android:background="@drawable/spinner_bg"
+                android:dropDownWidth="300dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:paddingRight="14dp"
+                android:popupBackground="@android:color/white"
+                android:popupElevation="3dp"
+                android:stateListAnimator="@drawable/spinner_sla"
+
                 />
 
         </LinearLayout>
@@ -206,6 +207,23 @@
                 android:theme="@style/MyEditTextStyle2"
                 />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:scaleType="centerCrop"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:visibility="gone"
+
+                />
         </LinearLayout>
 
         <RelativeLayout

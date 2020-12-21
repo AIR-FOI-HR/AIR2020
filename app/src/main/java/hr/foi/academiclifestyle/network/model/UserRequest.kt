@@ -1,11 +1,13 @@
 package hr.foi.academiclifestyle.network.model
 
+import android.graphics.Bitmap
+import android.graphics.Picture
+import android.graphics.drawable.Drawable
+
 data  class UserRequest(
         val name: String,
         val surname: String,
-        val password: String,
-        val username: String,
-        //val program: String,
+        val program: Int,
         val year: Int
-       // val picture: String
+        //val profile_picture: Bitmap
 )

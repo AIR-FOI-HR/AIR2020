@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="programs_array">
+        <item>Informacijski i poslovni sustavi</item>
+        <item>Informacijsko i programsko inženjerstvo</item>
+    </string-array>
+</resources>

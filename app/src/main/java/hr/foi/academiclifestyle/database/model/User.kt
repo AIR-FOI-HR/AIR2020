@@ -13,6 +13,8 @@ data class User (
 
     val surname: String? = "",
 
+    val username: String? = "",
+
     val email: String? = "",
 
     val year: String? = "",

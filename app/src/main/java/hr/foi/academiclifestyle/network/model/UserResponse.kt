@@ -1,5 +1,6 @@
 package hr.foi.academiclifestyle.network.model
 
+import android.graphics.Bitmap
 import com.squareup.moshi.Json
 
 data class UserResponse (

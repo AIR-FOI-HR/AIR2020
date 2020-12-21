@@ -34,6 +34,7 @@ class MainRepository (private val database: LocalDatabase) {
                     response.user!!.id,
                     response.user.name,
                     response.user.surname,
+                    response.user.username,
                     response.user.email,
                     response.user.year,
                     program,
@@ -65,6 +66,7 @@ class MainRepository (private val database: LocalDatabase) {
                         response.id,
                         response.name,
                         response.surname,
+                        response.username,
                         response.email,
                         response.year,
                         program,
@@ -89,11 +91,27 @@ class MainRepository (private val database: LocalDatabase) {
         }
     }
 
-    suspend fun updateUser(userRequest: UserRequest,token: String) :Boolean{
+    suspend fun updateUser(userRequest: UserRequest,token: String, rememberMe : Boolean) :Boolean{
 
         return withContext(Dispatchers.IO) {
 
             val response = NetworkApi.networkService.updateUser("Bearer $token", userRequest).await()
+
+            //val program = response?.program?.id
+            val user = User (
+                response!!.id,
+                response.name,
+                response.surname,
+                response.username,
+                response.email,
+                response.year,
+                response.program?.id,
+                "",
+                token,
+                rememberMe
+            )
+            database.userDao.clear()
+            database.userDao.insert(user)
 
             response.logToken != ""
         }
