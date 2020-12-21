@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -93,6 +92,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
         //Update users on button event click
         btnUpdateUser.setOnClickListener(){
+            toggleButtonState(false, "...", "grey")
             viewModel.updateUser()
         }
 
@@ -130,6 +130,17 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         return binding.root
     }
 
+    fun toggleButtonState(state: Boolean, text: String, color: String) {
+        val colorRs = when (color) {
+            "red" -> R.color.foi_red
+            "grey" -> R.color.grey_30
+            else -> R.color.foi_red
+        }
+        btnUpdateUser.setBackgroundTintList(ContextCompat.getColorStateList((activity as MainActivity), colorRs))
+        btnUpdateUser.setText(text)
+        btnUpdateUser.isEnabled = state
+        btnUpdateUser.isClickable = state
+    }
 
     private fun setupObservers(){
         viewModel.user?.observe(viewLifecycleOwner, Observer {
@@ -166,6 +177,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         })
 
         viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            toggleButtonState(true, getString(R.string.saveSettings), "red")
             when (it) {
                 1 -> Toast.makeText(activity as MainActivity?, "Profile updated!", Toast.LENGTH_SHORT).show()
                 2 -> Toast.makeText(activity as MainActivity?, "You dont have permission!", Toast.LENGTH_SHORT).show()
