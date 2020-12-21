@@ -42,6 +42,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
         binding = DataBindingUtil.inflate<FragmentMyclassesScheduleBinding>(inflater, R.layout.fragment_myclasses_schedule, container, false)
 
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
+        startAnimation()
 
         // Call getEvents each time the user picks a date
         // A mask is used here to prevent rapid calls
