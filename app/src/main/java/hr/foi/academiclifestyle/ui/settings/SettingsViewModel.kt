@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.core.graphics.drawable.toAdaptiveIcon
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.net.toUri
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.database.model.User
+import hr.foi.academiclifestyle.network.model.ImageRequest
 import hr.foi.academiclifestyle.network.model.UserRequest
 import hr.foi.academiclifestyle.repository.MainRepository
 import hr.foi.academiclifestyle.ui.auth.LoginViewModel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -47,8 +50,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _yearOfStudy = MutableLiveData<Int>()
     val yearOfStudy: LiveData<Int> get() = _yearOfStudy
 
-    private val _picture = MutableLiveData<Bitmap>()
-    val picture: LiveData<Bitmap> get() = _picture
+    private val _picture = MutableLiveData<Int>()
+    val picture : LiveData<Int> get() = _picture
+
+    private val _imageFile = MutableLiveData<Bitmap>()
+    val imageFile: LiveData<Bitmap> get() = _imageFile
 
 
     private var viewModelJob = Job()
@@ -60,19 +66,26 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun updateUser() {
 
-            //construct UserRequest
-            val userRequest: UserRequest =
-                    UserRequest(
-                            _firstName.value.toString(),
-                            _lastName.value.toString(),
-                            _study.value!!.toInt(),
-                            _yearOfStudy.value!!.toInt()
-                           // _picture.value!!
-                    )
+            //Construct image request
+           /* val imageRequest : ImageRequest = ImageRequest(
+                    imageFile.value!!
+            )*/
 
             //send request
             coroutineScope.launch {
                 try {
+                      //  val id = repository.uploadPicture(imageRequest, user?.value?.jwtToken!!)
+
+                    //construct UserRequest
+                    val userRequest: UserRequest =
+                            UserRequest(
+                                    _firstName.value.toString(),
+                                    _lastName.value.toString(),
+                                    _study.value!!.toInt(),
+                                    _yearOfStudy.value!!.toInt(),
+                                    0
+                            )
+
                      repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
                     _responseType.value = 1
 
@@ -126,7 +139,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setPicture(s : Bitmap){
         try{
-        _picture.value = s}
+        _imageFile.value = s}
         catch(ex : Exception){}
     }
 

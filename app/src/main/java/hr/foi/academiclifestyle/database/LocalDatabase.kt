@@ -11,7 +11,7 @@ import hr.foi.academiclifestyle.database.dao.UserDao
 import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Subject
 
-@Database(entities = [User::class, Event::class, Subject::class], version = 5, exportSchema = false)
+@Database(entities = [User::class, Event::class, Subject::class], version = 7, exportSchema = false)
 abstract class LocalDatabase : RoomDatabase() {
     abstract val userDao: UserDao
     abstract val eventDao: EventDao
@@ -25,7 +25,8 @@ fun getDatabase(context: Context): LocalDatabase {
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
                 LocalDatabase::class.java,
-                "localDb").build()
+                "localDb").fallbackToDestructiveMigration().build()
+
         }
     }
     return INSTANCE

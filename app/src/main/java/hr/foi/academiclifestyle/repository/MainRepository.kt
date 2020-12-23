@@ -7,10 +7,7 @@ import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
-import hr.foi.academiclifestyle.network.model.LoginRequest
-import hr.foi.academiclifestyle.network.model.RegisterRequest
-import hr.foi.academiclifestyle.network.model.UserRequest
-import hr.foi.academiclifestyle.network.model.UserResponse
+import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,6 +17,7 @@ class MainRepository (private val database: LocalDatabase) {
     val user: LiveData<User>? = database.userDao.getUser()
     val events: LiveData<List<Event>>? = database.eventDao.getEvents()
     val subjects: LiveData<List<Subject>>? = database.subjectDao.getSubjects()
+    var imageId : Int = 0
 
     //User
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
@@ -38,7 +36,7 @@ class MainRepository (private val database: LocalDatabase) {
                     response.user.email,
                     response.user.year,
                     program,
-                    "",
+                    imageId,
                     response.jwt,
                     rememberMe
                 )
@@ -70,7 +68,7 @@ class MainRepository (private val database: LocalDatabase) {
                         response.email,
                         response.year,
                         program,
-                        "",
+                        imageId,
                         token,
                         true
                 )
@@ -106,7 +104,7 @@ class MainRepository (private val database: LocalDatabase) {
                 response.email,
                 response.year,
                 response.program?.id,
-                "",
+                imageId,
                 token,
                 rememberMe
             )
@@ -114,6 +112,13 @@ class MainRepository (private val database: LocalDatabase) {
             database.userDao.insert(user)
 
             response.logToken != ""
+        }
+    }
+
+    suspend fun uploadPicture(imageRequest : ImageRequest, token : String?) : Int{
+        return withContext(Dispatchers.IO){
+            val response = NetworkApi.networkService.uploadPicture("Bearer $token", imageRequest).await()
+            response!!.id
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -13,7 +14,8 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.FileProvider.getUriForFile
+import androidx.core.view.drawToBitmap
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,26 +25,16 @@ import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
 import hr.foi.academiclifestyle.ui.MainActivity
-
-import android.Manifest.*
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build.*
-import android.util.Base64
-import android.widget.Toast
-import androidx.core.view.drawToBitmap
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.util.jar.Manifest
+import java.io.File
 
 
 class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
     private val viewModel: SettingsViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
-        ViewModelProvider(this, SettingsViewModel.Factory(activity.application)).get(SettingsViewModel::class.java)
+        ViewModelProvider(this, SettingsViewModel.Factory(activity.application)).get(
+            SettingsViewModel::class.java
+        )
     }
 
     private lateinit var txtFirstName: EditText
@@ -54,13 +46,18 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var btnChoosePicture : Button
     private lateinit var program :Spinner
     private lateinit var image : ImageView
-    private lateinit var bitmapImage : Bitmap
+    private lateinit var imageFile : File
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentSettingsBinding>(inflater, R.layout.fragment_settings, container, false)
+        val binding = DataBindingUtil.inflate<FragmentSettingsBinding>(
+            inflater,
+            R.layout.fragment_settings,
+            container,
+            false
+        )
 
 
         binding.lifecycleOwner = this
@@ -78,9 +75,9 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
         //Create spinner
         ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.programs_array,
-                R.layout.spinner_programs
+            requireContext(),
+            R.array.programs_array,
+            R.layout.spinner_programs
         ).also { adapter ->
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(R.layout.spinner_drop_down)
@@ -136,7 +133,12 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
             "grey" -> R.color.grey_30
             else -> R.color.foi_red
         }
-        btnUpdateUser.setBackgroundTintList(ContextCompat.getColorStateList((activity as MainActivity), colorRs))
+        btnUpdateUser.setBackgroundTintList(
+            ContextCompat.getColorStateList(
+                (activity as MainActivity),
+                colorRs
+            )
+        )
         btnUpdateUser.setText(text)
         btnUpdateUser.isEnabled = state
         btnUpdateUser.isClickable = state
@@ -144,7 +146,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun setupObservers(){
         viewModel.user?.observe(viewLifecycleOwner, Observer {
-            if(it != null) {
+            if (it != null) {
                 if (it.name != null) {
                     txtFirstName.text = Editable.Factory.getInstance().newEditable(it.name)
                 }
@@ -179,9 +181,21 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         viewModel.responseType.observe(viewLifecycleOwner, Observer {
             toggleButtonState(true, getString(R.string.saveSettings), "red")
             when (it) {
-                1 -> Toast.makeText(activity as MainActivity?, "Profile updated!", Toast.LENGTH_SHORT).show()
-                2 -> Toast.makeText(activity as MainActivity?, "You dont have permission!", Toast.LENGTH_SHORT).show()
-                3 -> Toast.makeText(activity as MainActivity?, "Server Error, please try again!", Toast.LENGTH_SHORT).show()
+                1 -> Toast.makeText(
+                    activity as MainActivity?,
+                    "Profile updated!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                2 -> Toast.makeText(
+                    activity as MainActivity?,
+                    "You dont have permission!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                3 -> Toast.makeText(
+                    activity as MainActivity?,
+                    "Server Error, please try again!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
@@ -191,21 +205,41 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         val toolbar = (activity as MainActivity?)?.findViewById<Toolbar>(R.id.toolbar)
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
         imageView?.setImageResource(R.drawable.ic_cogwheel)
-        toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.grey_60))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.grey_60));
-        navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.grey_60))
+        toolbar?.setBackgroundColor(
+            ContextCompat.getColor(
+                activity as MainActivity,
+                R.color.grey_60
+            )
+        )
+        (activity as MainActivity?)?.window?.setStatusBarColor(
+            ContextCompat.getColor(
+                activity as MainActivity,
+                R.color.grey_60
+            )
+        );
+        navHeader?.setBackgroundColor(
+            ContextCompat.getColor(
+                activity as MainActivity,
+                R.color.grey_60
+            )
+        )
 
         setNavigationColors()
     }
 
     fun setNavigationColors() {
         val navView = (activity as MainActivity?)?.findViewById<NavigationView>(R.id.navView)
-        val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked), intArrayOf())
+        val states = arrayOf(
+            intArrayOf(-android.R.attr.state_checked),
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf()
+        )
 
         val colors = intArrayOf(
-                (activity as MainActivity).getColor(R.color.grey_80), //unchecked
-                (activity as MainActivity).getColor(R.color.grey_60), //checked
-                (activity as MainActivity).getColor(R.color.grey_80)) //default
+            (activity as MainActivity).getColor(R.color.grey_80), //unchecked
+            (activity as MainActivity).getColor(R.color.grey_60), //checked
+            (activity as MainActivity).getColor(R.color.grey_80)
+        ) //default
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
@@ -254,15 +288,19 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when(requestCode){
             PERMISSION_CODE -> {
-                if (grantResults.size >0 && grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED){
+                if (grantResults.size > 0 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
                     //permission from popup granted
                     pickImageFromGallery()
-                }
-                else{
+                } else {
 
                 }
             }
@@ -272,9 +310,10 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             image.setImageURI(data?.data)
+
             try {
                 viewModel.setPicture(image.drawToBitmap())
-            }catch(ex :Exception){}
+            }catch (ex: Exception){}
         }
     }
 

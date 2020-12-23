@@ -34,6 +34,10 @@ interface DatabaseApiService {
 
     @GET("subjects")
     fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
+
+    @POST ("upload")
+    fun uploadPicture(@Header("Authorization") authorization: String,
+                      @Body body: ImageRequest?) : Deferred<ImageResponse>
 }
 
 object NetworkApi {

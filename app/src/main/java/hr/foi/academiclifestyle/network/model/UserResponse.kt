@@ -33,5 +33,5 @@ data class UserResponse (
     @field:Json(name = "@program")
     val program: Program? = null,
     @field:Json(name = "@profile_picture")
-    val profile_picture: String? = ""
+    val profile_picture: ProfilePicture? =  null
 )
