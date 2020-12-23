@@ -53,8 +53,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _picture = MutableLiveData<Int>()
     val picture : LiveData<Int> get() = _picture
 
-    private val _imageFile = MutableLiveData<Bitmap>()
-    val imageFile: LiveData<Bitmap> get() = _imageFile
+    private val _imageFile = MutableLiveData<File>()
+    val imageFile: LiveData<File> get() = _imageFile
 
 
     private var viewModelJob = Job()
@@ -67,14 +67,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun updateUser() {
 
             //Construct image request
-           /* val imageRequest : ImageRequest = ImageRequest(
+            val imageRequest : ImageRequest = ImageRequest(
                     imageFile.value!!
-            )*/
+            )
 
             //send request
             coroutineScope.launch {
                 try {
-                      //  val id = repository.uploadPicture(imageRequest, user?.value?.jwtToken!!)
+                        val id = repository.uploadPicture(imageFile.value!!, user?.value?.jwtToken!!)
 
                     //construct UserRequest
                     val userRequest: UserRequest =
@@ -83,7 +83,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                                     _lastName.value.toString(),
                                     _study.value!!.toInt(),
                                     _yearOfStudy.value!!.toInt(),
-                                    0
+                                    id
                             )
 
                      repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
@@ -137,7 +137,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }catch(ex: Exception){}
     }
 
-    fun setPicture(s : Bitmap){
+    fun setPicture(s : File){
         try{
         _imageFile.value = s}
         catch(ex : Exception){}

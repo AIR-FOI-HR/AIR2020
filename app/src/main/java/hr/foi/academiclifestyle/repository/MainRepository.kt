@@ -10,6 +10,7 @@ import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class MainRepository (private val database: LocalDatabase) {
 
@@ -115,9 +116,9 @@ class MainRepository (private val database: LocalDatabase) {
         }
     }
 
-    suspend fun uploadPicture(imageRequest : ImageRequest, token : String?) : Int{
+    suspend fun uploadPicture(file : File, token : String?) : Int {
         return withContext(Dispatchers.IO){
-            val response = NetworkApi.networkService.uploadPicture("Bearer $token", imageRequest).await()
+            val response = NetworkApi.networkService.uploadPicture("Bearer $token", file).await()
             response!!.id
         }
     }

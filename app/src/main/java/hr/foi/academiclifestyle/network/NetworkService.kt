@@ -1,13 +1,16 @@
 package hr.foi.academiclifestyle.network
 
+import android.media.Image
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
+import java.io.File
 
 private const val BASE_URL = "https://air-analyzer.herokuapp.com/"
 
@@ -35,9 +38,10 @@ interface DatabaseApiService {
     @GET("subjects")
     fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
 
+    @FormUrlEncoded
     @POST ("upload")
     fun uploadPicture(@Header("Authorization") authorization: String,
-                      @Body body: ImageRequest?) : Deferred<ImageResponse>
+                      @Field("files") file : File) : Deferred<ImageResponse>
 }
 
 object NetworkApi {

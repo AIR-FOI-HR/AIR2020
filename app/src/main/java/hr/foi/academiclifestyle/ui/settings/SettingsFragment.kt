@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Picture
 import android.net.Uri
+import android.os.Build
+import android.os.Build.*
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -14,8 +17,7 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider.getUriForFile
-import androidx.core.view.drawToBitmap
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -26,6 +28,7 @@ import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
 import hr.foi.academiclifestyle.ui.MainActivity
 import java.io.File
+import android.Manifest
 
 
 class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
@@ -117,8 +120,24 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
         //Choose picture
         btnChoosePicture.setOnClickListener(){
+            if (VERSION.SDK_INT >= VERSION_CODES.M){
+                if (checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_DENIED){
+                    //permission denied
+                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    //show popup to request runtime permission
+                    requestPermissions(permissions, PERMISSION_CODE);
+                }
+                else{
+                    //permission already granted
+                    pickImageFromGallery();
+                }
+            }
+            else{
+                //system OS is < Marshmallow
                 pickImageFromGallery();
             }
+        }
 
 
 
@@ -276,7 +295,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
-        image.visibility = View.VISIBLE
+
 
     }
 
@@ -310,10 +329,12 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             image.setImageURI(data?.data)
-
+             val uri : String = data?.dataString!!
+            imageFile = File(uri)
             try {
-                viewModel.setPicture(image.drawToBitmap())
+                viewModel.setPicture(imageFile)
             }catch (ex: Exception){}
+            image.visibility = View.VISIBLE
         }
     }
 
