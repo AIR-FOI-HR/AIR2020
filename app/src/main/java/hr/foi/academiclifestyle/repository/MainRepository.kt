@@ -7,10 +7,16 @@ import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
-import hr.foi.academiclifestyle.network.model.*
+import hr.foi.academiclifestyle.network.model.LoginRequest
+import hr.foi.academiclifestyle.network.model.RegisterRequest
+import hr.foi.academiclifestyle.network.model.UserRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
+
 
 class MainRepository (private val database: LocalDatabase) {
 
@@ -118,7 +124,9 @@ class MainRepository (private val database: LocalDatabase) {
 
     suspend fun uploadPicture(file : File, token : String?) : Int {
         return withContext(Dispatchers.IO){
-            val response = NetworkApi.networkService.uploadPicture("Bearer $token", file).await()
+            // this creates the multipart body with the image
+            val filePart = MultipartBody.Part.createFormData("file", file.name, RequestBody.create(MediaType.parse("image/*"), file))
+            val response = NetworkApi.networkService.uploadPicture("Bearer $token", filePart).await()
             response!!.id
         }
     }

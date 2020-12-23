@@ -38,10 +38,10 @@ interface DatabaseApiService {
     @GET("subjects")
     fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
 
-    @FormUrlEncoded
+    @Multipart
     @POST ("upload")
     fun uploadPicture(@Header("Authorization") authorization: String,
-                      @Field("files") file : File) : Deferred<ImageResponse>
+                      @Part file : MultipartBody.Part) : Deferred<ImageResponse>
 }
 
 object NetworkApi {

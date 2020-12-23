@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.File
 import java.net.SocketTimeoutException
+import java.net.URI
 import java.net.UnknownHostException
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -74,7 +75,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             //send request
             coroutineScope.launch {
                 try {
-                        val id = repository.uploadPicture(imageFile.value!!, user?.value?.jwtToken!!)
+                    val id = repository.uploadPicture(imageFile.value!!, user?.value?.jwtToken!!)
 
                     //construct UserRequest
                     val userRequest: UserRequest =

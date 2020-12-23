@@ -29,6 +29,8 @@ import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
 import hr.foi.academiclifestyle.ui.MainActivity
 import java.io.File
 import android.Manifest
+import android.util.Log
+import androidx.core.net.toUri
 
 
 class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
@@ -329,7 +331,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             image.setImageURI(data?.data)
-             val uri : String = data?.dataString!!
+            val uri : String = data?.dataString!!
             imageFile = File(uri)
             try {
                 viewModel.setPicture(imageFile)
