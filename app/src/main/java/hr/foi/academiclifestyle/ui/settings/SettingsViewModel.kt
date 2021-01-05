@@ -1,22 +1,13 @@
 package hr.foi.academiclifestyle.ui.settings
 
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.Picture
-import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.util.Log
-import androidx.core.graphics.drawable.toAdaptiveIcon
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.net.toUri
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
-import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.model.ImageRequest
 import hr.foi.academiclifestyle.network.model.UserRequest
 import hr.foi.academiclifestyle.repository.MainRepository
-import hr.foi.academiclifestyle.ui.auth.LoginViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,7 +15,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.File
 import java.net.SocketTimeoutException
-import java.net.URI
 import java.net.UnknownHostException
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -54,7 +44,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _picture = MutableLiveData<Int>()
     val picture : LiveData<Int> get() = _picture
 
-    private val _imageFile = MutableLiveData<File>()
+    private var _imageFile = MutableLiveData<File>()
     val imageFile: LiveData<File> get() = _imageFile
 
 
@@ -62,21 +52,22 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
+    //private lateinit var file1: File
 
     val user =repository.user
 
     fun updateUser() {
 
             //Construct image request
-            val imageRequest : ImageRequest = ImageRequest(
-                    imageFile.value!!
-            )
-
             //send request
-            coroutineScope.launch {
-                try {
-                    val id = repository.uploadPicture(imageFile.value!!, user?.value?.jwtToken!!)
 
+            coroutineScope.launch {
+
+                try {
+                    var id =user?.value?.profilePicture!!
+                    if(_imageFile.value != null) {
+                        id = repository.uploadPicture(_imageFile.value!!, user?.value?.jwtToken!!)
+                    }
                     //construct UserRequest
                     val userRequest: UserRequest =
                             UserRequest(
@@ -86,17 +77,18 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                                     _yearOfStudy.value!!.toInt(),
                                     id
                             )
-
                      repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
                     _responseType.value = 1
+
 
                } catch (ex: Exception) {
                     if (ex is SocketTimeoutException)
                         _responseType.value = 3
                     else if (ex is UnknownHostException)
                         _responseType.value = 3
-                    else if (ex is HttpException)
+                    else if (ex is HttpException) {
                         _responseType.value = 2
+                    }
                     else
                         Log.i("CoroutineInfo error", ex.message.toString())
                 }
@@ -140,7 +132,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setPicture(s : File){
         try{
-        _imageFile.value = s}
+        _imageFile.value = s
+        //file1 = s
+        }
         catch(ex : Exception){}
     }
 

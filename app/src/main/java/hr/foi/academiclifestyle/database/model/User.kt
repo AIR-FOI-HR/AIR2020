@@ -22,7 +22,7 @@ data class User (
     val program: Int? = 0,
 
     @ColumnInfo(name = "profile_picture")
-    val profilePicture: Int = 0,
+    val profilePicture: Int? = 0,
 
     @ColumnInfo(name = "jwt_token")
     val jwtToken: String? = "",

@@ -6,7 +6,10 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Deferred
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
@@ -41,7 +44,11 @@ interface DatabaseApiService {
     @Multipart
     @POST ("upload")
     fun uploadPicture(@Header("Authorization") authorization: String,
-                      @Part file : MultipartBody.Part) : Deferred<ImageResponse>
+                      @Part files : MultipartBody.Part) : Deferred<List<ImageResponse>>
+
+
+
+
 }
 
 object NetworkApi {

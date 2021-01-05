@@ -23,6 +23,19 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
     private val _userDeleted = MutableLiveData<Boolean>()
     val userDeleted: LiveData<Boolean> get() = _userDeleted
 
+    private val _name = MutableLiveData<String>()
+    val name: LiveData<String> get() = _name
+
+    private val _surname = MutableLiveData<String>()
+    val surname: LiveData<String> get() = _surname
+
+    private val _study = MutableLiveData<String>()
+    val study: LiveData<String> get() = _study
+
+    private val _yearOfStudy = MutableLiveData<Int>()
+    val yearOfStudy: LiveData<Int> get() = _yearOfStudy
+
+
     val user = repository.user
     var tokenChecked: Boolean = false
 

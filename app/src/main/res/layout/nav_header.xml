@@ -43,7 +43,7 @@
                 android:id="@+id/navUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:text="Jon Doe"
                 android:textColor="@color/white_acc"
                 />
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:text="Graduation unknown"
                 android:textColor="@color/white_acc"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/navYear"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="year unknown"
                 android:textColor="@color/white_acc"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 />
 
 

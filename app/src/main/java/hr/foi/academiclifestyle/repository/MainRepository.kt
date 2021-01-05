@@ -111,7 +111,7 @@ class MainRepository (private val database: LocalDatabase) {
                 response.email,
                 response.year,
                 response.program?.id,
-                imageId,
+                response.profile_picture?.id,
                 token,
                 rememberMe
             )
@@ -122,12 +122,15 @@ class MainRepository (private val database: LocalDatabase) {
         }
     }
 
-    suspend fun uploadPicture(file : File, token : String?) : Int {
+    suspend fun uploadPicture(file : File, token : String?): Int {
         return withContext(Dispatchers.IO){
-            // this creates the multipart body with the image
-            val filePart = MultipartBody.Part.createFormData("file", file.name, RequestBody.create(MediaType.parse("image/*"), file))
-            val response = NetworkApi.networkService.uploadPicture("Bearer $token", filePart).await()
-            response!!.id
+
+            Log.e("File", file.toString())
+            val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+            val body = MultipartBody.Part.createFormData("files", file.name, requestFile)
+            val response = NetworkApi.networkService.uploadPicture("Bearer $token", body).await()
+
+            response[0]!!.id
         }
     }
 

@@ -4,9 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Picture
-import android.net.Uri
-import android.os.Build
 import android.os.Build.*
 import android.os.Bundle
 import android.text.Editable
@@ -29,12 +26,15 @@ import hr.foi.academiclifestyle.databinding.FragmentSettingsBinding
 import hr.foi.academiclifestyle.ui.MainActivity
 import java.io.File
 import android.Manifest
+import android.provider.MediaStore
 import android.util.Log
-import androidx.core.net.toUri
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 
 
 class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
 
+    private var mediaPath: String? = null
     private val viewModel: SettingsViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
         ViewModelProvider(this, SettingsViewModel.Factory(activity.application)).get(
@@ -142,7 +142,12 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         }
 
 
+        // fix toggle animation for navView
+        val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
+        val toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
 
+        toggle.syncState()
         setupObservers()
         setThemeOptions()
         return binding.root
@@ -209,7 +214,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
                 ).show()
                 2 -> Toast.makeText(
                     activity as MainActivity?,
-                    "You dont have permission!",
+                    "Bad request!",
                     Toast.LENGTH_SHORT
                 ).show()
                 3 -> Toast.makeText(
@@ -328,11 +333,24 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            if(data != null){
+                val selectedImage = data.data
+                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                val cursor = context?.contentResolver?.query(selectedImage!!,filePathColumn,null,null,null)
+                assert(cursor != null)
+                cursor!!.moveToFirst()
+                val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+                mediaPath =cursor.getString(columnIndex)
+                cursor.close()
+
+            }
             image.setImageURI(data?.data)
-            val uri : String = data?.dataString!!
-            imageFile = File(uri)
+            //val uri : String = data?.dataString!!
+            var file = File(data!!.data!!.path)
+            imageFile = File(mediaPath)
             try {
                 viewModel.setPicture(imageFile)
             }catch (ex: Exception){}

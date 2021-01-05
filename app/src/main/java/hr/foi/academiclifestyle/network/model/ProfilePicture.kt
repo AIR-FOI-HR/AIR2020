@@ -6,6 +6,8 @@ data class ProfilePicture (
     @field:Json(name = "@id")
     val id: Int = 0,
     @field:Json(name = "@name")
-    val name: String = ""
+    val name: String = "",
+    @field:Json(name = "url")
+    val url: String = ""
 
 )

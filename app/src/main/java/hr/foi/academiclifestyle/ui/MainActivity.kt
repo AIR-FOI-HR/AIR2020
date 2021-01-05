@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.HeaderViewListAdapter
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -18,12 +20,17 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
+import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var nameAndSurname: TextView
+    private lateinit var study: TextView
+    private lateinit var yearOfStudy: TextView
+
+    private lateinit var header: HeaderViewListAdapter
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this, MainViewModel.Factory(application)).get(MainViewModel::class.java)
@@ -37,14 +44,20 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         drawerLayout = binding.drawerLayout
+
         val navController = this.findNavController(R.id.mainNavHostFragment)
+
 
         //pass each item individually to app bar so that it's considered a top-level destination (no back button)
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment,R.id.fragmentSettings), drawerLayout)
+                R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment, R.id.fragmentSettings), drawerLayout)
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
+
+
+
+
 
         //disable automatic icon tinting
         binding.navView.setItemIconTintList(null)
@@ -53,8 +66,16 @@ class MainActivity : AppCompatActivity() {
         var toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        
 
         setupObservers()
+
+        //Set user information on menu
+        val header: View = binding.navView.getHeaderView(0)
+        nameAndSurname = (header.findViewById<View>(R.id.navUser) as TextView)
+        study = (header.findViewById<View>(R.id.navStudy) as TextView)
+        yearOfStudy = (header.findViewById<View>(R.id.navYear) as TextView)
+
 
         binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {
             viewModel.logoutUser()
@@ -93,7 +114,34 @@ class MainActivity : AppCompatActivity() {
             if (it != null && !it)
                 switchActivities(true, false)
         })
+
+        viewModel.user?.observe(this, Observer {
+            if(it != null){
+                if(it.name != null && it.surname != null){
+
+
+                    nameAndSurname.setText(it.name + " " + it.surname)
+                }
+
+                if(it.program != null){
+                    if(it.program == 1){
+
+                       study.setText("Informacijski i poslovni sustavi")
+                    }
+                    else
+                        study.setText("Informacijsko i programsko inženjerstvo")
+
+                }
+
+                if(it.year != null){
+                    yearOfStudy.setText(it.year.toString()+ ". godina")
+                }
+
+            }
+
+        })
     }
+
 
     private fun switchActivities(showExpireToast: Boolean, preventSleep: Boolean) {
         val intent = Intent(this, AuthActivity::class.java)
