@@ -130,8 +130,7 @@ class MainRepository (private val database: LocalDatabase) {
     suspend fun uploadPicture(file : File, token : String?): Int {
         return withContext(Dispatchers.IO){
 
-            Log.e("File", file.toString())
-            val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+            val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
             val body = MultipartBody.Part.createFormData("files", file.name, requestFile)
             val response = NetworkApi.networkService.uploadPicture("Bearer $token", body).await()
 
