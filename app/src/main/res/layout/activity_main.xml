@@ -58,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
+                android:background="@color/white_acc"
                 app:headerLayout="@layout/nav_header"
                 app:menu="@menu/navdrawer_menu"
                 app:itemBackground="@drawable/nav_background_selector" >

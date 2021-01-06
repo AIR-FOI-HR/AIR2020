@@ -1,6 +1,7 @@
 package hr.foi.academiclifestyle.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
-        ViewModelProvider(this, LoginViewModel.Factory(activity.application)).get(LoginViewModel::class.java)
+        ViewModelProvider(activity).get(LoginViewModel::class.java)
     }
     private lateinit var loginBtn: Button
     private lateinit var txtUsername: EditText

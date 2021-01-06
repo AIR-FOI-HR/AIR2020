@@ -102,6 +102,11 @@ class MainRepository (private val database: LocalDatabase) {
 
             val response = NetworkApi.networkService.updateUser("Bearer $token", userRequest).await()
 
+            var profilePictureId = 0
+            if (response.profile_picture != null) {
+                profilePictureId = response.profile_picture.id
+            }
+
             //val program = response?.program?.id
             val user = User (
                 response!!.id,
@@ -111,7 +116,7 @@ class MainRepository (private val database: LocalDatabase) {
                 response.email,
                 response.year,
                 response.program?.id,
-                response.profile_picture?.id,
+                profilePictureId,
                 token,
                 rememberMe
             )

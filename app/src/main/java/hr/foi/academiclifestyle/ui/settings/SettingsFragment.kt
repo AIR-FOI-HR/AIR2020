@@ -64,7 +64,6 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
             false
         )
 
-
         binding.lifecycleOwner = this
 
         txtFirstName = binding.editTextTextPersonName
@@ -76,7 +75,6 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         btnChoosePicture = binding.btnSettingsChooseImage
         program = binding.spinner
         image = binding.imageView
-
 
         //Create spinner
         ArrayAdapter.createFromResource(

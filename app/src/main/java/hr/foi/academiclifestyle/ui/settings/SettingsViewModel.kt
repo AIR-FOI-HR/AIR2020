@@ -62,7 +62,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             //send request
 
             coroutineScope.launch {
-
                 try {
                     var id =user?.value?.profilePicture!!
                     if(_imageFile.value != null) {
