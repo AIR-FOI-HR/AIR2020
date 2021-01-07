@@ -1,5 +1,7 @@
 package hr.foi.academiclifestyle.repository
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
@@ -16,6 +18,8 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MainRepository (private val database: LocalDatabase) {
@@ -24,7 +28,6 @@ class MainRepository (private val database: LocalDatabase) {
     val user: LiveData<User>? = database.userDao.getUser()
     val events: LiveData<List<Event>>? = database.eventDao.getEvents()
     val subjects: LiveData<List<Subject>>? = database.subjectDao.getSubjects()
-    var imageId : Int = 0
 
     //User
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
@@ -33,6 +36,14 @@ class MainRepository (private val database: LocalDatabase) {
             var rememberMe : Boolean = false
             if (rememberUser)
                 rememberMe = true
+            var imageURL: String = ""
+            var imageID : Int? = 0
+            var bitmapImage : Bitmap? = null
+                if(response.user?.profile_picture != null) {
+                    imageURL = response.user?.profile_picture.url
+                    imageID =  response.user?.profile_picture.id
+                    bitmapImage = getBitmapFromURL(imageURL)
+                }
             if (response.jwt != "") {
                 val program = response.user?.program?.id
                 val user = User (
@@ -43,7 +54,9 @@ class MainRepository (private val database: LocalDatabase) {
                     response.user.email,
                     response.user.year,
                     program,
-                    imageId,
+                    imageID,
+                    imageURL,
+                   // bitmapImage,
                     response.jwt,
                     rememberMe
                 )
@@ -60,11 +73,24 @@ class MainRepository (private val database: LocalDatabase) {
         }
     }
 
-    suspend fun checkUserToken (token: String) : Boolean {
+    suspend fun checkUserToken (token: String, pictureID : Int?) : Boolean {
         return withContext(Dispatchers.IO) {
             val response = NetworkApi.networkService.getUserByToken("Bearer $token").await()
 
             //either update user or clear
+
+            var imageURL: String = ""
+            var imageID : Int? = 0
+           // var bitmapImage : Bitmap? = bitmapImage
+            if(response.profile_picture != null) {
+                imageURL = response?.profile_picture.url
+                imageID =  response?.profile_picture.id
+
+                if(response.profile_picture?.id  != pictureID){
+                  //  bitmapImage = getBitmapFromURL(imageURL)
+                }
+            }
+
             if (response.id > 0) {
                 val program = response.program?.id
                 val userRes = User (
@@ -75,7 +101,9 @@ class MainRepository (private val database: LocalDatabase) {
                         response.email,
                         response.year,
                         program,
-                        imageId,
+                        imageID,
+                        imageURL,
+                     //   bitmapImage,
                         token,
                         true
                 )
@@ -102,9 +130,13 @@ class MainRepository (private val database: LocalDatabase) {
 
             val response = NetworkApi.networkService.updateUser("Bearer $token", userRequest).await()
 
-            var profilePictureId = 0
-            if (response.profile_picture != null) {
-                profilePictureId = response.profile_picture.id
+            var imageURL: String = ""
+            var imageID : Int? = 0
+            var bitmapImage: Bitmap? = null
+            if(response.profile_picture != null) {
+                imageURL = response?.profile_picture.url
+                imageID =  response?.profile_picture.id
+                bitmapImage = getBitmapFromURL(imageURL)
             }
 
             //val program = response?.program?.id
@@ -116,10 +148,14 @@ class MainRepository (private val database: LocalDatabase) {
                 response.email,
                 response.year,
                 response.program?.id,
-                profilePictureId,
+                imageID,
+                imageURL,
+               // bitmapImage,
                 token,
                 rememberMe
             )
+
+            Log.e("User", user.toString())
             database.userDao.clear()
             database.userDao.insert(user)
 
@@ -188,6 +224,18 @@ class MainRepository (private val database: LocalDatabase) {
                 }
                 database.subjectDao.insertSubjects(subjects)
             }
+        }
+    }
+
+    suspend fun getBitmapFromURL(src: String?): Bitmap {
+       return  withContext(Dispatchers.IO) {
+            val url = URL(src)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+            val myBitmap = BitmapFactory.decodeStream(input)
+            myBitmap
         }
     }
 }

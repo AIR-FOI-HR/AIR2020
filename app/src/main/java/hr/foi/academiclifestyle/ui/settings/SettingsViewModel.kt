@@ -1,11 +1,12 @@
 package hr.foi.academiclifestyle.ui.settings
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
-import hr.foi.academiclifestyle.network.model.ImageRequest
 import hr.foi.academiclifestyle.network.model.UserRequest
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.File
+import java.io.IOException
+import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
+import java.net.URL
 import java.net.UnknownHostException
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,18 +56,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
-    //private lateinit var file1: File
 
     val user =repository.user
 
     fun updateUser() {
-
-            //Construct image request
-            //send request
-
+        //send request
             coroutineScope.launch {
+                //Construct image request
                 try {
                     var id =user?.value?.profilePicture!!
+                       // if(user.value!!.bitmapImage != null)
                     if(_imageFile.value != null) {
                         id = repository.uploadPicture(_imageFile.value!!, user?.value?.jwtToken!!)
                     }

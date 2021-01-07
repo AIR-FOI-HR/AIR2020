@@ -1,6 +1,7 @@
 package hr.foi.academiclifestyle.ui
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
@@ -10,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
 
 class MainViewModel (application: Application) : AndroidViewModel(application) {
 
@@ -35,6 +37,9 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
     private val _yearOfStudy = MutableLiveData<Int>()
     val yearOfStudy: LiveData<Int> get() = _yearOfStudy
 
+    private val _bitmapImage = MutableLiveData<Bitmap>()
+    val bitmapImage: LiveData<Bitmap> get() = _bitmapImage
+
 
     val user = repository.user
     var tokenChecked: Boolean = false
@@ -43,16 +48,19 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
     //should run in the background
-    fun checkToken(user: User) {
+    fun checkTokenAndUpdateUser(user: User) {
         tokenChecked = true
         coroutineScope.launch {
             try {
-                val validRes = repository.checkUserToken(user.jwtToken!!)
+                val validRes = repository.checkUserToken(user.jwtToken!!,user.profilePicture)
                 _valid.value = validRes
+                if(user.imageURL != "")
+                    _bitmapImage.value = repository.getBitmapFromURL(user.imageURL)
             } catch (ex: Exception) {
                 //TODO add handling for no connection
                 repository.clearUser()
                 _valid.value = false
+                Log.e("Image",ex.toString())
             }
         }
     }
@@ -77,6 +85,7 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
         else if (type == 2)
             _valid.value = null
     }
+
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

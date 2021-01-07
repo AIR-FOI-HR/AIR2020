@@ -56,7 +56,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     else if (ex is HttpException)
                         _responseType.value = 2
                     else
-                        Log.i("CoroutineInfo", ex.message.toString())
+                        Log.i("CoroutineInfo", ex.toString())
                 }
             }
         }

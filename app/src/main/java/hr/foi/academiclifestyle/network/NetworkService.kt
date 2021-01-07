@@ -46,9 +46,6 @@ interface DatabaseApiService {
     fun uploadPicture(@Header("Authorization") authorization: String,
                       @Part files : MultipartBody.Part) : Deferred<List<ImageResponse>>
 
-
-
-
 }
 
 object NetworkApi {

@@ -1,5 +1,6 @@
 package hr.foi.academiclifestyle.database.model
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
@@ -23,6 +24,8 @@ data class User (
 
     @ColumnInfo(name = "profile_picture")
     val profilePicture: Int? = 0,
+    val imageURL : String? = "",
+    //val bitmapImage: Bitmap? = null,
 
     @ColumnInfo(name = "jwt_token")
     val jwtToken: String? = "",

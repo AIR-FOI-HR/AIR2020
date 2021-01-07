@@ -1,10 +1,12 @@
 package hr.foi.academiclifestyle.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.HeaderViewListAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,15 +22,20 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
-import kotlin.properties.Delegates
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var nameAndSurname: TextView
     private lateinit var study: TextView
     private lateinit var yearOfStudy: TextView
+    private lateinit var profilePicture : ImageView
+    private lateinit var picture: Bitmap
 
     private lateinit var header: HeaderViewListAdapter
 
@@ -66,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         var toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        
+
 
         setupObservers()
 
@@ -75,6 +82,8 @@ class MainActivity : AppCompatActivity() {
         nameAndSurname = (header.findViewById<View>(R.id.navUser) as TextView)
         study = (header.findViewById<View>(R.id.navStudy) as TextView)
         yearOfStudy = (header.findViewById<View>(R.id.navYear) as TextView)
+        profilePicture = header.findViewById<View>(R.id.imageView) as ImageView
+
 
 
         binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {
@@ -107,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.user?.observe(this, Observer {
             if (it != null && it.jwtToken != "" && it.rememberMe && !viewModel.tokenChecked) {
-                viewModel.checkToken(it)
+                viewModel.checkTokenAndUpdateUser(it)
             }
         })
         viewModel.valid.observe(this, Observer {
@@ -136,9 +145,12 @@ class MainActivity : AppCompatActivity() {
                 if(it.year != null){
                     yearOfStudy.setText(it.year.toString()+ ". godina")
                 }
-
             }
+        })
 
+        viewModel.bitmapImage?.observe(this, Observer{
+              if(it != null)
+                profilePicture.setImageBitmap(it)
         })
     }
 
@@ -152,4 +164,5 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
 }

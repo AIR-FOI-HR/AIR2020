@@ -27,7 +27,6 @@ import hr.foi.academiclifestyle.ui.MainActivity
 import java.io.File
 import android.Manifest
 import android.provider.MediaStore
-import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 
@@ -41,6 +40,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
             SettingsViewModel::class.java
         )
     }
+
 
     private lateinit var txtFirstName: EditText
     private lateinit var txtLastName: EditText
