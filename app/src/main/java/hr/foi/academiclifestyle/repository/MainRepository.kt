@@ -2,6 +2,7 @@ package hr.foi.academiclifestyle.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Network
 import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
@@ -11,6 +12,7 @@ import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.LoginRequest
 import hr.foi.academiclifestyle.network.model.RegisterRequest
+import hr.foi.academiclifestyle.network.model.Room
 import hr.foi.academiclifestyle.network.model.UserRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -228,7 +230,7 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     suspend fun getBitmapFromURL(src: String?): Bitmap {
-       return  withContext(Dispatchers.IO) {
+       return withContext(Dispatchers.IO) {
             val url = URL(src)
             val connection = url.openConnection() as HttpURLConnection
             connection.doInput = true
@@ -236,6 +238,22 @@ class MainRepository (private val database: LocalDatabase) {
             val input = connection.inputStream
             val myBitmap = BitmapFactory.decodeStream(input)
             myBitmap
+        }
+    }
+
+    suspend fun getRoomsByBuildingName(building: String): MutableList<String> {
+        return withContext(Dispatchers.IO) {
+            val rawRoomList = NetworkApi.networkService.getRoomsByBuildingName(building = building).await()
+
+            if (rawRoomList.isNotEmpty()) {
+                val roomList: MutableList<String> = mutableListOf()
+                for (room in rawRoomList) {
+                    roomList.add(room.name)
+                }
+                roomList
+            } else {
+                mutableListOf()
+            }
         }
     }
 }

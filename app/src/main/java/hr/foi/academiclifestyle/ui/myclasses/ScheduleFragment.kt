@@ -48,7 +48,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
         // A mask is used here to prevent rapid calls
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             startAnimation()
-            var date : LocalDate = LocalDate.of(year, month+1, dayOfMonth)
+            val date : LocalDate = LocalDate.of(year, month+1, dayOfMonth)
             val currentDay : String = date.dayOfWeek.toString().toLowerCase()
             viewModel.getEvents(currentDay, 0)
         }
@@ -93,6 +93,28 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
             } else
                 // used to prevent double refresh on first fragment show
                 viewModel.firstCall = true
+        })
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                when (it) {
+                    2 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Bad request!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    3 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Server Error, please try again!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    4 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Unknown Error!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+                finishAnimation()
+            }
         })
     }
 

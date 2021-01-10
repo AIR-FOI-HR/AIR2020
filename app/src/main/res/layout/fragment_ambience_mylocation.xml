@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_20"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_acc"
+                android:layout_marginTop="20dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txtLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location: FOI 1, Dvorana 10"
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.03" />
+
+                <LinearLayout
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/green_primary"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
+
+                <TextView
+                    android:id="@+id/txtMeasurement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="MEASUREMENT"
+                    android:textColor="@color/green_primary"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+                <TextView
+                    android:id="@+id/txtValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VALUE"
+                    android:textColor="@color/green_primary"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtMeasurement"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/txtMeasurement"
+                    app:layout_constraintTop_toTopOf="@+id/txtMeasurement" />
+
+                <TextView
+                    android:id="@+id/txtTemperature"
+                    android:layout_width="138dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:text="Temperature (C): "
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtMeasurement" />
+
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/hBarChart"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtTemperature"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/txtTemperature"
+                    app:layout_constraintTop_toTopOf="@+id/txtTemperature" />
+
+                <TextView
+                    android:id="@+id/txtPressure"
+                    android:layout_width="138dp"
+                    android:layout_height="wrap_content"
+                    android:text="Pressure (hPa): "
+                    android:textColor="@color/grey_80"
+                    android:layout_marginTop="46dp"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtTemperature" />
+
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/hBarChart2"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtPressure"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/txtPressure"
+                    app:layout_constraintTop_toTopOf="@+id/txtPressure" />
+
+                <TextView
+                    android:id="@+id/txtMoisture"
+                    android:layout_width="138dp"
+                    android:layout_height="wrap_content"
+                    android:text="Moisture (%): "
+                    android:textColor="@color/grey_80"
+                    android:layout_marginTop="47dp"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtPressure" />
+
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/hBarChart3"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtMoisture"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/txtMoisture"
+                    app:layout_constraintTop_toTopOf="@+id/txtMoisture" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_acc"
+                android:layout_marginTop="20dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txtAirQuality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AIR QUALITY"
+                    android:textColor="@color/green_primary"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtAirPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(%)"
+                    android:textColor="@color/grey_60"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtAirQuality"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.020"
+                    app:layout_constraintStart_toEndOf="@+id/txtAirQuality"
+                    app:layout_constraintTop_toTopOf="@+id/txtAirQuality"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintWidth_max="380dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtAirQuality" />
+
+                <TextView
+                    android:id="@+id/txtAirDescriptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Description"
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+
+                <LinearLayout
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/green_primary"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtAirDescriptionTitle" />
+
+                <TextView
+                    android:id="@+id/txtAirDescriptionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Looking at the overall quality of air in this room, it looks like you need some fresh air."
+                    android:textColor="@color/grey_80"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_acc"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txtWindowPosition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WINDOW POSITION"
+                    android:textColor="@color/green_primary"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imgWindowPos"
+                    android:layout_width="234dp"
+                    android:layout_height="196dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_window_50"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtWindowPosition" />
+
+                <TextView
+                    android:id="@+id/txtWindowPosDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Description"
+                    android:textColor="@color/grey_80"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgWindowPos" />
+
+                <LinearLayout
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/green_primary"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtWindowPosDescription" />
+
+                <TextView
+                    android:id="@+id/txtWindowPosDescriptionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="It appears your window is lightly open and there is plenty of air circulation."
+                    android:textColor="@color/grey_80"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

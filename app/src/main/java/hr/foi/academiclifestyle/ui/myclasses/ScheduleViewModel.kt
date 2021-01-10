@@ -9,6 +9,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.*
 
 class ScheduleViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,6 +23,8 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     //events & livedata
     private val _eventsUpdated = MutableLiveData<Boolean>()
     val eventsUpdated: LiveData<Boolean> get() = _eventsUpdated
+    private val _responseType = MutableLiveData<Int>()
+    val responseType: LiveData<Int> get() = _responseType
 
     var events = repository.events
     var user = repository.user
@@ -46,10 +52,24 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
                 }
             } else
                 currentDay = day
-            if (program == 0)
-                _eventsUpdated.value = repository.updateEvents(currentDay, user?.value?.program!!)
-            else
-                _eventsUpdated.value = repository.updateEvents(currentDay, program)
+            try {
+                if (program == 0)
+                    _eventsUpdated.value = repository.updateEvents(currentDay, user?.value?.program!!)
+                else
+                    _eventsUpdated.value = repository.updateEvents(currentDay, program)
+            } catch (ex: Exception) {
+                if (ex is SocketTimeoutException)
+                    _responseType.value = 3
+                else if (ex is UnknownHostException)
+                    _responseType.value = 3
+                else if (ex is HttpException)
+                    _responseType.value = 2
+                else if (ex is ConnectException)
+                    _responseType.value = 3
+                else
+                    _responseType.value = 4
+                Log.i("CoroutineInfo", ex.toString())
+            }
         }
     }
 

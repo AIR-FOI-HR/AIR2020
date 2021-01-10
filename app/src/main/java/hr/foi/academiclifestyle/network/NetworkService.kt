@@ -46,6 +46,8 @@ interface DatabaseApiService {
     fun uploadPicture(@Header("Authorization") authorization: String,
                       @Part files : MultipartBody.Part) : Deferred<List<ImageResponse>>
 
+    @GET("rooms")
+    fun getRoomsByBuildingName(@Query("building.name") building: String): Deferred<List<Room>>
 }
 
 object NetworkApi {

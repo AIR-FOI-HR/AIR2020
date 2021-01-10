@@ -9,5 +9,5 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/dropdownListPreferredItemHeight"
     android:background="@drawable/abc_spinner_mtrl_am_alpha"
-    android:backgroundTint="@color/white_acc"
+    android:backgroundTint="@color/grey_60"
     android:ellipsize="marquee" />

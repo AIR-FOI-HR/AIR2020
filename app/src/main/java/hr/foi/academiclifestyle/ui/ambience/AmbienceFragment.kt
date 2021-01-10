@@ -14,40 +14,44 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentAmbienceBinding
+import hr.foi.academiclifestyle.ui.ambience.adapters.TabsPagerAdapter
 
 
 class AmbienceFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = AmbienceFragment()
+    private val viewModel: AmbienceViewModel by lazy {
+        val activity = requireNotNull(this.activity) {}
+        ViewModelProvider(this, AmbienceViewModel.Factory(activity.application)).get(AmbienceViewModel::class.java)
     }
-
-    private lateinit var viewModel: AmbienceViewModel
+    private lateinit var binding: FragmentAmbienceBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentAmbienceBinding>(inflater, R.layout.fragment_ambience, container, false)
+        binding = DataBindingUtil.inflate<FragmentAmbienceBinding>(inflater, R.layout.fragment_ambience, container, false)
 
         // fix toggle animation for navView
-        var drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
-        var toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
+        val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
+        val toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        setThemeOptions()
+        createTabLayout(binding.tabLayout, binding.viewPager)
+        setObservers()
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AmbienceViewModel::class.java)
-        // TODO: Use the ViewModel
-        setThemeOptions()
+    fun setObservers() {
+
     }
 
     fun setThemeOptions() {
@@ -75,5 +79,67 @@ class AmbienceFragment : Fragment() {
 
         navView?.setItemTextColor(navigationViewColorStateList)
         navView?.setItemIconTintList(navigationViewColorStateList)
+    }
+
+    fun createTabLayout(tabLayout: TabLayout, tabsViewpager: ViewPager2) {
+        // Tabs Customization
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor((activity as MainActivity), R.color.green_primary))
+        tabLayout.setBackgroundColor(ContextCompat.getColor((activity as MainActivity), R.color.green_secondary))
+        tabLayout.tabTextColors = ContextCompat.getColorStateList((activity as MainActivity), android.R.color.white)
+
+        // Number Of Tabs
+        val numberOfTabs = 2
+
+        // Show all Tabs in screen
+        tabLayout.tabMode = TabLayout.MODE_FIXED
+
+        // Set the ViewPager Adapter
+        val adapter = TabsPagerAdapter((activity as MainActivity).supportFragmentManager, lifecycle, numberOfTabs)
+        tabsViewpager.adapter = adapter
+
+        // Set to not remove the cached fragments
+        tabsViewpager.offscreenPageLimit = 2
+
+        // This is necessary to fix content height between fragments
+        tabsViewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val view : View? = when (position) {
+                    0 -> adapter.fragments[0].view
+                    1 -> adapter.fragments[1].view
+                    else -> adapter.fragments[0].view
+                }
+                view?.let {
+                    updatePagerHeightForChild(view, tabsViewpager)
+                }
+            }
+
+            private fun updatePagerHeightForChild(view: View, pager: ViewPager2) {
+                view.post {
+                    val wMeasureSpec =
+                            View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                    val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    view.measure(wMeasureSpec, hMeasureSpec)
+
+                    if (pager.layoutParams.height != view.measuredHeight) {
+                        pager.layoutParams = (pager.layoutParams)
+                                .also { lp ->
+                                    lp.height = view.measuredHeight
+                                }
+                    }
+                }
+            }
+        })
+
+        // Link the TabLayout and the ViewPager2 together and set titles
+        TabLayoutMediator(tabLayout, tabsViewpager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "My Location"
+                }
+                1 -> {
+                    tab.text = "Other Rooms"
+                }
+            }
+        }.attach()
     }
 }

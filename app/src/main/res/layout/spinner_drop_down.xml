@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    android:textColor="@color/grey_60"
+    android:textColor="@color/grey_80"
     android:textSize="20sp"
     android:background="@color/white_acc"
     style="?attr/spinnerDropDownItemStyle"

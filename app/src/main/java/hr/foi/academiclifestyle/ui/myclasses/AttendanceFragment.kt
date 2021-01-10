@@ -81,5 +81,26 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
             } else
                 viewModel.firstCall = true
         })
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                when (it) {
+                    2 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Bad request!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    3 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Server Error, please try again!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    4 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Unknown Error!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        })
     }
 }

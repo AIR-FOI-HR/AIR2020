@@ -9,6 +9,7 @@ import hr.foi.academiclifestyle.network.model.LoginRequest
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.*
 import retrofit2.HttpException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -55,6 +56,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         _responseType.value = 3
                     else if (ex is HttpException)
                         _responseType.value = 2
+                    else if (ex is ConnectException)
+                        _responseType.value = 3
                     else
                         Log.i("CoroutineInfo", ex.toString())
                 }
