@@ -81,7 +81,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                      repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
                     _responseType.value = 1
 
-
                } catch (ex: Exception) {
                     if (ex is SocketTimeoutException)
                         _responseType.value = 3
@@ -94,6 +93,24 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                         Log.i("CoroutineInfo error", ex.message.toString())
                 }
 
+        }
+    }
+
+    fun resetImage(){
+        coroutineScope.launch {
+            try{
+                val userRequest: UserRequest =
+                        UserRequest(
+                                _firstName.value.toString(),
+                                _lastName.value.toString(),
+                                _study.value!!.toInt(),
+                                _yearOfStudy.value!!.toInt(),
+                                0
+                        )
+                repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
+            }catch (ex : java.lang.Exception){
+                Log.e("Error", ex.toString())
+            }
         }
     }
 

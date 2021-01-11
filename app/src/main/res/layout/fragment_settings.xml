@@ -236,7 +236,7 @@
                 android:id="@+id/btnSettingsChooseImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Choose image"
+                android:text="@string/choose_image"
                 android:textColor="@color/white_acc"
                 android:textSize="18sp"
 
@@ -255,6 +255,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/saveSettings"
+                android:textColor="@color/white_acc"
+                android:textSize="18sp"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <Button
+                android:id="@+id/btnSetDefaultImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/set_default_image"
                 android:textColor="@color/white_acc"
                 android:textSize="18sp"
 

@@ -65,6 +65,15 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun loadImage(user: User){
+        coroutineScope.launch {
+            try {
+                _bitmapImage.value = repository.getBitmapFromURL(user.imageURL)
+            } catch (ex: Exception) {
+            }
+        }
+    }
+
     fun logoutUser() {
         coroutineScope.launch {
             repository.clearUser()

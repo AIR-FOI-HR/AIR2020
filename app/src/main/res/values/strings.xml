@@ -20,4 +20,6 @@
     <string name="year_of_study">Year of study</string>
     <string name="study">Study</string>
     <string name="saveSettings">Save</string>
+    <string name="set_default_image">SET DEFAULT IMAGE</string>
+    <string name="choose_image">Choose image</string>
 </resources>

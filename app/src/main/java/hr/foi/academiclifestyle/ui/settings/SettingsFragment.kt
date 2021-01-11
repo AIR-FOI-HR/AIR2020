@@ -52,6 +52,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var program :Spinner
     private lateinit var image : ImageView
     private lateinit var imageFile : File
+    private lateinit var setDefaultImage : Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +76,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         btnChoosePicture = binding.btnSettingsChooseImage
         program = binding.spinner
         image = binding.imageView
+        setDefaultImage = binding.btnSetDefaultImage
 
         //Create spinner
         ArrayAdapter.createFromResource(
@@ -137,6 +139,15 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
                 //system OS is < Marshmallow
                 pickImageFromGallery();
             }
+        }
+
+        setDefaultImage.setOnClickListener(){
+            viewModel.resetImage()
+            Toast.makeText(
+                    activity as MainActivity?,
+                    "Image reseted!",
+                    Toast.LENGTH_SHORT
+            ).show()
         }
 
 
