@@ -20,4 +20,5 @@
     <string name="year_of_study">Year of study</string>
     <string name="study">Study</string>
     <string name="saveSettings">Save</string>
+    <string name="btDesc">Make sure to turn on <font color='#01C6DB'>Bluetooth</font> for your attendance to be automatically noted!</string>
 </resources>

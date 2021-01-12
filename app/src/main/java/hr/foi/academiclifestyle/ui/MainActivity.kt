@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
+import hr.foi.academiclifestyle.dimens.CoursesEnum
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -54,17 +55,12 @@ open class MainActivity : AppCompatActivity() {
 
         val navController = this.findNavController(R.id.mainNavHostFragment)
 
-
         //pass each item individually to app bar so that it's considered a top-level destination (no back button)
         appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.homeFragment, R.id.ambienceFragment, R.id.myClassesFragment, R.id.myBehavioursFragment, R.id.fragmentSettings), drawerLayout)
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
-
-
-
-
 
         //disable automatic icon tinting
         binding.navView.setItemIconTintList(null)
@@ -74,7 +70,6 @@ open class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-
         setupObservers()
 
         //Set user information on menu
@@ -83,8 +78,6 @@ open class MainActivity : AppCompatActivity() {
         study = (header.findViewById<View>(R.id.navStudy) as TextView)
         yearOfStudy = (header.findViewById<View>(R.id.navYear) as TextView)
         profilePicture = header.findViewById<View>(R.id.imageView) as ImageView
-
-
 
         binding.navView.menu.findItem(R.id.log_out).setOnMenuItemClickListener() {
             viewModel.logoutUser()
@@ -135,10 +128,10 @@ open class MainActivity : AppCompatActivity() {
                 if(it.program != null){
                     if(it.program == 1){
 
-                       study.setText("Informacijski i poslovni sustavi")
+                       study.setText(CoursesEnum.IPS.programName)
                     }
                     else
-                        study.setText("Informacijsko i programsko inženjerstvo")
+                        study.setText(CoursesEnum.IPI.programName)
 
                 }
 

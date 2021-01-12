@@ -14,42 +14,52 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentHomeBinding
+import hr.foi.academiclifestyle.dimens.CoursesEnum
 
 class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HomeFragment()
+    private val viewModel: HomeViewModel by lazy {
+        val activity = requireNotNull(this.activity) {}
+        ViewModelProvider(activity).get(HomeViewModel::class.java)
     }
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater, R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater, R.layout.fragment_home, container, false)
 
         // fix toggle animation for navView
-        var drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
-        var toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
+        val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
+        val toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        setupObservers()
+        setThemeOptions()
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        // TODO: Use the ViewModel
-        setThemeOptions()
+    private fun setupObservers() {
+        viewModel.user?.observe(viewLifecycleOwner, Observer {
+            if (it != null && it.jwtToken != "") {
+                binding.txtYearValue.text = it.year
+                if (it.program != 0)
+                    binding.txtCourseValue.text = CoursesEnum.fromId(it.program!!)?.programName
+                viewModel.fetchEnrolledSubjectCount()
+            }
+        })
     }
 
-    fun setThemeOptions() {
+    private fun setThemeOptions() {
         val imageView = (activity as MainActivity?)?.findViewById<ImageView>(R.id.toolbarlogo)
         val toolbar = (activity as MainActivity?)?.findViewById<Toolbar>(R.id.toolbar)
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
@@ -61,7 +71,7 @@ class HomeFragment : Fragment() {
         setNavigationColors()
     }
 
-    fun setNavigationColors() {
+    private fun setNavigationColors() {
         val navView = (activity as MainActivity?)?.findViewById<NavigationView>(R.id.navView)
         val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked), intArrayOf())
 
