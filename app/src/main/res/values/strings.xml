@@ -21,4 +21,7 @@
     <string name="study">Study</string>
     <string name="saveSettings">Save</string>
     <string name="btDesc">Make sure to turn on <font color='#01C6DB'>Bluetooth</font> for your attendance to be automatically noted!</string>
+    <string name="set_default_image">SET DEFAULT IMAGE</string>
+    <string name="choose_image">Choose image</string>
+    <string name="tardiness">TARDINESS (%)</string>
 </resources>

@@ -75,6 +75,7 @@ class MainRepository (private val database: LocalDatabase) {
         }
     }
 
+
     suspend fun checkUserToken (token: String, pictureID : Int?) : Boolean {
         return withContext(Dispatchers.IO) {
             val response = NetworkApi.networkService.getUserByToken("Bearer $token").await()

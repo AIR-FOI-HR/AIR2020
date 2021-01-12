@@ -1,15 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.mybehaviours.MyBehavioursFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <TextView
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_20">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Hello, this is the my behaviours fragment" />
+            android:background="@color/grey_20"
+            android:orientation="vertical">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/white_acc"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/tardiness"
+                android:textColor="@color/foi_red"
+                android:textSize="22sp"
+                 />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartMyBehaviors"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_marginTop="15dp"
+                android:paddingStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:background="@color/white_acc"
+
+                />
+        </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical"
+               android:background="@color/white_acc"
+               >
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Description"
+                   android:layout_marginStart="15dp"
+                   android:textSize="17sp"
+                   android:textColor="@color/grey_80"
+                   android:layout_marginTop="10dp"
+               />
+
+               <LinearLayout
+                   android:id="@+id/divider2"
+                   android:layout_width="match_parent"
+                   android:layout_height="3dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginStart="15dp"
+                   android:layout_marginEnd="5dp"
+                   android:background="@color/foi_red"
+                   android:orientation="vertical"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@+id/txtAirDescriptionTitle" />
+
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:textSize="16dp"
+                   android:layout_marginTop="5dp"
+                   android:layout_marginStart="15dp"
+                   android:layout_marginEnd="5dp"
+                   android:text="Looking at your class arrival times it has been observed that you tend to arrive to class just in time the academic quarter expires or couple minutes late."
+                    android:textColor="@color/grey_80"
+                   />
+           </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:background="@color/white_acc"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="STUDY IMPROVMENTS"
+                android:textColor="@color/foi_red"
+                android:textSize="20sp"
+                android:layout_marginStart="15dp"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+
+
+                />
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_marginStart="15dp"
+                android:textSize="17sp"
+                android:textColor="@color/grey_80"
+                android:layout_marginTop="10dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/foi_red"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtAirDescriptionTitle" />
+            <TextView
+                android:id="@+id/txtMyBehavioursStudyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/grey_80"
+                android:text="It shows that your peak perfomance is when you have at least this amount of oxygen in the room."
+
+                />
+
+        </LinearLayout>
+
+
+</LinearLayout>
     </ScrollView>
 </layout>

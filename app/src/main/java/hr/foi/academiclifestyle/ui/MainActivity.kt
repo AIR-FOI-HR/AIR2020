@@ -36,9 +36,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var study: TextView
     private lateinit var yearOfStudy: TextView
     private lateinit var profilePicture : ImageView
-    private lateinit var picture: Bitmap
 
-    private lateinit var header: HeaderViewListAdapter
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this, MainViewModel.Factory(application)).get(MainViewModel::class.java)
@@ -138,7 +136,14 @@ open class MainActivity : AppCompatActivity() {
                 if(it.year != null){
                     yearOfStudy.setText(it.year.toString()+ ". godina")
                 }
+                if( it.imageURL != null){
+                    viewModel.loadImage(it)
+                }
+                if(it.imageURL == ""){
+                    profilePicture.setImageResource(R.drawable.ic_person)
+                }
             }
+
         })
 
         viewModel.bitmapImage?.observe(this, Observer{
