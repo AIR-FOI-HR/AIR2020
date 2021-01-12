@@ -13,7 +13,7 @@ data class Event (
     @field:Json(name = "@subject")
     val subject: Subject? = null,
     @field:Json(name = "@room")
-    val room: Room? = null,
+    val room: RoomEvent? = null,
     @field:Json(name = "@user")
     val user: User? = null,
     @field:Json(name = "@day")
