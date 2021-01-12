@@ -35,9 +35,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var study: TextView
     private lateinit var yearOfStudy: TextView
     private lateinit var profilePicture : ImageView
-    private lateinit var picture: Bitmap
 
-    private lateinit var header: HeaderViewListAdapter
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this, MainViewModel.Factory(application)).get(MainViewModel::class.java)
@@ -61,8 +59,6 @@ open class MainActivity : AppCompatActivity() {
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
-
-
 
 
 

@@ -22,4 +22,6 @@
     <string name="saveSettings">Save</string>
     <string name="set_default_image">SET DEFAULT IMAGE</string>
     <string name="choose_image">Choose image</string>
+    <string name="tardiness">TARDINESS (%)</string>
+
 </resources>
