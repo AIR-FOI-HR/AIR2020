@@ -22,6 +22,8 @@ data class User (
 
     val program: Int? = 0,
 
+    val semester: Int? = 0,
+
     @ColumnInfo(name = "profile_picture")
     val profilePicture: Int? = 0,
     val imageURL : String? = "",
