@@ -45,6 +45,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _yearOfStudy = MutableLiveData<Int>()
     val yearOfStudy: LiveData<Int> get() = _yearOfStudy
 
+    private val _semester = MutableLiveData<Int>()
+    val semester: LiveData<Int> get() = _semester
+
     private val _picture = MutableLiveData<Int>()
     val picture : LiveData<Int> get() = _picture
 
@@ -70,12 +73,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                         id = repository.uploadPicture(_imageFile.value!!, user?.value?.jwtToken!!)
                     }
                     //construct UserRequest
+                    val _semester1 = _semester
                     val userRequest: UserRequest =
                             UserRequest(
                                     _firstName.value.toString(),
                                     _lastName.value.toString(),
                                     _study.value!!.toInt(),
                                     _yearOfStudy.value!!.toInt(),
+                                    _semester.value!!.toInt(),
                                     id
                             )
                      repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
@@ -105,6 +110,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                                 _lastName.value.toString(),
                                 _study.value!!.toInt(),
                                 _yearOfStudy.value!!.toInt(),
+                                _semester.value!!.toInt(),
                                 0
                         )
                 repository.updateUser(userRequest, user?.value?.jwtToken!!,user?.value?.rememberMe!!)
@@ -148,12 +154,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }catch(ex: Exception){}
     }
 
+    fun setSemester(s: Editable){
+        try{
+            _semester.value = s.toString().toInt()
+        }catch (ex: Exception){}
+    }
+
     fun setPicture(s : File){
         try{
         _imageFile.value = s
-        //file1 = s
-        }
-        catch(ex : Exception){}
+        }catch(ex : Exception){}
     }
 
 

@@ -9,5 +9,6 @@ data  class UserRequest(
         val surname: String,
         val program: Int,
         val year: Int,
+        val semester: Int,
         val profile_picture: Int
 )

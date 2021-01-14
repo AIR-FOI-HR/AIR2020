@@ -24,4 +24,5 @@
     <string name="set_default_image">SET DEFAULT IMAGE</string>
     <string name="choose_image">Choose image</string>
     <string name="tardiness">TARDINESS (%)</string>
+    <string name="descriptionStudyImprovments">It shows that your peak performance is when you have at least <font color='#01C6DB'>this</font> amount of oxygen in the room.</string>
 </resources>

@@ -33,5 +33,7 @@ data class UserResponse (
     @field:Json(name = "@program")
     val program: Program? = null,
     @field:Json(name = "@profile_picture")
-    val profile_picture: ImageResponse? =  null
+    val profile_picture: ImageResponse? =  null,
+    @field:Json(name = "@semester")
+    val semester: Int = 0
 )

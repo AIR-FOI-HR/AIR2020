@@ -55,6 +55,8 @@ class HomeFragment : Fragment() {
                 if (it.program != 0)
                     binding.txtCourseValue.text = CoursesEnum.fromId(it.program!!)?.programName
                 viewModel.fetchEnrolledSubjectCount()
+                if(it.semester != 0)
+                    binding.txtSemesterValue.text = it.semester.toString()
             }
         })
     }

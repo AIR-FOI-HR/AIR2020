@@ -28,7 +28,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/tardiness"
-                android:textColor="@color/foi_red"
+                android:textColor="@color/red_primary"
                 android:textSize="22sp"
                  />
 
@@ -68,8 +68,8 @@
                    android:layout_height="3dp"
                    android:layout_marginTop="10dp"
                    android:layout_marginStart="15dp"
-                   android:layout_marginEnd="5dp"
-                   android:background="@color/foi_red"
+                   android:layout_marginEnd="15dp"
+                   android:background="@color/red_primary"
                    android:orientation="vertical"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
                    android:textSize="16dp"
                    android:layout_marginTop="5dp"
                    android:layout_marginStart="15dp"
-                   android:layout_marginEnd="5dp"
+                   android:layout_marginEnd="15dp"
                    android:text="Looking at your class arrival times it has been observed that you tend to arrive to class just in time the academic quarter expires or couple minutes late."
                     android:textColor="@color/grey_80"
                    />
@@ -97,8 +97,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="STUDY IMPROVMENTS"
-                android:textColor="@color/foi_red"
+                android:text="STUDY IMPROVMENETS"
+                android:textColor="@color/red_primary"
                 android:textSize="20sp"
                 android:layout_marginStart="15dp"/>
 
@@ -127,8 +127,8 @@
                 android:layout_height="3dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginEnd="5dp"
-                android:background="@color/foi_red"
+                android:layout_marginEnd="15dp"
+                android:background="@color/red_primary"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -140,10 +140,10 @@
                 android:textSize="16dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/grey_80"
-                android:text="It shows that your peak perfomance is when you have at least this amount of oxygen in the room."
+                android:text="@string/descriptionStudyImprovments"
 
                 />
 

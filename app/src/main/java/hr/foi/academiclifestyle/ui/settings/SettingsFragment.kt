@@ -47,6 +47,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var txtUsername: EditText
     private lateinit var txtEmail: EditText
     private lateinit var txtYearOfStudy: EditText
+    private lateinit var txtSemester: EditText
     private lateinit var btnUpdateUser : Button
     private lateinit var btnChoosePicture : Button
     private lateinit var program :Spinner
@@ -72,6 +73,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         txtUsername = binding.editTextTextUsername
         txtEmail = binding.editTextTextEmail
         txtYearOfStudy = binding.editTextYearOfStudy
+        txtSemester = binding.editTextSemester
         btnUpdateUser = binding.btnSaveSettings
         btnChoosePicture = binding.btnSettingsChooseImage
         program = binding.spinner
@@ -119,6 +121,10 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
             viewModel.setYearOfStudy(binding.editTextYearOfStudy.text)
         }
 
+        txtSemester.doAfterTextChanged {
+            viewModel.setSemester(binding.editTextSemester.text)
+        }
+
 
         //Choose picture
         btnChoosePicture.setOnClickListener(){
@@ -145,7 +151,7 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
             viewModel.resetImage()
             Toast.makeText(
                     activity as MainActivity?,
-                    "Image reseted!",
+                    "Image reset!",
                     Toast.LENGTH_SHORT
             ).show()
         }
@@ -207,6 +213,10 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
                 if (it.year != null) {
                     txtYearOfStudy.text =
                         Editable.Factory.getInstance().newEditable(it.year.toString())
+                }
+
+                if(it.semester != null){
+                    txtSemester.text = Editable.Factory.getInstance().newEditable(it.semester.toString())
                 }
             }
 
