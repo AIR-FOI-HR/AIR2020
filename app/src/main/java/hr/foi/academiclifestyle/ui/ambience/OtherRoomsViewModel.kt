@@ -22,10 +22,16 @@ class OtherRoomsViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _responseType = MutableLiveData<Int>()
     val responseType: LiveData<Int> get() = _responseType
+    private val _dataUpdated = MutableLiveData<Boolean>()
+    val dataUpdated: LiveData<Boolean> get() = _dataUpdated
 
     private val _roomList = MutableLiveData<List<String>>()
     val roomList: LiveData<List<String>> get() = _roomList
 
+    var firstCall: Boolean = false
+    var firstAnimCall: Boolean = false
+
+    var sensorData = repository.sensorData
     var user = repository.user
 
     fun fetchRoomList(building: String) {
@@ -48,6 +54,37 @@ class OtherRoomsViewModel(application: Application) : AndroidViewModel(applicati
                 }
             }
         }
+    }
+
+    fun fetchSensorData(roomName: String) {
+        coroutineScope.launch {
+            try {
+                if (roomName != "") {
+                    _dataUpdated.value = repository.updateSensorData(2, 0, roomName)
+                } else {
+                    throw java.lang.IllegalArgumentException()
+                }
+            } catch (ex: Exception) {
+                if (ex is SocketTimeoutException)
+                    _responseType.value = 3
+                else if (ex is UnknownHostException)
+                    _responseType.value = 3
+                else if (ex is HttpException)
+                    _responseType.value = 2
+                else if (ex is ConnectException)
+                    _responseType.value = 3
+                else if (ex is IllegalArgumentException) {
+                    _responseType.value = 5
+                } else
+                    _responseType.value = 4
+                Log.i("CoroutineInfo", ex.toString())
+            }
+        }
+    }
+
+    //reset the events after they have been called
+    fun resetEvents() {
+        _dataUpdated.value = null
     }
 
     //cancel request call if the view closes

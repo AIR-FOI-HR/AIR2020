@@ -7,13 +7,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
 import hr.foi.academiclifestyle.database.model.Event
+import hr.foi.academiclifestyle.database.model.Sensor
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.network.NetworkApi
-import hr.foi.academiclifestyle.network.model.LoginRequest
-import hr.foi.academiclifestyle.network.model.RegisterRequest
-import hr.foi.academiclifestyle.network.model.Room
-import hr.foi.academiclifestyle.network.model.UserRequest
+import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
@@ -30,6 +28,7 @@ class MainRepository (private val database: LocalDatabase) {
     val user: LiveData<User>? = database.userDao.getUser()
     val events: LiveData<List<Event>>? = database.eventDao.getEvents()
     val subjects: LiveData<List<Subject>>? = database.subjectDao.getSubjects()
+    val sensorData: LiveData<List<Sensor>>? = database.sensorDao.getSensors()
 
     //User
     suspend fun loginUser (loginRequest: LoginRequest, rememberUser: Boolean) {
@@ -257,6 +256,47 @@ class MainRepository (private val database: LocalDatabase) {
                 roomList
             } else {
                 mutableListOf()
+            }
+        }
+    }
+
+    suspend fun updateSensorData(tab: Int, roomId: Int?, roomName: String?): Boolean {
+        return withContext(Dispatchers.IO) {
+            var sensorData: List<SensorResponse> = mutableListOf()
+            if (roomId == 0) {
+                var room: List<Room> = NetworkApi.networkService.getRoomByName(roomName!!).await()
+                sensorData = NetworkApi.networkService.getSensorDataByRoomId(room[0].id).await()
+            } else {
+                sensorData = NetworkApi.networkService.getSensorDataByRoomId(roomId!!).await()
+            }
+
+            if (sensorData.isNotEmpty()) {
+                //list needs to be sorted by datetime first to pick the newest entries
+                sensorData = sensorData.sortedByDescending { it.published_at }
+
+                database.sensorDao.clearSensor(tab)
+                val sensorList: MutableList<Sensor> = mutableListOf()
+                //used for filtering out duplicates
+                val sensorIdList: MutableList<Int> = mutableListOf()
+                for (sensor in sensorData) {
+                    if (sensorIdList.isEmpty() || !sensorIdList.contains(sensor.sensor!!.id)) {
+                        sensorIdList.add(sensor.sensor!!.id)
+                        sensorList.add(Sensor(
+                                sensor.sensor!!.id,
+                                sensor.Results!!.x,
+                                sensor.Results!!.y,
+                                sensor.Results!!.z,
+                                sensor.Results!!.temp,
+                                sensor.Results!!.humid,
+                                sensor.Results!!.press,
+                                tab
+                        ))
+                    }
+                }
+                database.sensorDao.insertSensors(sensorList)
+                true
+            } else {
+                false
             }
         }
     }

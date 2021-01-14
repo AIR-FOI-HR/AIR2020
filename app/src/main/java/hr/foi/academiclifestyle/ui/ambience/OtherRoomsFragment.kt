@@ -1,6 +1,7 @@
 package hr.foi.academiclifestyle.ui.ambience
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +26,7 @@ import hr.foi.academiclifestyle.ui.ambience.helpers.RoomItemSelectedListener
 class OtherRoomsFragment : Fragment() {
 
     private val viewModel: OtherRoomsViewModel by lazy {
-        val activity = requireNotNull(this.activity) {}
-        ViewModelProvider(activity).get(OtherRoomsViewModel::class.java)
+        ViewModelProvider(this).get(OtherRoomsViewModel::class.java)
     }
 
     private lateinit var binding: FragmentAmbienceOtherroomsBinding
@@ -46,6 +46,7 @@ class OtherRoomsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentAmbienceOtherroomsBinding>(inflater, R.layout.fragment_ambience_otherrooms, container, false)
+        binding.lifecycleOwner= this
 
         //setup the spinners
         spinnerBuildings = binding.spinnerBuilding
@@ -58,15 +59,11 @@ class OtherRoomsFragment : Fragment() {
         spinnerRooms?.onItemSelectedListener = RoomItemSelectedListener(viewModel, ::startAnimation)
 
         //TODO get data from database (currently hardcoded)
-        setupHBarCharts()
-        setupPieChart()
-
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
-        startAnimation()
+        setupObservers()
 
         //initially get list for the first building in the list
         viewModel.fetchRoomList(buildingList[0])
-        setupObservers()
 
         //TODO set window position in accordance to data
         return binding.root
@@ -78,7 +75,36 @@ class OtherRoomsFragment : Fragment() {
                 adapterRooms = ArrayAdapter((activity as MainActivity), R.layout.spinner_programs, it)
                 adapterRooms?.setDropDownViewResource(R.layout.spinner_drop_down)
                 spinnerRooms?.adapter = adapterRooms
-                finishAnimation()
+
+                if (it.isEmpty()) {
+                    viewModel.fetchSensorData("")
+                }
+            }
+        })
+        viewModel.sensorData?.observe(viewLifecycleOwner, Observer {
+            if (it != null && viewModel.firstCall) {
+                for (sensor in it) {
+                    if (sensor.tab == 2 &&
+                            sensor.humid != null && sensor.temp != null && sensor.press != null) {
+                        setupHBarCharts(sensor.temp, sensor.humid, sensor.press)
+                    }
+                    //TODO set window position in accordance to data
+                }
+
+                //TODO fetch data for air quality, currently hardcoded
+                setupPieChart()
+            } else {
+                viewModel.firstCall = true
+            }
+        })
+        viewModel.dataUpdated.observe(viewLifecycleOwner, Observer {
+            // used only for updating the animation
+            if (it != null) {
+                if (viewModel.firstAnimCall) {
+                    finishAnimation()
+                } else
+                    viewModel.firstAnimCall = true
+                viewModel.resetEvents()
             }
         })
         viewModel.responseType.observe(viewLifecycleOwner, Observer {
@@ -99,13 +125,18 @@ class OtherRoomsFragment : Fragment() {
                             "Unknown Error!",
                             Toast.LENGTH_SHORT
                     ).show()
+                    5 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "No Rooms found!",
+                            Toast.LENGTH_SHORT
+                    ).show()
                 }
                 finishAnimation()
             }
         })
     }
 
-    private fun setupHBarCharts() {
+    private fun setupHBarCharts(temp: Float, humid: Float, press: Float) {
         //define charts and mutable lists of data
         val hBarChart: HorizontalBarChart = binding.hBarChart
         val hBarChart2: HorizontalBarChart = binding.hBarChart2
@@ -115,9 +146,9 @@ class OtherRoomsFragment : Fragment() {
         val hBarData3: MutableList<BarEntry> = mutableListOf()
 
         //add data to lists
-        hBarData.add(BarEntry(0F, 22F))
-        hBarData2.add(BarEntry(0F, 1013F))
-        hBarData3.add(BarEntry(0F, 20F))
+        hBarData.add(BarEntry(0F, temp))
+        hBarData2.add(BarEntry(0F, press))
+        hBarData3.add(BarEntry(0F, humid))
 
         //define a data set with the given data list and label
         val dataSet: BarDataSet = BarDataSet(hBarData, "(C)")

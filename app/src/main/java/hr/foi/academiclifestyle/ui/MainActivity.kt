@@ -51,6 +51,7 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         drawerLayout = binding.drawerLayout
 
+
         val navController = this.findNavController(R.id.mainNavHostFragment)
 
         //pass each item individually to app bar so that it's considered a top-level destination (no back button)
