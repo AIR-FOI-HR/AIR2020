@@ -47,7 +47,6 @@ class MyLocationFragment : Fragment() {
         //TODO use bluetooth to determine the current room Id
         viewModel.fetchSensorData(2)
 
-        Log.i("mylocation", viewModel.firstCall.toString())
         return binding.root
     }
 

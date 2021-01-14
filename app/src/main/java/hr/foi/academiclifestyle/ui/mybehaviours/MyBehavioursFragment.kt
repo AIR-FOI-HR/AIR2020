@@ -30,7 +30,6 @@ import kotlin.math.absoluteValue
 
 class MyBehavioursFragment : Fragment() {
 
-
     private val viewModel: MyBehavioursViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
         ViewModelProvider(this, MyBehavioursViewModel.Factory(activity.application)).get(MyBehavioursViewModel::class.java)

@@ -40,7 +40,6 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
     private val _bitmapImage = MutableLiveData<Bitmap>()
     val bitmapImage: LiveData<Bitmap> get() = _bitmapImage
 
-
     val user = repository.user
     var tokenChecked: Boolean = false
 
@@ -57,7 +56,6 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
                 if(user.imageURL != "")
                     _bitmapImage.value = repository.getBitmapFromURL(user.imageURL)
             } catch (ex: Exception) {
-                //TODO add handling for no connection
                 repository.clearUser()
                 _valid.value = false
                 Log.e("Image",ex.toString())

@@ -41,7 +41,6 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         )
     }
 
-
     private lateinit var txtFirstName: EditText
     private lateinit var txtLastName: EditText
     private lateinit var txtUsername: EditText
@@ -321,8 +320,6 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
-
-
     }
 
     companion object {
@@ -364,7 +361,6 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
                 val columnIndex = cursor.getColumnIndex(filePathColumn[0])
                 mediaPath =cursor.getString(columnIndex)
                 cursor.close()
-
             }
             image.setImageURI(data?.data)
             //val uri : String = data?.dataString!!

@@ -29,7 +29,6 @@ fun getDatabase(context: Context): LocalDatabase {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
                 LocalDatabase::class.java,
                 "localDb").fallbackToDestructiveMigration().build()
-
         }
     }
     return INSTANCE

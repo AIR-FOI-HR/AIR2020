@@ -20,7 +20,6 @@ import hr.foi.academiclifestyle.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment() {
 
-
     private val viewModel: RegisterViewModel by lazy {
         ViewModelProvider((activity as AuthActivity)).get(RegisterViewModel::class.java)
     }

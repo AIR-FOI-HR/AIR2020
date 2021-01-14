@@ -35,5 +35,5 @@ data class UserResponse (
     @field:Json(name = "@profile_picture")
     val profile_picture: ImageResponse? =  null,
     @field:Json(name = "@semester")
-    val semester: Int = 0
+    val semester: Int? = 0
 )

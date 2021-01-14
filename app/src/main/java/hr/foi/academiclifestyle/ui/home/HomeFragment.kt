@@ -3,6 +3,7 @@ package hr.foi.academiclifestyle.ui.home
 import android.content.res.ColorStateList
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,7 +56,7 @@ class HomeFragment : Fragment() {
                 if (it.program != 0)
                     binding.txtCourseValue.text = CoursesEnum.fromId(it.program!!)?.programName
                 viewModel.fetchEnrolledSubjectCount()
-                if(it.semester != 0)
+                if(it.semester != 0 && it.semester != null)
                     binding.txtSemesterValue.text = it.semester.toString()
             }
         })
