@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
 
         setupObservers()
         setThemeOptions()
+        //enroledSubjects()
         return binding.root
     }
 
@@ -60,6 +61,15 @@ class HomeFragment : Fragment() {
                     binding.txtSemesterValue.text = it.semester.toString()
             }
         })
+
+        viewModel.subjectsEnroled?.observe(viewLifecycleOwner, Observer{
+            if(it != null)
+                binding.txtSubjectsEnrolledValue.text =it.toString()
+        })
+    }
+
+    private fun enroledSubjects(){
+        binding.txtSubjectsEnrolledValue.text = viewModel.fetchEnrolledSubjectCount().toString()
     }
 
     private fun setThemeOptions() {

@@ -45,6 +45,7 @@ class MainRepository (private val database: LocalDatabase) {
                     imageID =  response.user?.profile_picture.id
                     bitmapImage = getBitmapFromURL(imageURL)
                 }
+
             if (response.jwt != "") {
                 val program = response.user?.program?.id
                 val user = User (
@@ -55,7 +56,7 @@ class MainRepository (private val database: LocalDatabase) {
                     response.user.email,
                     response.user.year,
                     program,
-                    response.user.semester,
+                    response.user!!.semester,
                     imageID,
                     imageURL,
                    // bitmapImage,
@@ -171,8 +172,15 @@ class MainRepository (private val database: LocalDatabase) {
             val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
             val body = MultipartBody.Part.createFormData("files", file.name, requestFile)
             val response = NetworkApi.networkService.uploadPicture("Bearer $token", body).await()
-
             response[0]!!.id
+        }
+    }
+
+
+    suspend fun fetchSubjectsBySemesterAndProgram(programId: Int,semester: Int) : Int{
+       return withContext(Dispatchers.IO){
+            val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
+           response.size
         }
     }
 
