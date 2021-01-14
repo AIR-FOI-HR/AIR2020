@@ -1,13 +1,18 @@
 package hr.foi.academiclifestyle.ui.ambience
 
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.*
@@ -18,23 +23,83 @@ import hr.foi.academiclifestyle.ui.MainActivity
 
 class MyLocationFragment : Fragment() {
 
+    private val viewModel: MyLocationViewModel by lazy {
+        ViewModelProvider(this).get(MyLocationViewModel::class.java)
+    }
+
     private lateinit var binding: FragmentAmbienceMylocationBinding
+
+    private lateinit var progressBarHolder: FrameLayout
+    private lateinit var inAnimation: AlphaAnimation
+    private lateinit var outAnimation: AlphaAnimation
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentAmbienceMylocationBinding>(inflater, R.layout.fragment_ambience_mylocation, container, false)
+        binding.lifecycleOwner = this
 
-        //TODO get data from database (currently hardcoded)
-        setupHBarCharts()
-        setupPieChart()
+        progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
+        startAnimation()
+        setupObservers()
 
-        //TODO set window position in accordance to data
+        //TODO use bluetooth to determine the current room Id
+        viewModel.fetchSensorData(2)
+
+        Log.i("mylocation", viewModel.firstCall.toString())
         return binding.root
     }
 
-    private fun setupHBarCharts() {
+    private fun setupObservers() {
+        viewModel.sensorData?.observe(viewLifecycleOwner, Observer {
+            if (it != null && viewModel.firstCall) {
+                for (sensor in it) {
+                    if (sensor.tab == 1 &&
+                            sensor.humid != null && sensor.temp != null && sensor.press != null) {
+                        setupHBarCharts(sensor.temp, sensor.humid, sensor.press)
+                    }
+                    //TODO set window position in accordance to data
+                }
+
+                //TODO fetch data for air quality, currently hardcoded
+                setupPieChart()
+            } else {
+                viewModel.firstCall = true
+            }
+        })
+        viewModel.dataUpdated.observe(viewLifecycleOwner, Observer {
+            // used only for updating the animation
+            if (it != null) {
+                finishAnimation()
+                viewModel.resetEvents()
+            }
+        })
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                when (it) {
+                    2 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Bad request!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    3 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Server Error, please try again!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    4 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Unknown Error!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+                finishAnimation()
+            }
+        })
+    }
+
+    private fun setupHBarCharts(temp: Float, humid: Float, press: Float) {
         //define charts and mutable lists of data
         val hBarChart: HorizontalBarChart = binding.hBarChart
         val hBarChart2: HorizontalBarChart = binding.hBarChart2
@@ -44,9 +109,9 @@ class MyLocationFragment : Fragment() {
         val hBarData3: MutableList<BarEntry> = mutableListOf()
 
         //add data to lists
-        hBarData.add(BarEntry(0F, 22F))
-        hBarData2.add(BarEntry(0F, 1013F))
-        hBarData3.add(BarEntry(0F, 20F))
+        hBarData.add(BarEntry(0F, temp))
+        hBarData2.add(BarEntry(0F, press))
+        hBarData3.add(BarEntry(0F, humid))
 
         //define a data set with the given data list and label
         val dataSet: BarDataSet = BarDataSet(hBarData, "(C)")
@@ -172,5 +237,19 @@ class MyLocationFragment : Fragment() {
 
         pieChart.data = pieData
         pieChart.invalidate()
+    }
+
+    private fun startAnimation() {
+        inAnimation = AlphaAnimation(0f, 1f)
+        inAnimation.setDuration(200)
+        progressBarHolder.animation = inAnimation
+        progressBarHolder.visibility = View.VISIBLE
+    }
+
+    private fun finishAnimation() {
+        outAnimation = AlphaAnimation(1f, 0f)
+        outAnimation.setDuration(200)
+        progressBarHolder.animation = outAnimation
+        progressBarHolder.visibility = View.GONE
     }
 }

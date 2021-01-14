@@ -37,6 +37,7 @@ class AmbienceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentAmbienceBinding>(inflater, R.layout.fragment_ambience, container, false)
+        binding.lifecycleOwner = this
 
         // fix toggle animation for navView
         val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
@@ -46,12 +47,7 @@ class AmbienceFragment : Fragment() {
 
         setThemeOptions()
         createTabLayout(binding.tabLayout, binding.viewPager)
-        setObservers()
         return binding.root
-    }
-
-    fun setObservers() {
-
     }
 
     fun setThemeOptions() {
@@ -94,7 +90,7 @@ class AmbienceFragment : Fragment() {
         tabLayout.tabMode = TabLayout.MODE_FIXED
 
         // Set the ViewPager Adapter
-        val adapter = TabsPagerAdapter((activity as MainActivity).supportFragmentManager, lifecycle, numberOfTabs)
+        val adapter = TabsPagerAdapter(childFragmentManager, lifecycle, numberOfTabs)
         tabsViewpager.adapter = adapter
 
         // Set to not remove the cached fragments

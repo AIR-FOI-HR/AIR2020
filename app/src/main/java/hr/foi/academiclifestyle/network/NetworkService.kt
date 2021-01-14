@@ -48,6 +48,12 @@ interface DatabaseApiService {
 
     @GET("rooms")
     fun getRoomsByBuildingName(@Query("building.name") building: String): Deferred<List<Room>>
+
+    @GET("rooms")
+    fun getRoomByName(@Query("name") roomName: String): Deferred<List<Room>>
+
+    @GET("sensor-data")
+    fun getSensorDataByRoomId(@Query("sensor.room") roomId: Int): Deferred<List<SensorResponse>>
 }
 
 object NetworkApi {

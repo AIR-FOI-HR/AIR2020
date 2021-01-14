@@ -2,6 +2,7 @@ package hr.foi.academiclifestyle.ui.myclasses
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,6 +84,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
         })
         viewModel.events?.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.firstCall) {
+                Log.i("it", it.toString())
                 if (it.isNotEmpty()) {
                     val scheduleList = createScheduleList(it)
                     binding.scheduleRecycler.adapter = ScheduleRecyclerAdapter(scheduleList, this)
