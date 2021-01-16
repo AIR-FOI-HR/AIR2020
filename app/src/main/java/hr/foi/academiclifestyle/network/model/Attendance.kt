@@ -3,19 +3,28 @@ package hr.foi.academiclifestyle.network.model
 import com.squareup.moshi.Json
 import hr.foi.academiclifestyle.database.model.User
 
-data class Event (
+data class Attendance (
+    @field:Json(name = "@id")
+    val id: Int = 0,
+    @field:Json(name = "@logTime")
+    val log_time: String = "",
+    @field:Json(name = "@event")
+    val event: EventAttend? = null
+)
+
+data class EventAttend (
     @field:Json(name = "@id")
     val id: Int = 0,
     @field:Json(name = "@name")
     val Name: String = "",
     @field:Json(name = "@event_type")
-    val event_type: EventType? = null,
+    val event_type: Int? = 0,
     @field:Json(name = "@subject")
-    val subject: Subject? = null,
+    val subject: Int? = 0,
     @field:Json(name = "@room")
-    val room: RoomEvent? = null,
+    val room: Int? = 0,
     @field:Json(name = "@user")
-    val user: User? = null,
+    val user: Int? = 0,
     @field:Json(name = "@day")
     val day: String = "",
     @field:Json(name = "@start_time")

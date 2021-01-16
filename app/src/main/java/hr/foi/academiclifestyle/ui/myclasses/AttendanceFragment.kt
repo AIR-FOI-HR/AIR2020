@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -15,9 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.databinding.FragmentMyclassesAttendanceBinding
+import hr.foi.academiclifestyle.dimens.AttendanceDetails
 import hr.foi.academiclifestyle.ui.MainActivity
+import hr.foi.academiclifestyle.ui.myclasses.adapters.AttendanceDetailsRecyclerAdapter
 import hr.foi.academiclifestyle.ui.myclasses.adapters.AttendanceRecyclerAdapter
-import hr.foi.academiclifestyle.ui.myclasses.adapters.ScheduleRecyclerAdapter
 
 class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickListener {
 
@@ -26,13 +29,20 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
         ViewModelProvider(this, AttendanceViewModel.Factory(activity.application)).get(AttendanceViewModel::class.java)
     }
 
+    private lateinit var subjectListHolder: MutableList<Subject>
+    private lateinit var detailsListHolder: MutableList<AttendanceDetails>
     private lateinit var binding: FragmentMyclassesAttendanceBinding
+    private lateinit var progressBarHolder: FrameLayout
+    private lateinit var inAnimation: AlphaAnimation
+    private lateinit var outAnimation: AlphaAnimation
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentMyclassesAttendanceBinding>(inflater, R.layout.fragment_myclasses_attendance, container, false)
+
+        progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
 
         binding.btnRightSem.setOnClickListener() {
             val txtSemester: TextView = binding.txtSemNumber
@@ -50,17 +60,28 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
         }
 
         // Setup the recycler
-        val emptySubjectList: MutableList<Subject> = mutableListOf()
-        emptySubjectList.add(Subject(1, "-", "-", 1, 1, "-"))
-        binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(emptySubjectList, this)
+        subjectListHolder = mutableListOf()
+        detailsListHolder = mutableListOf()
+        subjectListHolder.add(Subject(0, "-", "-", 0, 0, "-"))
+        detailsListHolder.add(AttendanceDetails("", "", 0, 0, 0))
+        binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
         binding.attendanceRecycler.layoutManager = LinearLayoutManager((activity as MainActivity))
+        binding.attendanceDetailsRecycler.adapter = AttendanceDetailsRecyclerAdapter(detailsListHolder)
+        binding.attendanceDetailsRecycler.layoutManager = LinearLayoutManager((activity as MainActivity))
+
+        binding.btnBack.setOnClickListener(View.OnClickListener {
+            binding.detailsView.visibility = View.GONE
+            binding.mainView.visibility = View.VISIBLE
+        })
 
         setupObservers()
         return binding.root
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText((activity as MainActivity), "Position: $position", Toast.LENGTH_SHORT).show()
+        startAnimation()
+        val subject = subjectListHolder[position]
+        viewModel.getSubjectDetails(subject)
     }
 
     private fun setupObservers() {
@@ -72,14 +93,35 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
         viewModel.subjects?.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.firstCall) {
                 if (it.isNotEmpty()) {
-                    binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(it, this)
+                    subjectListHolder = it.toMutableList()
+                    binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
                 } else {
-                    val emptySubjectList: MutableList<Subject> = mutableListOf()
-                    emptySubjectList.add(Subject(1, "-", "-", 1, 1, "-"))
-                    binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(emptySubjectList, this)
+                    subjectListHolder = mutableListOf()
+                    subjectListHolder.add(Subject(0, "-", "-", 0, 0, "-"))
+                    binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
                 }
             } else
                 viewModel.firstCall = true
+        })
+        viewModel.details.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                if (it.isNotEmpty()) {
+                    binding.txtSubjectTitle.text = it[0].name
+
+                    detailsListHolder = it.toMutableList()
+                    binding.attendanceDetailsRecycler.adapter = AttendanceDetailsRecyclerAdapter(detailsListHolder)
+
+                    binding.mainView.visibility = View.GONE
+                    binding.detailsView.visibility = View.VISIBLE
+                } else {
+                    Toast.makeText(
+                            activity as MainActivity?,
+                            "No subject selected!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+                finishAnimation()
+            }
         })
         viewModel.responseType.observe(viewLifecycleOwner, Observer {
             if (it != null) {
@@ -102,5 +144,19 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
                 }
             }
         })
+    }
+
+    private fun startAnimation() {
+        inAnimation = AlphaAnimation(0f, 1f)
+        inAnimation.setDuration(200)
+        progressBarHolder.animation = inAnimation
+        progressBarHolder.visibility = View.VISIBLE
+    }
+
+    private fun finishAnimation() {
+        outAnimation = AlphaAnimation(1f, 0f)
+        outAnimation.setDuration(200)
+        progressBarHolder.animation = outAnimation
+        progressBarHolder.visibility = View.GONE
     }
 }

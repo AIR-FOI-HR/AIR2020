@@ -10,6 +10,8 @@ import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Sensor
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
+import hr.foi.academiclifestyle.dimens.AttendanceDetails
+import hr.foi.academiclifestyle.dimens.EventTypeEnum
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
@@ -303,6 +305,42 @@ class MainRepository (private val database: LocalDatabase) {
             } else {
                 false
             }
+        }
+    }
+
+    suspend fun getSubjectDetails(subject: Subject, userId: Long) : MutableList<AttendanceDetails> {
+        return withContext(Dispatchers.IO) {
+            val events = NetworkApi.networkService.getEventsForSubjectId(subject.subjectId).await()
+            val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
+            var detailsList: MutableList<AttendanceDetails> = mutableListOf()
+
+            Log.i("attendance", userId.toString())
+            if (events.isNotEmpty()) {
+                for (event in events) {
+                    var userAttendance = 0
+                    if (attendances.isNotEmpty()) {
+                        for (attendance in attendances) {
+                            if (attendance.event!!.id == event.id && attendance.event.event_type == event.event_type!!.id) {
+                                userAttendance += 1
+                            }
+                        }
+                    }
+
+                    var maxAtt: Int = 0
+                    if (event.max_attendance != null && event.max_attendance != 0) {
+                        maxAtt = event.max_attendance
+                    }
+                    val details = AttendanceDetails (
+                            subject.name!!,
+                            EventTypeEnum.fromId(event.event_type!!.id)!!.eventName,
+                            maxAtt,
+                            0, //this needs to be set to the min attendance
+                            userAttendance
+                    )
+                    detailsList.add(details)
+                }
+            }
+            detailsList
         }
     }
 }

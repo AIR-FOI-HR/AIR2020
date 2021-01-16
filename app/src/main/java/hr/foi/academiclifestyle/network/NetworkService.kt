@@ -38,6 +38,9 @@ interface DatabaseApiService {
     @GET("events")
     fun getEventsForDayAndProgram(@Query("subject.program") programId: Int, @Query("day") day: String): Deferred<List<Event>>
 
+    @GET("events")
+    fun getEventsForSubjectId(@Query("subject.id") subjectId: Int): Deferred<List<Event>>
+
     @GET("subjects")
     fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
 
@@ -54,6 +57,9 @@ interface DatabaseApiService {
 
     @GET("sensor-data")
     fun getSensorDataByRoomId(@Query("sensor.room") roomId: Int): Deferred<List<SensorResponse>>
+
+    @GET("attendances")
+    fun getAttendanceByUserId(@Query("users_permissions_user.id") userId: Long): Deferred<List<Attendance>>
 }
 
 object NetworkApi {
