@@ -12,7 +12,7 @@ data class Event (
 
         val day: String? = "",
 
-        val date: Long? = 0L,
+        val date: String? = "",
 
         val name: String? = "",
 

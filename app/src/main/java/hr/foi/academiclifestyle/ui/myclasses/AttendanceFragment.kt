@@ -47,15 +47,17 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
         binding.btnRightSem.setOnClickListener() {
             val txtSemester: TextView = binding.txtSemNumber
             if (txtSemester.text == "1") {
+                startAnimation()
                 txtSemester.text = "2"
-                viewModel.getSubjects(0, 2)
+                viewModel.getSubjects(0, 2, 0L)
             }
         }
         binding.btnLeftSem.setOnClickListener() {
             val txtSemester: TextView = binding.txtSemNumber
             if (txtSemester.text == "2") {
+                startAnimation()
                 txtSemester.text = "1"
-                viewModel.getSubjects(0, 1)
+                viewModel.getSubjects(0, 1, 0L)
             }
         }
 
@@ -86,8 +88,8 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
 
     private fun setupObservers() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
-            if (it?.program != null && it.program != 0) {
-                viewModel.getSubjects(it.program, 1)
+            if (it?.program != null && it.program != 0 && it.semester != 0 && it.program != null) {
+                viewModel.getSubjects(it.program, 1, it.userId)
             }
         })
         viewModel.subjects?.observe(viewLifecycleOwner, Observer {
@@ -100,6 +102,7 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
                     subjectListHolder.add(Subject(0, "-", "-", 0, 0, "-"))
                     binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
                 }
+                finishAnimation()
             } else
                 viewModel.firstCall = true
         })

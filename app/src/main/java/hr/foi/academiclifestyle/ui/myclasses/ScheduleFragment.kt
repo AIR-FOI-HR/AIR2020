@@ -49,9 +49,8 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
         // A mask is used here to prevent rapid calls
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             startAnimation()
-            val date : LocalDate = LocalDate.of(year, month+1, dayOfMonth)
-            val currentDay : String = date.dayOfWeek.toString().toLowerCase()
-            viewModel.getEvents(currentDay, 0)
+            val currentDate : LocalDate = LocalDate.of(year, month+1, dayOfMonth)
+            viewModel.getEvents(currentDate, 0)
         }
 
         // Setup the recycler
@@ -72,7 +71,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
     private fun setupObservers() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
             if (it?.program != null && it.program != 0) {
-                viewModel.getEvents("", it.program)
+                viewModel.getEvents(null, it.program)
             }
         })
         viewModel.eventsUpdated.observe(viewLifecycleOwner, Observer {
@@ -84,7 +83,6 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
         })
         viewModel.events?.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.firstCall) {
-                Log.i("it", it.toString())
                 if (it.isNotEmpty()) {
                     val scheduleList = createScheduleList(it)
                     binding.scheduleRecycler.adapter = ScheduleRecyclerAdapter(scheduleList, this)
@@ -135,6 +133,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
             var time = "$numStart-$numEnd"
             var name = "-"
             var status = 0
+            var userLogTime = ""
 
             val event = eventList.find {
                 var found = false
@@ -148,9 +147,10 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
             }
             if (event != null) {
                 name = event.name!!
-                status = 2 //event.status!! - revert this once status is done
+                status = event.status!!
+                userLogTime = event.date!!
             }
-            scheduleList.add(ScheduleEvent(time, name, status))
+            scheduleList.add(ScheduleEvent(time, name, status, userLogTime))
         }
         return scheduleList
     }

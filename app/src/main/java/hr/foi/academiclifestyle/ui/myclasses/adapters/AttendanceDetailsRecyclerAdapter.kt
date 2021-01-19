@@ -36,13 +36,13 @@ class AttendanceDetailsRecyclerAdapter(private val detailsList: List<AttendanceD
 
         var userAttendPercentage = 0
         if (currentItem.userAttend > 0 && currentItem.maxAttend > 0) {
-            userAttendPercentage = (currentItem.userAttend/currentItem.maxAttend)*100
+            userAttendPercentage = ((currentItem.userAttend.toDouble()/currentItem.maxAttend)*100).toInt()
         }
         holder.txtMyAttend.text = currentItem.userAttend.toString() + "/" + currentItem.maxAttend.toString() + " (" + userAttendPercentage + "%)"
 
         var minAttendPercentage = 0
         if (currentItem.minAttend > 0 && currentItem.maxAttend > 0) {
-            minAttendPercentage = (currentItem.minAttend/currentItem.maxAttend)*100
+            minAttendPercentage = ((currentItem.minAttend.toDouble()/currentItem.maxAttend)*100).toInt()
         }
         holder.txtMinAttend.text = "$minAttendPercentage%"
 

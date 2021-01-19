@@ -4,10 +4,12 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.dimens.ScheduleEvent
 
@@ -21,6 +23,14 @@ class CustomDialog {
 
         dialog.findViewById<TextView>(R.id.txtDTitle).text = event.name
         val dialogButton: Button = dialog.findViewById(R.id.btnDConfirm)
+
+        if (event.status == 1) {
+            dialog.findViewById<TextView>(R.id.txtDInfo).visibility = View.INVISIBLE
+            dialogButton.text = "Close"
+            dialogButton.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_60))
+            dialog.findViewById<TextView>(R.id.txtDPresenceVar).text = event.userLogTime
+        }
+
         dialogButton.setOnClickListener() {
             dialog.dismiss()
         }

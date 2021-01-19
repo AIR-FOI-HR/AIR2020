@@ -11,7 +11,7 @@
     <string name="log_out">Log Out</string>
     <string name="open">open</string>
     <string name="close">close</string>
-    <string name="myclasses_warning">Make sure to set your study program in the settings before using this module</string>
+    <string name="myclasses_warning">Make sure to set your study program and semester in the settings before using this module</string>
     <string name="txtSettings_first_name">First name</string>
     <string name="textEditorSettingsFistName">First Name</string>
     <string name="last_name">Last name</string>

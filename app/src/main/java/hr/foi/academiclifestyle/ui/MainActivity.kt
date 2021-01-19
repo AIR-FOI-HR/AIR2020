@@ -20,6 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import com.jakewharton.threetenabp.AndroidThreeTen
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
 import hr.foi.academiclifestyle.dimens.CoursesEnum
@@ -43,6 +44,9 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Initialize timezone
+        AndroidThreeTen.init(this)
+
         var binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         //set up the toolbar

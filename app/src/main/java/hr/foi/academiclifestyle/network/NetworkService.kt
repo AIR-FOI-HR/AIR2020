@@ -36,7 +36,7 @@ interface DatabaseApiService {
                    @Body body: UserRequest?) : Deferred<UserResponse>
 
     @GET("events")
-    fun getEventsForDayAndProgram(@Query("subject.program") programId: Int, @Query("day") day: String): Deferred<List<Event>>
+    fun getEventsForDayProgramSemester(@Query("subject.program") programId: Int, @Query("day") day: String, @Query("subject.Semester") semester: Int): Deferred<List<Event>>
 
     @GET("events")
     fun getEventsForSubjectId(@Query("subject.id") subjectId: Int): Deferred<List<Event>>

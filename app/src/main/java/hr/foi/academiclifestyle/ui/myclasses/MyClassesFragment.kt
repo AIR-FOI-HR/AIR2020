@@ -61,7 +61,7 @@ class MyClassesFragment : Fragment() {
 
     fun setObservers() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
-            if (it?.program != null && it.program != 0) {
+            if (it?.program != null && it.program != 0 && it.semester != null && it.semester != 0) {
                 binding.classesMain.visibility = View.VISIBLE
                 createTabLayout(binding.tabLayout, binding.viewPager)
             } else {

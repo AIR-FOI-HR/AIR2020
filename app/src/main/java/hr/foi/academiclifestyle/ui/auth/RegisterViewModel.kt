@@ -66,7 +66,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             coroutineScope.launch {
                 try {
                     val valid = repository.registerUser(registerRequest)
-                    Log.i("valid", valid.toString())
                     if (valid) {
                         _registerValid.value = true
                         _responseType.value = 4

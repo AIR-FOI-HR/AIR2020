@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -34,29 +35,18 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
-    fun getEvents(day: String, program: Int) {
+    fun getEvents(currentDate: LocalDate?, program: Int) {
         coroutineScope.launch {
-            var currentDay: String = ""
-            if (day == "") {
-                val c = Calendar.getInstance()
-                c.time = Date()
-                val dayOfWeek = c[Calendar.DAY_OF_WEEK]
-                currentDay = when (dayOfWeek) {
-                    1 -> "sunday"
-                    2 -> "monday"
-                    3 -> "tuesday"
-                    4 -> "wednesday"
-                    5 -> "thursday"
-                    6 -> "friday"
-                    else -> "saturday"
-                }
-            } else
-                currentDay = day
+            var parsedDate = currentDate
+            if (parsedDate == null) {
+                parsedDate = LocalDate.now()
+            }
+
             try {
                 if (program == 0)
-                    _eventsUpdated.value = repository.updateEvents(currentDay, user?.value?.program!!)
+                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, user?.value?.program!!, user?.value?.semester!!, user?.value?.userId!!)
                 else
-                    _eventsUpdated.value = repository.updateEvents(currentDay, program)
+                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, program, user?.value?.semester!!, user?.value?.userId!!)
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
                     _responseType.value = 3

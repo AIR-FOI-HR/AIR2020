@@ -3,6 +3,7 @@ package hr.foi.academiclifestyle.repository
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Network
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
@@ -19,9 +20,12 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 
 class MainRepository (private val database: LocalDatabase) {
@@ -161,7 +165,6 @@ class MainRepository (private val database: LocalDatabase) {
                 rememberMe
             )
 
-            Log.e("User", user.toString())
             database.userDao.clear()
             database.userDao.insert(user)
 
@@ -187,24 +190,53 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Events
-    suspend fun updateEvents(day: String, programId: Int) : Boolean {
+    suspend fun updateEvents(date: LocalDate, programId: Int, semester: Int, userId: Long) : Boolean {
         return withContext(Dispatchers.IO) {
-            val eventList = NetworkApi.networkService.getEventsForDayAndProgram(programId = programId, day = day).await()
+            var day = date.dayOfWeek.toString().toLowerCase()
+            val eventList = NetworkApi.networkService.getEventsForDayProgramSemester(programId = programId, day = day, semester = semester).await()
+            val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
 
             database.eventDao.clearEvents()
             if (eventList.isNotEmpty()) {
                 var events: MutableList<Event> = mutableListOf()
                 for (event in eventList) {
-                    //TODO fetch and add status according to user presence
-                    //TODO the current date and the presence of the user should be checked to determine the status of an event
+                    var userLoggedDate = ""
+                    var pressence = 2 //not present by default
+                    if (attendances.isNotEmpty()) {
+                        for (attendance in attendances) {
+
+                            if (attendance.event!!.id == event.id && attendance.event.event_type == event.event_type!!.id) {
+                                val time = attendance.log_time
+                                var parsedDateTime = LocalDateTime.parse(time.substring(0, time.length - 1))
+                                parsedDateTime = parsedDateTime.plusHours(1) //Strapi returns the wrong timezone
+
+                                val hourStart = event.start_time.substring(0, event.start_time.length-3).toInt()
+                                val minutesStart = event.start_time.substring(3, event.start_time.length).toInt()
+                                var dateTimeStart = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourStart, minutesStart)
+
+                                val hourEnd = event.end_time.substring(0, event.end_time.length-3).toInt()
+                                val minutesEnd = event.end_time.substring(3, event.end_time.length).toInt()
+                                var dateTimeEnd = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourEnd, minutesEnd)
+
+                                //if user logged time is in range of the lecture time
+                                if (parsedDateTime.compareTo(dateTimeStart) == 1 && parsedDateTime.compareTo(dateTimeEnd) == -1) {
+                                    pressence = 1
+                                    userLoggedDate = parsedDateTime.toLocalTime().toString()
+                                }
+
+                                break
+                            }
+                        }
+                    }
+
                     val eventRes = Event (
                             event.id,
                             event.day,
-                            0L,
+                            userLoggedDate,
                             event.Name,
                             event.start_time,
                             event.end_time,
-                            0
+                            pressence
                     )
                     events.add(eventRes)
                 }
@@ -215,22 +247,56 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Subjects
-    suspend fun updateSubjects(programId: Int, semester: Int) {
+    suspend fun updateSubjects(userId: Long, programId: Int, semester: Int) {
         withContext(Dispatchers.IO) {
             val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = semester).await()
+            val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
 
             database.subjectDao.clearSubjects()
             if (subjectList.isNotEmpty()) {
                 var subjects: MutableList<Subject> = mutableListOf()
                 for (subject in subjectList) {
-                    //TODO fetch and correct percentage
+                    var userAttendance = 0
+                    var maxAttendance = 0
+
+                    //this is only to fetch each type once for max attendance
+                    var bLecture = false
+                    var bLab = false
+                    var bSeminar = false
+                    if (attendances.isNotEmpty()) {
+                        for (attendance in attendances) {
+                            if (attendance.event!!.subject == subject.id) {
+                                userAttendance += 1
+                                if (attendance.event!!.max_attendance != null && attendance.event!!.max_attendance != 0) {
+                                    if (!bLecture && attendance.event!!.event_type == EventTypeEnum.LECTURE.eventTypeId) {
+                                        maxAttendance += attendance.event!!.max_attendance!!
+                                        bLecture = true
+                                    }
+                                    if (!bLab && attendance.event!!.event_type == EventTypeEnum.LAB.eventTypeId) {
+                                        maxAttendance += attendance.event!!.max_attendance!!
+                                        bLab = true
+                                    }
+                                    if (!bSeminar && attendance.event!!.event_type == EventTypeEnum.SEMINAR.eventTypeId) {
+                                        maxAttendance += attendance.event!!.max_attendance!!
+                                        bSeminar = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var percentage = 0
+                    if (userAttendance != 0 && maxAttendance != 0) {
+                        percentage = ((userAttendance.toDouble()/maxAttendance)*100).toInt()
+                    }
+
                     val subjectRes = Subject (
                             subject.id,
                             subject.Name,
                             subject.program?.shortName,
                             semester,
                             programId,
-                            "0%"
+                            "$percentage%"
                     )
                     subjects.add(subjectRes)
                 }
@@ -314,7 +380,6 @@ class MainRepository (private val database: LocalDatabase) {
             val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
             var detailsList: MutableList<AttendanceDetails> = mutableListOf()
 
-            Log.i("attendance", userId.toString())
             if (events.isNotEmpty()) {
                 for (event in events) {
                     var userAttendance = 0
@@ -327,14 +392,18 @@ class MainRepository (private val database: LocalDatabase) {
                     }
 
                     var maxAtt: Int = 0
+                    var minAtt: Int = 0
                     if (event.max_attendance != null && event.max_attendance != 0) {
                         maxAtt = event.max_attendance
+                    }
+                    if (event.min_attendance != null && event.min_attendance != 0) {
+                        minAtt = event.min_attendance
                     }
                     val details = AttendanceDetails (
                             subject.name!!,
                             EventTypeEnum.fromId(event.event_type!!.id)!!.eventName,
                             maxAtt,
-                            0, //this needs to be set to the min attendance
+                            minAtt, //this needs to be set to the min attendance
                             userAttendance
                     )
                     detailsList.add(details)

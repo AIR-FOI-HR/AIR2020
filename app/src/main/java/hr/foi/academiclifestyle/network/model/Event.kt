@@ -23,5 +23,7 @@ data class Event (
     @field:Json(name = "@end_time")
     val end_time: String = "",
     @field:Json(name = "@maxAttendance")
-    val max_attendance: Int? = 0
+    val max_attendance: Int? = 0,
+    @field:Json(name = "@minAttendance")
+    val min_attendance: Int? = 0
 )
