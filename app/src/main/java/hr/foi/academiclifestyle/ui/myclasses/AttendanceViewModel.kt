@@ -25,22 +25,28 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
+    //events && data
     private val _responseType = MutableLiveData<Int>()
     val responseType: LiveData<Int> get() = _responseType
     private val _details = MutableLiveData<List<AttendanceDetails>>()
     val details: LiveData<List<AttendanceDetails>> get() = _details
+    private val _subjectsUpdated = MutableLiveData<Boolean>()
+    val subjectsUpdated: LiveData<Boolean> get() = _subjectsUpdated
 
     var user = repository.user
     var subjects = repository.subjects
-    var firstCall: Boolean = false
+
+    //helper variables for preventing multiple refreshes at start
+    var firstCallAtt: Boolean = false
+    var firstCallAttFinish: Boolean = false
 
     fun getSubjects(programId: Int, semester: Int, userId: Long) {
         coroutineScope.launch {
             try {
                 if (programId == 0 || userId == 0L)
-                    repository.updateSubjects(user?.value?.userId!!, user?.value?.program!!, semester)
+                    _subjectsUpdated.value = repository.updateSubjects(user?.value?.userId!!, user?.value?.program!!, semester)
                 else
-                    repository.updateSubjects(userId, programId, semester)
+                    _subjectsUpdated.value = repository.updateSubjects(userId, programId, semester)
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
                     _responseType.value = 3
@@ -81,6 +87,10 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
     override fun onCleared() {
         viewModelJob.cancel()
         super.onCleared()
+    }
+
+    fun resetEvents() {
+        _subjectsUpdated.value = null
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {

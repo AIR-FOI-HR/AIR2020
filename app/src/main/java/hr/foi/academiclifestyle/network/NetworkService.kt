@@ -44,6 +44,9 @@ interface DatabaseApiService {
     @GET("subjects")
     fun getSubjectsByProgramAndSemester(@Query("program.id") programId: Int, @Query("Semester") semester: Int): Deferred<List<SubjectProgram>>
 
+    @GET("subjects")
+    fun getSubjectByName(@Query("Name") subjectName: String): Deferred<List<SubjectProgram>>
+
     @Multipart
     @POST ("upload")
     fun uploadPicture(@Header("Authorization") authorization: String,
@@ -60,6 +63,9 @@ interface DatabaseApiService {
 
     @GET("attendances")
     fun getAttendanceByUserId(@Query("users_permissions_user.id") userId: Long): Deferred<List<Attendance>>
+
+    @GET("attendances")
+    fun getAttendanceBySubjectId(@Query("event.subject") subjectId: Int): Deferred<List<Attendance>>
 }
 
 object NetworkApi {

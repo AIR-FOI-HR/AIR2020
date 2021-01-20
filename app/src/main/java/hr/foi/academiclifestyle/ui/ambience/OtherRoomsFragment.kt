@@ -76,6 +76,7 @@ class OtherRoomsFragment : Fragment() {
                 adapterRooms?.setDropDownViewResource(R.layout.spinner_drop_down)
                 spinnerRooms?.adapter = adapterRooms
 
+                //this triggers if the dropdown is empty - onItemSelected doesn't work on empty lists
                 if (it.isEmpty()) {
                     viewModel.fetchSensorData("")
                 }

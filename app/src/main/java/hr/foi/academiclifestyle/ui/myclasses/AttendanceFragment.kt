@@ -93,7 +93,7 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
             }
         })
         viewModel.subjects?.observe(viewLifecycleOwner, Observer {
-            if (it != null && viewModel.firstCall) {
+            if (it != null && viewModel.firstCallAtt) {
                 if (it.isNotEmpty()) {
                     subjectListHolder = it.toMutableList()
                     binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
@@ -102,9 +102,15 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
                     subjectListHolder.add(Subject(0, "-", "-", 0, 0, "-"))
                     binding.attendanceRecycler.adapter = AttendanceRecyclerAdapter(subjectListHolder, this)
                 }
+            } else if (it != null)
+                viewModel.firstCallAtt = true
+        })
+        viewModel.subjectsUpdated.observe(viewLifecycleOwner, Observer {
+            if (it != null && viewModel.firstCallAttFinish) {
                 finishAnimation()
-            } else
-                viewModel.firstCall = true
+                viewModel.resetEvents()
+            } else if (it != null)
+                viewModel.firstCallAttFinish = true
         })
         viewModel.details.observe(viewLifecycleOwner, Observer {
             if (it != null) {
@@ -145,6 +151,7 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
                             Toast.LENGTH_SHORT
                     ).show()
                 }
+                finishAnimation()
             }
         })
     }

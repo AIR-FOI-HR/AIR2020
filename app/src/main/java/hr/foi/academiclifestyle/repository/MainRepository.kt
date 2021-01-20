@@ -7,12 +7,14 @@ import android.text.format.DateFormat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
+import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Sensor
 import hr.foi.academiclifestyle.database.model.Subject
 import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.dimens.AttendanceDetails
 import hr.foi.academiclifestyle.dimens.EventTypeEnum
+import hr.foi.academiclifestyle.dimens.StatsGoalsGraphData
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
@@ -184,8 +186,21 @@ class MainRepository (private val database: LocalDatabase) {
 
     suspend fun fetchSubjectsBySemesterAndProgram(programId: Int,semester: Int) : Int{
        return withContext(Dispatchers.IO){
-            val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
+           val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
            response.size
+        }
+    }
+
+    suspend fun fetchSubjectNamesBySemesterAndProgram(programId: Int,semester: Int) : List<String> {
+        return withContext(Dispatchers.IO){
+            val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
+            val subjectNames: MutableList<String> = mutableListOf()
+            if (response.isNotEmpty()) {
+                for (subject in response) {
+                    subjectNames.add(subject.Name)
+                }
+            }
+            subjectNames
         }
     }
 
@@ -247,8 +262,8 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Subjects
-    suspend fun updateSubjects(userId: Long, programId: Int, semester: Int) {
-        withContext(Dispatchers.IO) {
+    suspend fun updateSubjects(userId: Long, programId: Int, semester: Int) : Boolean {
+        return withContext(Dispatchers.IO) {
             val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = semester).await()
             val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
 
@@ -302,6 +317,7 @@ class MainRepository (private val database: LocalDatabase) {
                 }
                 database.subjectDao.insertSubjects(subjects)
             }
+            true
         }
     }
 
@@ -410,6 +426,62 @@ class MainRepository (private val database: LocalDatabase) {
                 }
             }
             detailsList
+        }
+    }
+
+    suspend fun getGraphDataBySubject(subjectName: String, userId: Long) : StatsGoalsGraphData? {
+        return withContext(Dispatchers.IO) {
+            val subjects = NetworkApi.networkService.getSubjectByName(subjectName).await()
+            var subjectId = 0
+            if (subjects.isNotEmpty()) {
+                subjectId = subjects[0].id
+            }
+
+            var gData: StatsGoalsGraphData? = null
+
+            if (subjectId != 0) {
+                val events = NetworkApi.networkService.getEventsForSubjectId(subjectId).await()
+                val attendances = NetworkApi.networkService.getAttendanceBySubjectId(subjectId).await()
+
+                var maxAttendance: Int = 0
+                var userAttendance: Int = 0
+                var peerAttendance: Int = 0 //total attendances for this subject
+                var peers: MutableList<Int> = mutableListOf() //number of different users recorded
+                var avgAttendance: Int = 0
+
+                if (events.isNotEmpty()) {
+                    //max subject attendance
+                    for (event in events) {
+                        if (event.max_attendance != null && event.max_attendance != 0) {
+                            maxAttendance += event.max_attendance
+                        }
+                    }
+
+                    if (attendances.isNotEmpty()) {
+                        for (attendance in attendances) {
+                            //user attendance
+                            if (attendance.users_permissions_user?.id == userId.toInt() ) {
+                                userAttendance += 1
+                            }
+                            if (peers.isEmpty() || !peers.contains(attendance.users_permissions_user?.id)) {
+                                peers.add(attendance.users_permissions_user?.id!!)
+                            }
+                            peerAttendance += 1
+                        }
+                        //avg attendance
+                        if (maxAttendance != 0) {
+                            if (peerAttendance != 0) {
+                                avgAttendance = (((peerAttendance.toDouble()/peers.size)/maxAttendance)*100).toInt()
+                            }
+                            if (userAttendance != 0) {
+                                userAttendance = ((userAttendance.toDouble()/maxAttendance)*100).toInt()
+                            }
+                        }
+                    }
+                }
+                gData = StatsGoalsGraphData(userAttendance, avgAttendance, maxAttendance)
+            }
+            gData
         }
     }
 }

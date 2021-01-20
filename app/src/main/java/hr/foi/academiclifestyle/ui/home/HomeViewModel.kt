@@ -16,7 +16,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _subjectsEnroled = MutableLiveData<Int>()
     val subjectsEnroled :LiveData<Int> get() =_subjectsEnroled
 
-
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)

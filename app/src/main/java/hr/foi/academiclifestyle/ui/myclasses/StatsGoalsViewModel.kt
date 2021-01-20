@@ -1,9 +1,11 @@
-package hr.foi.academiclifestyle.ui.ambience
+package hr.foi.academiclifestyle.ui.myclasses
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.dimens.StatsGoalsGraphData
+import hr.foi.academiclifestyle.network.model.SubjectProgram
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,53 +16,29 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class OtherRoomsViewModel(application: Application) : AndroidViewModel(application) {
+class StatsGoalsViewModel(application: Application) : AndroidViewModel(application) {
+
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
+    //livedata & events
     private val _responseType = MutableLiveData<Int>()
     val responseType: LiveData<Int> get() = _responseType
-    private val _dataUpdated = MutableLiveData<Boolean>()
-    val dataUpdated: LiveData<Boolean> get() = _dataUpdated
+    private val _subjectList = MutableLiveData<List<String>>()
+    val subjectList: LiveData<List<String>> get() = _subjectList
+    private val _graphData = MutableLiveData<StatsGoalsGraphData>()
+    val graphData: LiveData<StatsGoalsGraphData> get() = _graphData
 
-    private val _roomList = MutableLiveData<List<String>>()
-    val roomList: LiveData<List<String>> get() = _roomList
-
-    var firstCall: Boolean = false
-    var firstAnimCall: Boolean = false
-
-    var sensorData = repository.sensorData
     var user = repository.user
+    var statsFirstCall = false
 
-    fun fetchRoomList(building: String) {
-        coroutineScope.launch {
-            if (building != "") {
-                try {
-                    _roomList.value = repository.getRoomsByBuildingName(building)
-                } catch (ex: Exception) {
-                    if (ex is SocketTimeoutException)
-                        _responseType.value = 3
-                    else if (ex is UnknownHostException)
-                        _responseType.value = 3
-                    else if (ex is HttpException)
-                        _responseType.value = 2
-                    else if (ex is ConnectException)
-                        _responseType.value = 3
-                    else
-                        _responseType.value = 4
-                        Log.i("CoroutineInfo", ex.toString())
-                }
-            }
-        }
-    }
-
-    fun fetchSensorData(roomName: String) {
+    fun getGraphData(subjectName: String) {
         coroutineScope.launch {
             try {
-                if (roomName != "") {
-                    _dataUpdated.value = repository.updateSensorData(2, 0, roomName)
+                if (subjectName != "") {
+                    _graphData.value = repository.getGraphDataBySubject(subjectName, user!!.value!!.userId)
                 } else {
                     throw java.lang.IllegalArgumentException()
                 }
@@ -82,9 +60,24 @@ class OtherRoomsViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    //reset the events after they have been called
-    fun resetEvents() {
-        _dataUpdated.value = null
+    fun getSubjectsForSpinner(programId: Int, semester: Int) {
+        coroutineScope.launch {
+            try {
+                _subjectList.value = repository.fetchSubjectNamesBySemesterAndProgram(programId, semester)
+            } catch (ex: Exception) {
+                if (ex is SocketTimeoutException)
+                    _responseType.value = 3
+                else if (ex is UnknownHostException)
+                    _responseType.value = 3
+                else if (ex is HttpException)
+                    _responseType.value = 2
+                else if (ex is ConnectException)
+                    _responseType.value = 3
+                else
+                    _responseType.value = 4
+                Log.i("CoroutineInfo", ex.toString())
+            }
+        }
     }
 
     //cancel request call if the view closes
@@ -95,9 +88,9 @@ class OtherRoomsViewModel(application: Application) : AndroidViewModel(applicati
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(OtherRoomsViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(StatsGoalsViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return OtherRoomsViewModel(app) as T
+                return ScheduleViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

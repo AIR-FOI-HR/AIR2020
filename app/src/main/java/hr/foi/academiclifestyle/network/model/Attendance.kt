@@ -8,6 +8,8 @@ data class Attendance (
     val id: Int = 0,
     @field:Json(name = "@logTime")
     val log_time: String = "",
+    @field:Json(name = "@users_permissions_user")
+    val users_permissions_user: EventUser? = null,
     @field:Json(name = "@event")
     val event: EventAttend? = null
 )
@@ -33,4 +35,11 @@ data class EventAttend (
     val end_time: String = "",
     @field:Json(name = "@maxAttendance")
     val max_attendance: Int? = 0
+)
+
+data class EventUser (
+    @field:Json(name = "@id")
+    val id: Int = 0,
+    @field:Json(name = "@username")
+    val username: String? = ""
 )
