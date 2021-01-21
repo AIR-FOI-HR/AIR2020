@@ -26,7 +26,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun fetchEnrolledSubjectCount(){
         coroutineScope.launch {
             try {
-                _subjectsEnroled.value = repository.fetchSubjectsBySemesterAndProgram(user?.value?.program!!, user?.value?.semester!!)
+                _subjectsEnroled.value = repository.getSubjectsBySemesterProgramYear(user?.value?.program!!, user?.value?.semester!!, user?.value?.year!!)
             }catch (ex: Exception){
                 Log.e("Error",ex.toString())
             }

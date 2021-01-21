@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
     private fun setupObservers() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
             if (it != null && it.jwtToken != "") {
-                binding.txtYearValue.text = it.year
+                binding.txtYearValue.text = it.year.toString()
                 if (it.program != 0)
                     binding.txtCourseValue.text = CoursesEnum.fromId(it.program!!)?.programName
                 viewModel.fetchEnrolledSubjectCount()

@@ -72,6 +72,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     if(_imageFile.value != null) {
                         id = repository.uploadPicture(_imageFile.value!!, user?.value?.jwtToken!!)
                     }
+
+                    if (_semester.value != 0 && _semester.value!! > 2) {
+                        throw java.lang.IllegalArgumentException()
+                    }
+
                     //construct UserRequest
                     val _semester1 = _semester
                     val userRequest: UserRequest =
@@ -93,6 +98,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                         _responseType.value = 3
                     else if (ex is HttpException) {
                         _responseType.value = 2
+                    } else if (ex is java.lang.IllegalArgumentException) {
+                        _responseType.value = 4
                     }
                     else
                         Log.i("CoroutineInfo error", ex.message.toString())

@@ -40,7 +40,7 @@ class StatsGoalsViewModel(application: Application) : AndroidViewModel(applicati
                 if (subjectName != "") {
                     _graphData.value = repository.getGraphDataBySubject(subjectName, user!!.value!!.userId)
                 } else {
-                    throw java.lang.IllegalArgumentException()
+                    throw IllegalArgumentException()
                 }
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
@@ -55,15 +55,15 @@ class StatsGoalsViewModel(application: Application) : AndroidViewModel(applicati
                     _responseType.value = 5
                 else
                     _responseType.value = 4
-                Log.i("CoroutineInfo", ex.toString())
+                Log.i("CoroutineInfoStats", ex.toString())
             }
         }
     }
 
-    fun getSubjectsForSpinner(programId: Int, semester: Int) {
+    fun getSubjectsForSpinner(programId: Int, semester: Int, year: Int) {
         coroutineScope.launch {
             try {
-                _subjectList.value = repository.fetchSubjectNamesBySemesterAndProgram(programId, semester)
+                _subjectList.value = repository.getSubjectNamesBySemesterProgramYear(programId, semester, year)
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
                     _responseType.value = 3

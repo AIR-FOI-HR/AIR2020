@@ -40,13 +40,13 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
     var firstCallAtt: Boolean = false
     var firstCallAttFinish: Boolean = false
 
-    fun getSubjects(programId: Int, semester: Int, userId: Long) {
+    fun getSubjects(programId: Int, semester: Int, year: Int, userId: Long) {
         coroutineScope.launch {
             try {
-                if (programId == 0 || userId == 0L)
-                    _subjectsUpdated.value = repository.updateSubjects(user?.value?.userId!!, user?.value?.program!!, semester)
+                if (programId == 0 || userId == 0L || year == 0)
+                    _subjectsUpdated.value = repository.updateSubjects(user?.value?.userId!!, user?.value?.program!!, user?.value?.year!!, semester)
                 else
-                    _subjectsUpdated.value = repository.updateSubjects(userId, programId, semester)
+                    _subjectsUpdated.value = repository.updateSubjects(userId, programId, year, semester)
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
                     _responseType.value = 3
@@ -58,7 +58,7 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
                     _responseType.value = 3
                 else
                     _responseType.value = 4
-                Log.i("CoroutineInfo", ex.toString())
+                Log.i("CoroutineInfoAttendance", ex.toString())
             }
         }
     }

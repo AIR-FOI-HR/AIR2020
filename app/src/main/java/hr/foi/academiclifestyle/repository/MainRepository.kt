@@ -184,16 +184,32 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
 
-    suspend fun fetchSubjectsBySemesterAndProgram(programId: Int,semester: Int) : Int{
+    suspend fun getSubjectsBySemesterProgramYear(programId: Int, semester: Int, year: Int) : Int{
        return withContext(Dispatchers.IO){
-           val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
+           //calculate semester based on year
+           var realSemester = semester
+           if (semester == 1) {
+               realSemester = (year*2)-1
+           } else {
+               realSemester = (year*2)
+           }
+
+           val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = realSemester).await()
            response.size
         }
     }
 
-    suspend fun fetchSubjectNamesBySemesterAndProgram(programId: Int,semester: Int) : List<String> {
+    suspend fun getSubjectNamesBySemesterProgramYear(programId: Int, semester: Int, year: Int) : List<String> {
         return withContext(Dispatchers.IO){
-            val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId,semester).await()
+            //calculate semester based on year
+            var realSemester = semester
+            if (semester == 1) {
+                realSemester = (year*2)-1
+            } else {
+                realSemester = (year*2)
+            }
+
+            val response = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = realSemester).await()
             val subjectNames: MutableList<String> = mutableListOf()
             if (response.isNotEmpty()) {
                 for (subject in response) {
@@ -205,10 +221,19 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Events
-    suspend fun updateEvents(date: LocalDate, programId: Int, semester: Int, userId: Long) : Boolean {
+    suspend fun updateEvents(date: LocalDate, programId: Int, semester: Int, userId: Long, year: Int) : Boolean {
         return withContext(Dispatchers.IO) {
             var day = date.dayOfWeek.toString().toLowerCase()
-            val eventList = NetworkApi.networkService.getEventsForDayProgramSemester(programId = programId, day = day, semester = semester).await()
+
+            //calculate semester based on year
+            var realSemester = semester
+            if (semester == 1) {
+                realSemester = (year*2)-1
+            } else {
+                realSemester = (year*2)
+            }
+
+            val eventList = NetworkApi.networkService.getEventsForDayProgramSemester(programId = programId, day = day, semester = realSemester).await()
             val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
 
             database.eventDao.clearEvents()
@@ -262,9 +287,17 @@ class MainRepository (private val database: LocalDatabase) {
     }
 
     //Subjects
-    suspend fun updateSubjects(userId: Long, programId: Int, semester: Int) : Boolean {
+    suspend fun updateSubjects(userId: Long, programId: Int, year: Int, semester: Int) : Boolean {
         return withContext(Dispatchers.IO) {
-            val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = semester).await()
+            //calculate semester based on year
+            var realSemester = semester
+            if (semester == 1) {
+                realSemester = (year*2)-1
+            } else {
+                realSemester = (year*2)
+            }
+
+            val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = programId, semester = realSemester).await()
             val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
 
             database.subjectDao.clearSubjects()
@@ -309,7 +342,7 @@ class MainRepository (private val database: LocalDatabase) {
                             subject.id,
                             subject.Name,
                             subject.program?.shortName,
-                            semester,
+                            realSemester,
                             programId,
                             "$percentage%"
                     )

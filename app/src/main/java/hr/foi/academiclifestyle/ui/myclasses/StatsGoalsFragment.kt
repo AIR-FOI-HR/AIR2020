@@ -59,7 +59,7 @@ class StatsGoalsFragment : Fragment() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 if (it.program != 0 && it.semester != 0) {
-                    viewModel.getSubjectsForSpinner(it.program!!, it.semester!!)
+                    viewModel.getSubjectsForSpinner(it.program!!, it.semester!!, it.year!!)
                 }
             }
         })
@@ -109,7 +109,11 @@ class StatsGoalsFragment : Fragment() {
                             Toast.LENGTH_SHORT
                     ).show()
                 }
-                finishAnimation()
+                if (viewModel.statsFirstCall) {
+                    finishAnimation()
+                } else {
+                    viewModel.statsFirstCall = true
+                }
             }
         })
     }

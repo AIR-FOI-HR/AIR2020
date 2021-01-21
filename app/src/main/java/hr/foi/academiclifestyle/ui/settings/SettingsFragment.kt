@@ -240,6 +240,11 @@ class SettingsFragment: Fragment(), AdapterView.OnItemSelectedListener {
                     "Server Error, please try again!",
                     Toast.LENGTH_SHORT
                 ).show()
+                4 -> Toast.makeText(
+                    activity as MainActivity?,
+                    "Semester must be 1 or 2!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }

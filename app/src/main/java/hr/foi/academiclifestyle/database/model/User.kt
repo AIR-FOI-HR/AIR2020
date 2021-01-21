@@ -18,7 +18,7 @@ data class User (
 
     val email: String? = "",
 
-    val year: String? = "",
+    val year: Int? = 0,
 
     val program: Int? = 0,
 

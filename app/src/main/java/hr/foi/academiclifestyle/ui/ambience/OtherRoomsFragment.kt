@@ -58,14 +58,12 @@ class OtherRoomsFragment : Fragment() {
         spinnerBuildings?.onItemSelectedListener = BuildingItemSelectedListener(viewModel, ::startAnimation)
         spinnerRooms?.onItemSelectedListener = RoomItemSelectedListener(viewModel, ::startAnimation)
 
-        //TODO get data from database (currently hardcoded)
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
         setupObservers()
 
         //initially get list for the first building in the list
         viewModel.fetchRoomList(buildingList[0])
 
-        //TODO set window position in accordance to data
         return binding.root
     }
 

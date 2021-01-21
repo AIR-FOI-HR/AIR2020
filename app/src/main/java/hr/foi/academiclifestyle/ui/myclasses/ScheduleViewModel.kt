@@ -44,9 +44,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
             try {
                 if (program == 0)
-                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, user?.value?.program!!, user?.value?.semester!!, user?.value?.userId!!)
+                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, user?.value?.program!!, user?.value?.semester!!, user?.value?.userId!!, user?.value?.year!!)
                 else
-                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, program, user?.value?.semester!!, user?.value?.userId!!)
+                    _eventsUpdated.value = repository.updateEvents(parsedDate!!, program, user?.value?.semester!!, user?.value?.userId!!, user?.value?.year!!)
             } catch (ex: Exception) {
                 if (ex is SocketTimeoutException)
                     _responseType.value = 3
@@ -58,7 +58,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
                     _responseType.value = 3
                 else
                     _responseType.value = 4
-                Log.i("CoroutineInfo", ex.toString())
+                Log.i("CoroutineInfoSchedule", ex.toString())
             }
         }
     }

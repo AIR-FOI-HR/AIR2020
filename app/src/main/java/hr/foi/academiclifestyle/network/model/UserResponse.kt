@@ -29,7 +29,7 @@ data class UserResponse (
     @field:Json(name = "@logToken")
     val logToken: String? = "",
     @field:Json(name = "@year")
-    val year: String? = "",
+    val year: Int? = 0,
     @field:Json(name = "@program")
     val program: Program? = null,
     @field:Json(name = "@profile_picture")

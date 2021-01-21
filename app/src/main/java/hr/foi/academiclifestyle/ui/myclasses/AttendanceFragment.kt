@@ -44,12 +44,13 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
 
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
 
+        //zero values here are taken from the user object in viewmodel
         binding.btnRightSem.setOnClickListener() {
             val txtSemester: TextView = binding.txtSemNumber
             if (txtSemester.text == "1") {
                 startAnimation()
                 txtSemester.text = "2"
-                viewModel.getSubjects(0, 2, 0L)
+                viewModel.getSubjects(0, 2, 0, 0L)
             }
         }
         binding.btnLeftSem.setOnClickListener() {
@@ -57,7 +58,7 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
             if (txtSemester.text == "2") {
                 startAnimation()
                 txtSemester.text = "1"
-                viewModel.getSubjects(0, 1, 0L)
+                viewModel.getSubjects(0, 1, 0, 0L)
             }
         }
 
@@ -89,7 +90,7 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
     private fun setupObservers() {
         viewModel.user?.observe(viewLifecycleOwner, Observer {
             if (it?.program != null && it.program != 0 && it.semester != 0 && it.program != null) {
-                viewModel.getSubjects(it.program, 1, it.userId)
+                viewModel.getSubjects(it.program, 1, it.year!!,  it.userId)
             }
         })
         viewModel.subjects?.observe(viewLifecycleOwner, Observer {
