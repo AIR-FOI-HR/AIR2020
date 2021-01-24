@@ -517,4 +517,45 @@ class MainRepository (private val database: LocalDatabase) {
             gData
         }
     }
+
+    suspend fun getSemestarCompletionData(user :User) :Float{
+        return withContext(Dispatchers.IO){
+            var currentAttendace : Float = 0F
+
+            val attendaces = NetworkApi.networkService.getAttendanceByUserId(user.userId).await()
+            val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = user!!.program!!, semester = user!!.semester!!).await()
+            var maxAttendance : Int = 0
+            var userAttendance : Int = 0
+
+            //Get user subjects by program and max attandance for that program
+            if(subjectList.isNotEmpty()){
+                for(subject in subjectList){
+                    val events = NetworkApi.networkService.getEventsForSubjectId(subject.id!!).await()
+                    for(event in events){
+                        maxAttendance += event.max_attendance!!
+                    }
+
+                }
+            }
+
+            //Get attendance for user
+            if(attendaces.isNotEmpty()){
+                for(attendace in attendaces){
+                    if (attendace.users_permissions_user?.id == user.userId.toInt() ) {
+                        userAttendance += 1
+                    }
+                }
+            }
+
+
+
+            currentAttendace = userAttendance.toFloat()/maxAttendance.toFloat()
+            Log.e("Max attendance",maxAttendance.toString())
+            Log.e("User attendace",userAttendance.toString())
+            Log.e("Current attendace",currentAttendace.toString())
+
+
+            currentAttendace
+        }
+    }
 }

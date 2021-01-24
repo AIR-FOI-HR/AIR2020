@@ -193,8 +193,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white_acc"
                 android:layout_marginTop="20dp"
+                android:background="@color/white_acc"
                 android:padding="10dp">
 
                 <TextView
@@ -228,12 +228,13 @@
                     android:layout_width="0dp"
                     android:layout_height="175dp"
                     android:layout_marginTop="15dp"
-                    app:layout_constraintWidth_max="380dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtAvgTardiness" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtAvgTardiness"
+                    app:layout_constraintWidth_max="380dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </ScrollView>
 </layout>

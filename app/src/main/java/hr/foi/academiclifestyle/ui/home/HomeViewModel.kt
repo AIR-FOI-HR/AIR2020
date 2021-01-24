@@ -16,6 +16,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _subjectsEnroled = MutableLiveData<Int>()
     val subjectsEnroled :LiveData<Int> get() =_subjectsEnroled
 
+    private val _attendance = MutableLiveData<Float>()
+    val attendance : LiveData<Float> get() = _attendance
+
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)
@@ -30,6 +33,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }catch (ex: Exception){
                 Log.e("Error",ex.toString())
             }
+        }
+    }
+
+
+    fun getAttendance(){
+        coroutineScope.launch {
+            try{
+                _attendance.value = repository.getSemestarCompletionData(user?.value!!)
+
+            }catch (ex: Exception){
+                Log.e("Error", ex.toString())
+            }
+            _attendance.value = null
         }
     }
 
