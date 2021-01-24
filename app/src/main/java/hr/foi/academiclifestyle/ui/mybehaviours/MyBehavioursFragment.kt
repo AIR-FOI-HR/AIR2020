@@ -3,10 +3,13 @@ package hr.foi.academiclifestyle.ui.mybehaviours
 import android.content.res.ColorStateList
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -37,11 +41,18 @@ class MyBehavioursFragment : Fragment() {
 
     private lateinit var binding: FragmentMybehavioursBinding
 
+    private lateinit var progressBarHolder: FrameLayout
+    private lateinit var inAnimation: AlphaAnimation
+    private lateinit var outAnimation: AlphaAnimation
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentMybehavioursBinding>(inflater, R.layout.fragment_mybehaviours, container, false)
+
+        binding.lifecycleOwner = this
+        progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
 
         // fix toggle animation for navView
         var drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
@@ -49,9 +60,26 @@ class MyBehavioursFragment : Fragment() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        startAnimation()
         setThemeOptions()
-        setupPieChart()
+        setupObservers()
         return binding.root
+    }
+
+    fun setupObservers(){
+        viewModel.user?.observe(viewLifecycleOwner, Observer {
+            if( it != null){
+                viewModel.getTardiness()
+            }
+        })
+
+        viewModel.tardiness?.observe(viewLifecycleOwner, Observer {
+            if (it != null){
+                Log.e("It",it.toString())
+                setupPieChart(it.late/it.currentAttendance.toFloat(),it.early/it.currentAttendance.toFloat(),it.inTime/it.currentAttendance.toFloat())
+                finishAnimation()
+            }
+        })
     }
 
 
@@ -83,13 +111,13 @@ class MyBehavioursFragment : Fragment() {
     }
 
     //Setup charts
-    private fun setupPieChart() {
+    private fun setupPieChart(late: Float, early: Float, inTime: Float) {
         val pieChart: PieChart = binding.pieChartMyBehaviors
         val pieEntries: MutableList<PieEntry> = mutableListOf()
 
-        pieEntries.add(PieEntry(45F, "Late"))
-        pieEntries.add(PieEntry(20F, "Early"))
-        pieEntries.add(PieEntry(35F, "In time"))
+        pieEntries.add(PieEntry(late*100, "Late"))
+        pieEntries.add(PieEntry(early*100, "Early"))
+        pieEntries.add(PieEntry(inTime*100, "In time"))
 
         val dataset: PieDataSet = PieDataSet(pieEntries, "")
         dataset.setColors(mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
@@ -118,5 +146,19 @@ class MyBehavioursFragment : Fragment() {
 
         pieChart.data = pieData
         pieChart.invalidate()
+    }
+
+    private fun startAnimation() {
+        inAnimation = AlphaAnimation(0f, 1f)
+        inAnimation.setDuration(200)
+        progressBarHolder.animation = inAnimation
+        progressBarHolder.visibility = View.VISIBLE
+    }
+
+    private fun finishAnimation() {
+        outAnimation = AlphaAnimation(1f, 0f)
+        outAnimation.setDuration(200)
+        progressBarHolder.animation = outAnimation
+        progressBarHolder.visibility = View.GONE
     }
 }

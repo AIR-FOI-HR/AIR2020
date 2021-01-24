@@ -2,12 +2,8 @@ package hr.foi.academiclifestyle.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Network
-import android.text.format.DateFormat
-import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
-import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.database.model.Event
 import hr.foi.academiclifestyle.database.model.Sensor
 import hr.foi.academiclifestyle.database.model.Subject
@@ -15,6 +11,7 @@ import hr.foi.academiclifestyle.database.model.User
 import hr.foi.academiclifestyle.dimens.AttendanceDetails
 import hr.foi.academiclifestyle.dimens.EventTypeEnum
 import hr.foi.academiclifestyle.dimens.StatsGoalsGraphData
+import hr.foi.academiclifestyle.dimens.TardinessData
 import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.network.model.*
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +24,6 @@ import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 
 
 class MainRepository (private val database: LocalDatabase) {
@@ -546,16 +542,86 @@ class MainRepository (private val database: LocalDatabase) {
                     }
                 }
             }
-
-
-
             currentAttendace = userAttendance.toFloat()/maxAttendance.toFloat()
-            Log.e("Max attendance",maxAttendance.toString())
-            Log.e("User attendace",userAttendance.toString())
-            Log.e("Current attendace",currentAttendace.toString())
-
-
             currentAttendace
+        }
+    }
+
+    suspend fun myTardiness(user: User) : TardinessData?{
+        return  withContext(Dispatchers.IO){
+
+            var data : TardinessData? = null
+            var currentAttendance: Int = 0
+            var late: Int = 0
+            var inTime: Int = 0
+            var early: Int = 0
+
+            val attendances = NetworkApi.networkService.getAttendanceByUserId(user.userId).await()
+            for( attendance in attendances) {
+
+                currentAttendance += 1
+                //Get minutes and hours from subjects and log time from students
+                val logMinutes = attendance.log_time.substring(14,16).toInt()
+                val logHours = attendance.log_time.substring(11,13).toInt()
+                val minutesStart = attendance.event?.start_time!!.substring(attendance.event?.start_time!!.indexOf(':')+1, attendance.event?.start_time!!.length).toInt()
+                val hoursStart = attendance.event?.start_time!!.substring(0,attendance.event?.start_time!!.indexOf(':')).toInt()
+
+                    if((minutesStart-logMinutes > 0  && hoursStart == logHours) || hoursStart > logHours){
+                        early +=1
+                    }
+                    else if( (minutesStart - logMinutes < 0 && hoursStart == logHours) || hoursStart < logHours){
+                        late += 1
+                    }
+                    else if ( minutesStart == logMinutes && hoursStart == logHours){
+                        inTime += 1
+                }
+            }
+            data = TardinessData(currentAttendance,late,inTime,early)
+            data
+        }
+    }
+
+    suspend fun averageTardiness(user: User): TardinessData?{
+        return withContext(Dispatchers.IO){
+            var data: TardinessData? = null
+
+
+            var currentAttendance: Int = 0
+            var late: Int = 0
+            var inTime: Int = 0
+            var early: Int = 0
+
+            val attendances = NetworkApi.networkService.getAttendance().await()
+            val subjectList = NetworkApi.networkService.getSubjectsByProgramAndSemester(programId = user!!.program!!, semester = user!!.semester!!).await()
+
+            for(subject in subjectList){
+                val events = NetworkApi.networkService.getEventsForSubjectId(subjectId = subject.id!!).await()
+                for(event in events){
+                    for( attendance in attendances){
+                        if(attendance.event?.id!! == event?.id ){
+
+                            currentAttendance += 1
+                            //Get minutes and hours from subjects and log time from students
+                            val logMinutes = attendance.log_time.substring(14,16).toInt()
+                            val logHours = attendance.log_time.substring(11,13).toInt()
+                            val minutesStart = attendance.event?.start_time!!.substring(attendance.event?.start_time!!.indexOf(':')+1, attendance.event?.start_time!!.length).toInt()
+                            val hoursStart = attendance.event?.start_time!!.substring(0,attendance.event?.start_time!!.indexOf(':')).toInt()
+
+                            if((minutesStart-logMinutes > 0  && hoursStart == logHours) || hoursStart > logHours){
+                                early +=1
+                            }
+                            else if( (minutesStart - logMinutes < 0 && hoursStart == logHours) || hoursStart < logHours){
+                                late += 1
+                            }
+                            else if ( minutesStart == logMinutes && hoursStart == logHours){
+                                inTime += 1
+                            }
+                        }
+                    }
+                }
+            }
+            data = TardinessData(currentAttendance,late,inTime,early)
+            data
         }
     }
 }

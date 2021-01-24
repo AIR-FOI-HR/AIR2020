@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
+import hr.foi.academiclifestyle.dimens.TardinessData
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _attendance = MutableLiveData<Float>()
     val attendance : LiveData<Float> get() = _attendance
+
+    private val _tardiness = MutableLiveData<TardinessData>()
+    val tardiness : LiveData<TardinessData> get() = _tardiness
+
+    private val _averageTardiness = MutableLiveData<TardinessData>()
+    val averageTardiness: LiveData<TardinessData> get() = _averageTardiness
+
+    private val _response = MutableLiveData<Int>()
+    val response: LiveData<Int> get() = _response
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -41,11 +51,34 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         coroutineScope.launch {
             try{
                 _attendance.value = repository.getSemestarCompletionData(user?.value!!)
-
             }catch (ex: Exception){
                 Log.e("Error", ex.toString())
             }
             _attendance.value = null
+
+        }
+    }
+
+    fun getMyTardiness(){
+        coroutineScope.launch {
+            try{
+                _tardiness.value = repository.myTardiness(user?.value!!)
+            }catch (ex: Exception){
+                Log.e("Error",ex.toString())
+            }
+            _tardiness.value = null
+
+        }
+    }
+
+    fun averageTardiness(){
+        coroutineScope.launch {
+            try{
+                _averageTardiness.value = repository.averageTardiness(user?.value!!)
+            }catch(ex: Exception) {
+                Log.e("Error", ex.toString())
+            }
+            _averageTardiness.value = null
         }
     }
 

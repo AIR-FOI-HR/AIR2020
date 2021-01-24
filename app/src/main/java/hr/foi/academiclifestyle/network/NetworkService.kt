@@ -65,6 +65,9 @@ interface DatabaseApiService {
     fun getAttendanceByUserId(@Query("users_permissions_user.id") userId: Long): Deferred<List<Attendance>>
 
     @GET("attendances")
+    fun getAttendance(): Deferred<List<Attendance>>
+
+    @GET("attendances")
     fun getAttendanceBySubjectId(@Query("event.subject") subjectId: Int): Deferred<List<Attendance>>
 }
 
