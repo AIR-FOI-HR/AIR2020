@@ -7,12 +7,13 @@ import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.dimens.TardinessData
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.lang.Exception
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class MyBehavioursViewModel(application: Application) : AndroidViewModel(application) {
-
-
-
     private val _tardiness = MutableLiveData<TardinessData>()
     val tardiness: LiveData<TardinessData> get() = _tardiness
 
@@ -21,6 +22,9 @@ class MyBehavioursViewModel(application: Application) : AndroidViewModel(applica
     private val database = getDatabase(application)
     private val repository = MainRepository(database)
 
+    private val _responseType = MutableLiveData<Int>()
+    val responseType: LiveData<Int> get() = _responseType
+
     var user = repository.user
 
     fun getTardiness(){
@@ -28,7 +32,17 @@ class MyBehavioursViewModel(application: Application) : AndroidViewModel(applica
             try{
                 _tardiness.value = repository.myTardiness(user?.value!!)
             }catch (ex: Exception){
-                Log.e("Error",ex.toString())
+                if (ex is SocketTimeoutException)
+                    _responseType.value = 3
+                else if (ex is UnknownHostException)
+                    _responseType.value = 3
+                else if (ex is HttpException)
+                    _responseType.value = 2
+                else if (ex is ConnectException)
+                    _responseType.value = 3
+                else
+                    _responseType.value = 4
+                Log.i("CoroutineInfoAttendance", ex.toString())
             }
             _tardiness.value = null
         }

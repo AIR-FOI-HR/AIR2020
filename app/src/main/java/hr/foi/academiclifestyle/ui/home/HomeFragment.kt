@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.home
 
 import android.content.res.ColorStateList
-import android.icu.lang.UCharacter.IndicPositionalCategory.BOTTOM
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -30,13 +30,12 @@ import hr.foi.academiclifestyle.databinding.FragmentHomeBinding
 import hr.foi.academiclifestyle.dimens.CoursesEnum
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.util.RoundedHorizontalBarChartRenderer
-import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by lazy {
         val activity = requireNotNull(this.activity) {}
-        ViewModelProvider(activity).get(HomeViewModel::class.java)
+        ViewModelProvider(this, HomeViewModel.Factory(activity.application)).get(HomeViewModel::class.java)
     }
 
     private lateinit var binding: FragmentHomeBinding
@@ -44,12 +43,12 @@ class HomeFragment : Fragment() {
     private lateinit var inAnimation: AlphaAnimation
     private lateinit var outAnimation: AlphaAnimation
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater, R.layout.fragment_home, container, false)
+        binding.lifecycleOwner = this
 
         // fix toggle animation for navView
         val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
@@ -76,6 +75,7 @@ class HomeFragment : Fragment() {
                 viewModel.fetchEnrolledSubjectCount()
                 if(it.semester != 0 && it.semester != null)
                     binding.txtSemesterValue.text = it.semester.toString()
+
                 viewModel.getAttendance()
                 viewModel.getMyTardiness()
                 viewModel.averageTardiness()
@@ -90,7 +90,6 @@ class HomeFragment : Fragment() {
         viewModel.attendance?.observe(viewLifecycleOwner, Observer {
             if(it != null) {
                 setupHBarCharts(it)
-                finishAnimation()
             }
         })
 
@@ -103,6 +102,29 @@ class HomeFragment : Fragment() {
         viewModel.averageTardiness?.observe(viewLifecycleOwner, Observer {
             if(it != null){
                 setupPieChart2(it.early/it.currentAttendance.toFloat(),it.late/it.currentAttendance.toFloat(),it.inTime/it.currentAttendance.toFloat())
+                finishAnimation()
+            }
+        })
+
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                when (it) {
+                    2 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Bad request!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    3 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Server Error, please try again!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    4 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Unknown Error!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
                 finishAnimation()
             }
         })

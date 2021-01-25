@@ -10,7 +10,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.lang.Exception
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -29,6 +33,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _response = MutableLiveData<Int>()
     val response: LiveData<Int> get() = _response
 
+    private val _responseType = MutableLiveData<Int>()
+    val responseType: LiveData<Int> get() = _responseType
+
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val database = getDatabase(application)
@@ -40,8 +47,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         coroutineScope.launch {
             try {
                 _subjectsEnroled.value = repository.getSubjectsBySemesterProgramYear(user?.value?.program!!, user?.value?.semester!!, user?.value?.year!!)
-            }catch (ex: Exception){
-                Log.e("Error",ex.toString())
+            }catch (ex: Exception) { //since there's multiple simultaneous calls, finish animation only on the first one
+                if (ex is SocketTimeoutException)
+                    _responseType.value = 3
+                else if (ex is UnknownHostException)
+                    _responseType.value = 3
+                else if (ex is HttpException)
+                    _responseType.value = 2
+                else if (ex is ConnectException)
+                    _responseType.value = 3
+                else
+                    _responseType.value = 4
+                Log.i("CoroutineInfoAttendance", ex.toString())
             }
         }
     }

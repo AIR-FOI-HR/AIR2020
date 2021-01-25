@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -77,6 +78,29 @@ class MyBehavioursFragment : Fragment() {
             if (it != null){
                 Log.e("It",it.toString())
                 setupPieChart(it.late/it.currentAttendance.toFloat(),it.early/it.currentAttendance.toFloat(),it.inTime/it.currentAttendance.toFloat())
+                finishAnimation()
+            }
+        })
+
+        viewModel.responseType.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                when (it) {
+                    2 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Bad request!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    3 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Server Error, please try again!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    4 -> Toast.makeText(
+                            activity as MainActivity?,
+                            "Unknown Error!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
                 finishAnimation()
             }
         })
