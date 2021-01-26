@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -30,6 +31,7 @@ import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentAmbienceBinding
 import hr.foi.academiclifestyle.databinding.FragmentMybehavioursBinding
+import hr.foi.academiclifestyle.dimens.DescriptionsEnum
 import hr.foi.academiclifestyle.ui.ambience.AmbienceViewModel
 import kotlin.math.absoluteValue
 
@@ -45,6 +47,7 @@ class MyBehavioursFragment : Fragment() {
     private lateinit var progressBarHolder: FrameLayout
     private lateinit var inAnimation: AlphaAnimation
     private lateinit var outAnimation: AlphaAnimation
+    private lateinit var description: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +57,7 @@ class MyBehavioursFragment : Fragment() {
 
         binding.lifecycleOwner = this
         progressBarHolder = (activity as MainActivity).findViewById(R.id.progressBarHolder)
+        description = binding.tardinessDescription
 
         // fix toggle animation for navView
         var drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
@@ -78,6 +82,20 @@ class MyBehavioursFragment : Fragment() {
             if (it != null){
                 Log.e("It",it.toString())
                 setupPieChart(it.late/it.currentAttendance.toFloat(),it.early/it.currentAttendance.toFloat(),it.inTime/it.currentAttendance.toFloat())
+
+                Log.e("Late",it.late.toFloat().toString())
+                Log.e("Early",it.early.toFloat().toString())
+                Log.e("In time",it.inTime.toFloat().toString())
+
+                if((it.late.toFloat() >= (it.early).toFloat()) && ((it.late).toFloat() >= (it.inTime).toFloat())) {
+                    description.text = DescriptionsEnum.TARDINESS_LATE.description
+                }
+                else if((it.early.toFloat() >= (it.late).toFloat()) && ((it.early).toFloat() >= (it.inTime).toFloat())) {
+                    description.text = DescriptionsEnum.TARDINESS_EARLY.description
+                }
+                else{
+                    description.text = DescriptionsEnum.TARDINESS_NORMAL.description
+                }
                 finishAnimation()
             }
         })
