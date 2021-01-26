@@ -13,6 +13,7 @@ data class Sensor (
         val x: Float? = null,
         val y: Float? = null,
         val z: Float? = null,
+        val status: Int? = null,
 
         val temp: Float? = null,
         val humid: Float? = null,

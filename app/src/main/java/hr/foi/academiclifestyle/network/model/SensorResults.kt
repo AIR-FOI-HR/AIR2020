@@ -16,5 +16,7 @@ data class SensorResults (
         @field:Json(name = "@humid")
         val humid: Float? = 0f,
         @field:Json(name = "@press")
-        val press: Float? = 0f
+        val press: Float? = 0f,
+        @field:Json(name = "@status")
+        val status: Int? = 0
 )

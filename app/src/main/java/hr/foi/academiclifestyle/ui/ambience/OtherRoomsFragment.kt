@@ -19,6 +19,8 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.FragmentAmbienceOtherroomsBinding
+import hr.foi.academiclifestyle.dimens.DescriptionsEnum
+import hr.foi.academiclifestyle.dimens.WindowStatusEnum
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.ui.ambience.helpers.BuildingItemSelectedListener
 import hr.foi.academiclifestyle.ui.ambience.helpers.RoomItemSelectedListener
@@ -83,11 +85,15 @@ class OtherRoomsFragment : Fragment() {
         viewModel.sensorData?.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.firstCall) {
                 for (sensor in it) {
+                    //these will trigger even when there is no data for a specific sensor
                     if (sensor.tab == 2 &&
                             sensor.humid != null && sensor.temp != null && sensor.press != null) {
                         setupHBarCharts(sensor.temp, sensor.humid, sensor.press)
                     }
-                    //TODO set window position in accordance to data
+                    if (sensor.tab == 2 && sensor.status != null) {
+                        Log.i("sensor", sensor.toString())
+                        setupWindow(sensor.status)
+                    }
                 }
 
                 //TODO fetch data for air quality, currently hardcoded
@@ -135,7 +141,32 @@ class OtherRoomsFragment : Fragment() {
         })
     }
 
+    private fun setupWindow(status: Int) {
+        val windowText: TextView = binding.txtWindowPosDescriptionText
+        val windowImg: ImageView = binding.imgWindowPos
+        when (WindowStatusEnum.fromValue(status)?.name) {
+            WindowStatusEnum.OPEN.name -> {
+                windowText.text = DescriptionsEnum.WINDOW_OPEN.description
+                windowImg.setImageResource(R.drawable.ic_window_75)
+            }
+            WindowStatusEnum.CLOSED.name -> {
+                windowText.text = DescriptionsEnum.WINDOW_CLOSED.description
+                windowImg.setImageResource(R.drawable.ic_window_0)
+            }
+            WindowStatusEnum.TILTED.name -> {
+                windowText.text = DescriptionsEnum.WINDOW_TILTED.description
+                windowImg.setImageResource(R.drawable.ic_window_25)
+            }
+            else -> {
+                windowText.text = DescriptionsEnum.NO_DATA.description
+                windowImg.setImageResource(R.drawable.ic_window_0)
+            }
+        }
+    }
+
     private fun setupHBarCharts(temp: Float, humid: Float, press: Float) {
+        Log.i("data", "$temp $humid $press")
+
         //define charts and mutable lists of data
         val hBarChart: HorizontalBarChart = binding.hBarChart
         val hBarChart2: HorizontalBarChart = binding.hBarChart2

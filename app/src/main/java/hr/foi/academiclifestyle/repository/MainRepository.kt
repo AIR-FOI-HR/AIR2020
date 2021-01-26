@@ -404,6 +404,7 @@ class MainRepository (private val database: LocalDatabase) {
                                 sensor.Results!!.x,
                                 sensor.Results!!.y,
                                 sensor.Results!!.z,
+                                sensor.Results!!.status,
                                 sensor.Results!!.temp,
                                 sensor.Results!!.humid,
                                 sensor.Results!!.press,
