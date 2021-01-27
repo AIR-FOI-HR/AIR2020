@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_gravity="center_vertical"
             >
 
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:text="Jon Doe"
+                android:text="@string/placeholder"
                 android:textColor="@color/white_acc"
                 />
 
@@ -54,7 +54,7 @@
                 android:id="@+id/navStudy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Graduation unknown"
+                android:text="@string/placeholder"
                 android:textColor="@color/white_acc"
                 android:textSize="14sp" />
 
@@ -62,7 +62,7 @@
                 android:id="@+id/navYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="year unknown"
+                android:text="@string/placeholder"
                 android:textColor="@color/white_acc"
                 android:textSize="14sp"
                 />

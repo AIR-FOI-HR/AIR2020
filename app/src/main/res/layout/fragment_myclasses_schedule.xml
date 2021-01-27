@@ -42,7 +42,7 @@
                         android:layout_height="40dp">
 
                         <TextView
-                            android:text="TIME"
+                            android:text="@string/schedule_time"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:textColor="@color/yellow_primary"
@@ -50,7 +50,7 @@
                             android:layout_weight="1"/>
 
                         <TextView
-                            android:text="SUBJECT"
+                            android:text="@string/schedule_subject"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:textColor="@color/yellow_primary"
@@ -58,7 +58,7 @@
                             android:layout_weight="3"/>
 
                         <TextView
-                            android:text="ATTENDANCE"
+                            android:text="@string/schedule_attendance"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:textColor="@color/yellow_primary"

@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.auth
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.repository.MainRepository

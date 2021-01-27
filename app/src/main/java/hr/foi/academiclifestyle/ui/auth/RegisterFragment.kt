@@ -113,7 +113,7 @@ class RegisterFragment : Fragment() {
         registerBtn.isClickable = state
 
         //fields
-        var fieldDrawable = when (state) {
+        val fieldDrawable = when (state) {
             true -> R.drawable.edit_text
             else -> R.drawable.edit_text_disabled
         }

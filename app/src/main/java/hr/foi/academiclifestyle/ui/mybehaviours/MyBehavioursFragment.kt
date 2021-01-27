@@ -17,7 +17,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -29,11 +28,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.navigation.NavigationView
 import hr.foi.academiclifestyle.ui.MainActivity
 import hr.foi.academiclifestyle.R
-import hr.foi.academiclifestyle.databinding.FragmentAmbienceBinding
 import hr.foi.academiclifestyle.databinding.FragmentMybehavioursBinding
 import hr.foi.academiclifestyle.dimens.DescriptionsEnum
-import hr.foi.academiclifestyle.ui.ambience.AmbienceViewModel
-import kotlin.math.absoluteValue
 
 class MyBehavioursFragment : Fragment() {
 
@@ -60,8 +56,8 @@ class MyBehavioursFragment : Fragment() {
         description = binding.tardinessDescription
 
         // fix toggle animation for navView
-        var drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
-        var toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
+        val drawerLayout : DrawerLayout = (activity as MainActivity).findViewById(R.id.drawerLayout)
+        val toggle = ActionBarDrawerToggle((activity as MainActivity), (activity as MainActivity).findViewById(R.id.drawerLayout), R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -80,12 +76,7 @@ class MyBehavioursFragment : Fragment() {
 
         viewModel.tardiness?.observe(viewLifecycleOwner, Observer {
             if (it != null){
-                Log.e("It",it.toString())
                 setupPieChart(it.late/it.currentAttendance.toFloat(),it.early/it.currentAttendance.toFloat(),it.inTime/it.currentAttendance.toFloat())
-
-                Log.e("Late",it.late.toFloat().toString())
-                Log.e("Early",it.early.toFloat().toString())
-                Log.e("In time",it.inTime.toFloat().toString())
 
                 if((it.late.toFloat() >= (it.early).toFloat()) && ((it.late).toFloat() >= (it.inTime).toFloat())) {
                     description.text = DescriptionsEnum.TARDINESS_LATE.description
@@ -131,7 +122,7 @@ class MyBehavioursFragment : Fragment() {
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
         imageView?.setImageResource(R.drawable.ic_bicycle)
         toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary));
+        (activity as MainActivity?)?.window?.statusBarColor = ContextCompat.getColor(activity as MainActivity, R.color.red_primary)
         navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.red_primary))
 
         setNavigationColors()
@@ -148,8 +139,8 @@ class MyBehavioursFragment : Fragment() {
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
-        navView?.setItemTextColor(navigationViewColorStateList)
-        navView?.setItemIconTintList(navigationViewColorStateList)
+        navView?.itemTextColor = navigationViewColorStateList
+        navView?.itemIconTintList = navigationViewColorStateList
     }
 
     //Setup charts
@@ -162,8 +153,8 @@ class MyBehavioursFragment : Fragment() {
         pieEntries.add(PieEntry(inTime*100, "In time"))
 
         val dataset: PieDataSet = PieDataSet(pieEntries, "")
-        dataset.setColors(mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
-            , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc)))
+        dataset.colors = mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
+                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
         //dataset.sliceSpace = 3f
         dataset.selectionShift = 4f
 
@@ -192,14 +183,14 @@ class MyBehavioursFragment : Fragment() {
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

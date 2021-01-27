@@ -16,7 +16,7 @@ class AuthActivity: AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var fragment = SplashFragment()
+        val fragment = SplashFragment()
         val transaction= supportFragmentManager.beginTransaction()
         transaction.replace(R.id.loginContainer, fragment, "LoginContainer")
         transaction.commit()

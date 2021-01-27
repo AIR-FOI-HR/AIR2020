@@ -120,7 +120,7 @@
                 android:id="@+id/txtSettingsEmail"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Email"
+                android:text="@string/settings_email"
                 android:textColor="@color/grey_60"
                 android:textSize="22sp" />
 
@@ -169,7 +169,7 @@
                 android:background="@drawable/spinner_bg"
                 android:dropDownWidth="300dp"
                 android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
-                android:paddingRight="14dp"
+                android:paddingEnd="14dp"
                 android:popupBackground="@android:color/white"
                 android:popupElevation="3dp"
                 android:stateListAnimator="@drawable/spinner_sla"
@@ -189,7 +189,7 @@
                 android:id="@+id/txtSettingsSemester"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:text="Semester"
+                android:text="@string/settings_semester"
                 android:textColor="@color/grey_60"
                 android:textSize="22sp" />
 

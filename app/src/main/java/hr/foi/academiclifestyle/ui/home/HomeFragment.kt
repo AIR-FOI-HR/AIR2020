@@ -2,7 +2,6 @@ package hr.foi.academiclifestyle.ui.home
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -140,7 +139,7 @@ class HomeFragment : Fragment() {
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
         imageView?.setImageResource(R.drawable.ic_house)
         toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.foi_red))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.foi_red));
+        (activity as MainActivity?)?.window?.statusBarColor = ContextCompat.getColor(activity as MainActivity, R.color.foi_red)
         navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.foi_red))
 
         setNavigationColors()
@@ -158,8 +157,8 @@ class HomeFragment : Fragment() {
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
-        navView?.setItemTextColor(navigationViewColorStateList)
-        navView?.setItemIconTintList(navigationViewColorStateList)
+        navView?.itemTextColor = navigationViewColorStateList
+        navView?.itemIconTintList = navigationViewColorStateList
     }
 
 
@@ -170,9 +169,9 @@ class HomeFragment : Fragment() {
         val hBarChart: HorizontalBarChart = binding.hBarChart
         val hBarData: MutableList<BarEntry> = mutableListOf()
 
-        val roundedBarChartRenderer = RoundedHorizontalBarChartRenderer(hBarChart, hBarChart.getAnimator(), hBarChart.getViewPortHandler())
+        val roundedBarChartRenderer = RoundedHorizontalBarChartRenderer(hBarChart, hBarChart.animator, hBarChart.viewPortHandler)
         roundedBarChartRenderer.setmRadius(20f)
-        hBarChart.setRenderer(roundedBarChartRenderer)
+        hBarChart.renderer = roundedBarChartRenderer
 
         //add data to lists
         hBarData.add(BarEntry(0F, attendance*100))
@@ -181,7 +180,7 @@ class HomeFragment : Fragment() {
         val dataSet: BarDataSet = BarDataSet(hBarData, "(%)")
 
         //hbar
-        dataSet.setColor(ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
+        dataSet.color = ContextCompat.getColor((activity as MainActivity), R.color.red_acc)
         hBarChart.description.text = ""
         hBarChart.setDrawGridBackground(false)
         hBarChart.setDrawBorders(true)
@@ -189,15 +188,15 @@ class HomeFragment : Fragment() {
         hBarChart.animateY(800)
         hBarChart.setBorderWidth(1F)
 
-        var topAxis: YAxis = hBarChart.axisLeft
+        val topAxis: YAxis = hBarChart.axisLeft
         topAxis.axisMinimum = 0F
         topAxis.axisMaximum = 100F
         topAxis.setDrawAxisLine(false)
         topAxis.setLabelCount(2, true)
-        var bottomAxis: YAxis = hBarChart.axisRight
+        val bottomAxis: YAxis = hBarChart.axisRight
         bottomAxis.isEnabled = false
 
-        var legend: Legend = hBarChart.legend
+        val legend: Legend = hBarChart.legend
         legend.isEnabled = false
 
         hBarChart.xAxis.isEnabled = false
@@ -221,8 +220,8 @@ class HomeFragment : Fragment() {
         pieEntries.add(PieEntry(inTime*100, "In time"))
 
         val dataset: PieDataSet = PieDataSet(pieEntries, "")
-        dataset.setColors(mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
-                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc)))
+        dataset.colors = mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
+                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
         //dataset.sliceSpace = 3f
         dataset.selectionShift = 4f
 
@@ -252,8 +251,8 @@ class HomeFragment : Fragment() {
         pieEntries.add(PieEntry(inTime*100, "In time"))
 
         val dataset: PieDataSet = PieDataSet(pieEntries, "")
-        dataset.setColors(mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
-                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc)))
+        dataset.colors = mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
+                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
         //dataset.sliceSpace = 3f
         dataset.selectionShift = 4f
 
@@ -275,14 +274,14 @@ class HomeFragment : Fragment() {
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

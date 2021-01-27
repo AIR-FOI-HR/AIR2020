@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/grey_60"
-        android:text="-"
-        android:textSize="18dp"
+        android:text="@string/placeholder"
+        android:textSize="18sp"
         android:gravity="center"
         android:height="40dp"
         android:textStyle="bold" />
@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:textColor="@color/grey_60"
         android:layout_marginTop="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="2dp"
-        android:text="Presence recorded at: "
-        android:textSize="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="2dp"
+        android:text="@string/dialog_presence"
+        android:textSize="16sp"
         android:layout_below="@+id/txtDTitle"/>
 
     <TextView
@@ -40,11 +40,11 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="93dp"
         android:layout_toEndOf="@+id/txtDPresence"
-        android:paddingLeft="10dp"
-        android:paddingRight="20dp"
-        android:text="-"
+        android:paddingStart="10dp"
+        android:paddingEnd="20dp"
+        android:text="@string/placeholder"
         android:textColor="@color/grey_60"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/txtDInfo"
@@ -54,8 +54,8 @@
         android:layout_marginTop="25dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="Would you like to retry recording the presence?"
-        android:textSize="16dp"
+        android:text="@string/dialog_retry"
+        android:textSize="16sp"
         android:layout_below="@+id/txtDPresence"/>
 
     <!-- stateListAnimator removes button emboss and shadow, works only on API >= 21 -->
@@ -67,7 +67,7 @@
         android:clickable="true"
         android:contextClickable="true"
         android:focusable="true"
-        android:text="RETRY"
+        android:text="@string/dialog_btn"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="8dp"
         android:textColor="@color/white_acc"

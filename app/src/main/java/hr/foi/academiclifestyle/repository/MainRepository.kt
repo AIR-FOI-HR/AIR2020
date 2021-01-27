@@ -219,7 +219,7 @@ class MainRepository (private val database: LocalDatabase) {
     //Events
     suspend fun updateEvents(date: LocalDate, programId: Int, semester: Int, userId: Long, year: Int) : Boolean {
         return withContext(Dispatchers.IO) {
-            var day = date.dayOfWeek.toString().toLowerCase()
+            val day = date.dayOfWeek.toString().toLowerCase()
 
             //calculate semester based on year
             var realSemester = semester
@@ -234,7 +234,7 @@ class MainRepository (private val database: LocalDatabase) {
 
             database.eventDao.clearEvents()
             if (eventList.isNotEmpty()) {
-                var events: MutableList<Event> = mutableListOf()
+                val events: MutableList<Event> = mutableListOf()
                 for (event in eventList) {
                     var userLoggedDate = ""
                     var pressence = 2 //not present by default
@@ -248,11 +248,11 @@ class MainRepository (private val database: LocalDatabase) {
 
                                 val hourStart = event.start_time.substring(0, event.start_time.length-3).toInt()
                                 val minutesStart = event.start_time.substring(3, event.start_time.length).toInt()
-                                var dateTimeStart = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourStart, minutesStart)
+                                val dateTimeStart = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourStart, minutesStart)
 
                                 val hourEnd = event.end_time.substring(0, event.end_time.length-3).toInt()
                                 val minutesEnd = event.end_time.substring(3, event.end_time.length).toInt()
-                                var dateTimeEnd = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourEnd, minutesEnd)
+                                val dateTimeEnd = LocalDateTime.of(date.year, date.monthValue, date.dayOfMonth, hourEnd, minutesEnd)
 
                                 //if user logged time is in range of the lecture time
                                 if (parsedDateTime.compareTo(dateTimeStart) == 1 && parsedDateTime.compareTo(dateTimeEnd) == -1) {
@@ -298,7 +298,7 @@ class MainRepository (private val database: LocalDatabase) {
 
             database.subjectDao.clearSubjects()
             if (subjectList.isNotEmpty()) {
-                var subjects: MutableList<Subject> = mutableListOf()
+                val subjects: MutableList<Subject> = mutableListOf()
                 for (subject in subjectList) {
                     var userAttendance = 0
                     var maxAttendance = 0
@@ -382,7 +382,7 @@ class MainRepository (private val database: LocalDatabase) {
         return withContext(Dispatchers.IO) {
             var sensorData: List<SensorResponse> = mutableListOf()
             if (roomId == 0) {
-                var room: List<Room> = NetworkApi.networkService.getRoomByName(roomName!!).await()
+                val room: List<Room> = NetworkApi.networkService.getRoomByName(roomName!!).await()
                 sensorData = NetworkApi.networkService.getSensorDataByRoomId(room[0].id).await()
             } else {
                 sensorData = NetworkApi.networkService.getSensorDataByRoomId(roomId!!).await()
@@ -424,7 +424,7 @@ class MainRepository (private val database: LocalDatabase) {
         return withContext(Dispatchers.IO) {
             val events = NetworkApi.networkService.getEventsForSubjectId(subject.subjectId).await()
             val attendances = NetworkApi.networkService.getAttendanceByUserId(userId).await()
-            var detailsList: MutableList<AttendanceDetails> = mutableListOf()
+            val detailsList: MutableList<AttendanceDetails> = mutableListOf()
 
             if (events.isNotEmpty()) {
                 for (event in events) {
@@ -476,7 +476,7 @@ class MainRepository (private val database: LocalDatabase) {
                 var maxAttendance: Int = 0
                 var userAttendance: Int = 0
                 var peerAttendance: Int = 0 //total attendances for this subject
-                var peers: MutableList<Int> = mutableListOf() //number of different users recorded
+                val peers: MutableList<Int> = mutableListOf() //number of different users recorded
                 var avgAttendance: Int = 0
 
                 if (events.isNotEmpty()) {

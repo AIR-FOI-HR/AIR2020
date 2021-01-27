@@ -1,6 +1,5 @@
 package hr.foi.academiclifestyle.ui.ambience.helpers
 
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import hr.foi.academiclifestyle.ui.ambience.OtherRoomsViewModel

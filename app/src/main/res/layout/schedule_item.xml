@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/txtTime"
-            android:text="-"
+            android:text="@string/placeholder"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:textColor="@color/grey_80"
@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/txtName"
-            android:text="-"
+            android:text="@string/placeholder"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:textColor="@color/grey_80"

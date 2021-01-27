@@ -1,5 +1,6 @@
 package hr.foi.academiclifestyle.util
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -14,6 +15,7 @@ import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.dimens.ScheduleEvent
 
 class CustomDialog {
+    @SuppressLint("SetTextI18n")
     fun showDialog(context: Context, event: ScheduleEvent) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

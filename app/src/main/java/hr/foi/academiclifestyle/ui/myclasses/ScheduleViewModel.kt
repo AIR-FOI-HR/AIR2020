@@ -14,7 +14,6 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
 
 class ScheduleViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -48,16 +47,13 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
                 else
                     _eventsUpdated.value = repository.updateEvents(parsedDate!!, program, user?.value?.semester!!, user?.value?.userId!!, user?.value?.year!!)
             } catch (ex: Exception) {
-                if (ex is SocketTimeoutException)
-                    _responseType.value = 3
-                else if (ex is UnknownHostException)
-                    _responseType.value = 3
-                else if (ex is HttpException)
-                    _responseType.value = 2
-                else if (ex is ConnectException)
-                    _responseType.value = 3
-                else
-                    _responseType.value = 4
+                when (ex) {
+                    is SocketTimeoutException -> _responseType.value = 3
+                    is UnknownHostException -> _responseType.value = 3
+                    is HttpException -> _responseType.value = 2
+                    is ConnectException -> _responseType.value = 3
+                    else -> _responseType.value = 4
+                }
                 Log.i("CoroutineInfoSchedule", ex.toString())
             }
         }

@@ -56,7 +56,7 @@ class AmbienceFragment : Fragment() {
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
         imageView?.setImageResource(R.drawable.ic_leaf)
         toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.green_primary))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.green_primary));
+        (activity as MainActivity?)?.window?.statusBarColor = ContextCompat.getColor(activity as MainActivity, R.color.green_primary)
         navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.green_primary))
 
         setNavigationColors()
@@ -73,8 +73,8 @@ class AmbienceFragment : Fragment() {
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
-        navView?.setItemTextColor(navigationViewColorStateList)
-        navView?.setItemIconTintList(navigationViewColorStateList)
+        navView?.itemTextColor = navigationViewColorStateList
+        navView?.itemIconTintList = navigationViewColorStateList
     }
 
     fun createTabLayout(tabLayout: TabLayout, tabsViewpager: ViewPager2) {

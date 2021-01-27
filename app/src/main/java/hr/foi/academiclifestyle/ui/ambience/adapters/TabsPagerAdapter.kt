@@ -6,9 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import hr.foi.academiclifestyle.ui.ambience.MyLocationFragment
 import hr.foi.academiclifestyle.ui.ambience.OtherRoomsFragment
-import hr.foi.academiclifestyle.ui.myclasses.AttendanceFragment
-import hr.foi.academiclifestyle.ui.myclasses.ScheduleFragment
-import hr.foi.academiclifestyle.ui.myclasses.StatsGoalsFragment
 
 class TabsPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle, private var numberOfTabs: Int) : FragmentStateAdapter(fm, lifecycle) {
 

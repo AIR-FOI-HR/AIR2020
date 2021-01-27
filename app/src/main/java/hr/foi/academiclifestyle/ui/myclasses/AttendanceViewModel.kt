@@ -48,16 +48,13 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
                 else
                     _subjectsUpdated.value = repository.updateSubjects(userId, programId, year, semester)
             } catch (ex: Exception) {
-                if (ex is SocketTimeoutException)
-                    _responseType.value = 3
-                else if (ex is UnknownHostException)
-                    _responseType.value = 3
-                else if (ex is HttpException)
-                    _responseType.value = 2
-                else if (ex is ConnectException)
-                    _responseType.value = 3
-                else
-                    _responseType.value = 4
+                when (ex) {
+                    is SocketTimeoutException -> _responseType.value = 3
+                    is UnknownHostException -> _responseType.value = 3
+                    is HttpException -> _responseType.value = 2
+                    is ConnectException -> _responseType.value = 3
+                    else -> _responseType.value = 4
+                }
                 Log.i("CoroutineInfoAttendance", ex.toString())
             }
         }
@@ -68,16 +65,13 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
             try {
                 _details.value = repository.getSubjectDetails(subject, user?.value?.userId!!)
             } catch (ex: Exception) {
-                if (ex is SocketTimeoutException)
-                    _responseType.value = 3
-                else if (ex is UnknownHostException)
-                    _responseType.value = 3
-                else if (ex is HttpException)
-                    _responseType.value = 2
-                else if (ex is ConnectException)
-                    _responseType.value = 3
-                else
-                    _responseType.value = 4
+                when (ex) {
+                    is SocketTimeoutException -> _responseType.value = 3
+                    is UnknownHostException -> _responseType.value = 3
+                    is HttpException -> _responseType.value = 2
+                    is ConnectException -> _responseType.value = 3
+                    else -> _responseType.value = 4
+                }
                 Log.i("CoroutineInfo", ex.toString())
             }
         }

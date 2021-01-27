@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,8 +92,8 @@ class LoginFragment : Fragment() {
             "grey" -> R.color.grey_30
             else -> R.color.yellow_acc
         }
-        loginBtn.setBackgroundTintList(ContextCompat.getColorStateList((activity as AuthActivity), colorRs))
-        loginBtn.setText(text)
+        loginBtn.backgroundTintList = ContextCompat.getColorStateList((activity as AuthActivity), colorRs)
+        loginBtn.text = text
         loginBtn.isEnabled = state
         loginBtn.isClickable = state
 

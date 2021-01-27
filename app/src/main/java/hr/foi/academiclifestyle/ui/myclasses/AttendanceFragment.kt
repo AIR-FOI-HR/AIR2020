@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -159,14 +158,14 @@ class AttendanceFragment : Fragment(), AttendanceRecyclerAdapter.OnItemClickList
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

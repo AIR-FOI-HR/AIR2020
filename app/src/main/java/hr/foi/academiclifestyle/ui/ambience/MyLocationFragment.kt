@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.ambience
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -149,7 +148,7 @@ class MyLocationFragment : Fragment() {
 
         //--set styling--
         //hbar1
-        dataSet.setColor(ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
+        dataSet.color = ContextCompat.getColor((activity as MainActivity), R.color.red_acc)
         hBarChart.description.text = ""
         hBarChart.setDrawGridBackground(false)
         hBarChart.setDrawBorders(false)
@@ -172,7 +171,7 @@ class MyLocationFragment : Fragment() {
         hBarChart.xAxis.isEnabled = false
 
         //hbar2
-        dataSet2.setColor(ContextCompat.getColor((activity as MainActivity), R.color.blue_acc))
+        dataSet2.color = ContextCompat.getColor((activity as MainActivity), R.color.blue_acc)
         hBarChart2.description.text = ""
         hBarChart2.setDrawGridBackground(false)
         hBarChart2.setDrawBorders(false)
@@ -192,7 +191,7 @@ class MyLocationFragment : Fragment() {
         legend.isEnabled = false
 
         //hbar3
-        dataSet3.setColor(ContextCompat.getColor((activity as MainActivity), R.color.teal_acc))
+        dataSet3.color = ContextCompat.getColor((activity as MainActivity), R.color.teal_acc)
         hBarChart3.description.text = ""
         hBarChart3.setDrawGridBackground(false)
         hBarChart3.setDrawBorders(false)
@@ -240,8 +239,8 @@ class MyLocationFragment : Fragment() {
         pieEntries.add(PieEntry(1F, "Argon, other gases..."))
 
         val dataset: PieDataSet = PieDataSet(pieEntries, "")
-        dataset.setColors(mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
-                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc)))
+        dataset.colors = mutableListOf(ContextCompat.getColor((activity as MainActivity), R.color.yellow_acc)
+                , ContextCompat.getColor((activity as MainActivity), R.color.teal_acc), ContextCompat.getColor((activity as MainActivity), R.color.red_acc))
         //dataset.sliceSpace = 3f
         dataset.selectionShift = 8f
 
@@ -270,14 +269,14 @@ class MyLocationFragment : Fragment() {
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

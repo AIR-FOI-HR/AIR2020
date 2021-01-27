@@ -9,7 +9,6 @@ import android.util.Patterns
 import androidx.lifecycle.*
 import hr.foi.academiclifestyle.database.getDatabase
 import hr.foi.academiclifestyle.network.model.RegisterRequest
-import hr.foi.academiclifestyle.network.NetworkApi
 import hr.foi.academiclifestyle.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -71,14 +69,12 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
                         _responseType.value = 4
                     }
                 } catch (ex: Exception) {
-                    if (ex is SocketTimeoutException)
-                        _responseType.value = 3
-                    else if (ex is UnknownHostException)
-                        _responseType.value = 3
-                    else if (ex is HttpException)
-                        _responseType.value = 5
-                    else
-                        Log.i("error", ex.message.toString())
+                    when (ex) {
+                        is SocketTimeoutException -> _responseType.value = 3
+                        is UnknownHostException -> _responseType.value = 3
+                        is HttpException -> _responseType.value = 5
+                        else -> Log.i("error", ex.message.toString())
+                    }
                 }
             }
         }
@@ -109,14 +105,12 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun setField(s: Editable, type: Int){
-        if (type == 1)
-            _fullNameTxt.value = s.toString()
-        else if (type == 2)
-            _username.value = s.toString()
-        else if (type == 3)
-            _email.value = s.toString()
-        else if (type == 4)
-            _password.value = s.toString()
+        when (type) {
+            1 -> _fullNameTxt.value = s.toString()
+            2 -> _username.value = s.toString()
+            3 -> _email.value = s.toString()
+            4 -> _password.value = s.toString()
+        }
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {

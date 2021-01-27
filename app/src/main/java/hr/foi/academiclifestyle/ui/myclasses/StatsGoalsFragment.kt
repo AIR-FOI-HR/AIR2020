@@ -1,7 +1,6 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -130,7 +129,7 @@ class StatsGoalsFragment : Fragment() {
         colors.add(ContextCompat.getColor((activity as MainActivity), R.color.yellow_primary))
 
         val dataSet: BarDataSet = BarDataSet(barData, "")
-        dataSet.setColors(colors)
+        dataSet.colors = colors
         barChart.description.text = ""
         barChart.setDrawGridBackground(false)
         barChart.setDrawBorders(false)
@@ -154,7 +153,7 @@ class StatsGoalsFragment : Fragment() {
         val data: BarData = BarData(dataSet)
         data.setValueTextSize(11f)
         data.setValueTextColors(colors)
-        data.setBarWidth(0.5f)
+        data.barWidth = 0.5f
 
         val legend: Legend = barChart.legend
         val legend1: LegendEntry = LegendEntry()
@@ -167,7 +166,7 @@ class StatsGoalsFragment : Fragment() {
         legend2.formColor = colors[1]
         legend2.label = "Avg"
         legend2.formSize = 12f
-        var legendList: MutableList<LegendEntry> = mutableListOf()
+        val legendList: MutableList<LegendEntry> = mutableListOf()
         legendList.add(legend1)
         legendList.add(legend2)
         legend.setCustom(legendList)
@@ -178,21 +177,21 @@ class StatsGoalsFragment : Fragment() {
         legend.textSize = 11f
         legend.isWordWrapEnabled = true
 
-        barChart.setData(data)
+        barChart.data = data
         barChart.setFitBars(true)
         barChart.invalidate()
     }
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

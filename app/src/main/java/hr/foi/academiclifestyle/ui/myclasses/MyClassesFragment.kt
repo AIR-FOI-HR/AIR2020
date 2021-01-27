@@ -1,26 +1,18 @@
 package hr.foi.academiclifestyle.ui.myclasses
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.widget.Adapter
 import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.children
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -76,7 +68,7 @@ class MyClassesFragment : Fragment() {
         val navHeader = (activity as MainActivity?)?.findViewById<ConstraintLayout>(R.id.navHeader)
         imageView?.setImageResource(R.drawable.ic_clock)
         toolbar?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
-        (activity as MainActivity?)?.window?.setStatusBarColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary));
+        (activity as MainActivity?)?.window?.statusBarColor = ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary);
         navHeader?.setBackgroundColor(ContextCompat.getColor(activity as MainActivity, R.color.yellow_primary))
 
         setNavigationColors()
@@ -93,8 +85,8 @@ class MyClassesFragment : Fragment() {
 
         val navigationViewColorStateList = ColorStateList(states, colors)
 
-        navView?.setItemTextColor(navigationViewColorStateList)
-        navView?.setItemIconTintList(navigationViewColorStateList)
+        navView?.itemTextColor = navigationViewColorStateList
+        navView?.itemIconTintList = navigationViewColorStateList
     }
 
     fun createTabLayout(tabLayout: TabLayout, tabsViewpager: ViewPager2) {

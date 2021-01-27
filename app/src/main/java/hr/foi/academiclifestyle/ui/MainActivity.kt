@@ -1,11 +1,9 @@
 package hr.foi.academiclifestyle.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import android.widget.HeaderViewListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -24,10 +22,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import hr.foi.academiclifestyle.R
 import hr.foi.academiclifestyle.databinding.ActivityMainBinding
 import hr.foi.academiclifestyle.dimens.CoursesEnum
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 open class MainActivity : AppCompatActivity() {
@@ -47,7 +41,7 @@ open class MainActivity : AppCompatActivity() {
         //Initialize timezone
         AndroidThreeTen.init(this)
 
-        var binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         //set up the toolbar
         val toolbar: Toolbar = binding.toolbar
@@ -64,10 +58,10 @@ open class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         //disable automatic icon tinting
-        binding.navView.setItemIconTintList(null)
+        binding.navView.itemIconTintList = null
 
         //set the animated drawer toggle
-        var toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -101,6 +95,7 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupObservers() {
         viewModel.userDeleted.observe(this, Observer {
             if (it != null && it) {
@@ -123,21 +118,21 @@ open class MainActivity : AppCompatActivity() {
                 if(it.name != null && it.surname != null){
 
 
-                    nameAndSurname.setText(it.name + " " + it.surname)
+                    nameAndSurname.text = it.name + " " + it.surname
                 }
 
                 if(it.program != null){
                     if(it.program == 1){
 
-                       study.setText(CoursesEnum.IPS.programName)
+                        study.text = CoursesEnum.IPS.programName
                     }
                     else
-                        study.setText(CoursesEnum.IPI.programName)
+                        study.text = CoursesEnum.IPI.programName
 
                 }
 
                 if(it.year != null){
-                    yearOfStudy.setText(it.year.toString()+ ". godina")
+                    yearOfStudy.text = it.year.toString()+ ". godina"
                 }
                 if( it.imageURL != null){
                     viewModel.loadImage(it)

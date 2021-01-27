@@ -2,7 +2,6 @@ package hr.foi.academiclifestyle.ui.myclasses
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -130,7 +129,7 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
                 numEnd = "0$numEnd"
 
             // variables
-            var time = "$numStart-$numEnd"
+            val time = "$numStart-$numEnd"
             var name = "-"
             var status = 0
             var userLogTime = ""
@@ -157,14 +156,14 @@ class ScheduleFragment : Fragment(), ScheduleRecyclerAdapter.OnItemClickListener
 
     private fun startAnimation() {
         inAnimation = AlphaAnimation(0f, 1f)
-        inAnimation.setDuration(200)
+        inAnimation.duration = 200
         progressBarHolder.animation = inAnimation
         progressBarHolder.visibility = View.VISIBLE
     }
 
     private fun finishAnimation() {
         outAnimation = AlphaAnimation(1f, 0f)
-        outAnimation.setDuration(200)
+        outAnimation.duration = 200
         progressBarHolder.animation = outAnimation
         progressBarHolder.visibility = View.GONE
     }

@@ -1,8 +1,6 @@
 package hr.foi.academiclifestyle.ui.settings
 
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
@@ -15,10 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.File
-import java.io.IOException
-import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
-import java.net.URL
 import java.net.UnknownHostException
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
