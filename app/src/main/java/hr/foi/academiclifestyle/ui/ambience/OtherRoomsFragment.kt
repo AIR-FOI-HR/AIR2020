@@ -109,6 +109,11 @@ class OtherRoomsFragment : Fragment() {
                 } else
                     viewModel.firstAnimCall = true
                 viewModel.resetEvents()
+                if (it == false) {
+                    //refresh all graphs in case there's no data
+                    setupHBarCharts(0f, 0f, 0f)
+                    setupWindow(4) //4 - NO_DATA
+                }
             }
         })
         viewModel.responseType.observe(viewLifecycleOwner, Observer {

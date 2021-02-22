@@ -11,12 +11,14 @@ data class SensorResults (
         val y: Float? = 0f,
         @field:Json(name = "@z")
         val z: Float? = 0f,
-        @field:Json(name = "@temp")
-        val temp: Float? = 0f,
-        @field:Json(name = "@humid")
-        val humid: Float? = 0f,
-        @field:Json(name = "@press")
-        val press: Float? = 0f,
+        @field:Json(name = "@Temperature")
+        val Temperature: Float? = 0f,
+        @field:Json(name = "@Humidity")
+        val Humidity: Float? = 0f,
+        @Json(name = "Air pressure")
+        val AirPressure: Float? = 0f,
+        @Json(name = "Air quality")
+        val AirQuality: AirQuality? = null,
         @field:Json(name = "@status")
         val status: Int? = 0
 )

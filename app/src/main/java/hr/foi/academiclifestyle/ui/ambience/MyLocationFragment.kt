@@ -1,6 +1,7 @@
 package hr.foi.academiclifestyle.ui.ambience
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +49,7 @@ class MyLocationFragment : Fragment() {
         setupObservers()
 
         //TODO use bluetooth to determine the current room Id
-        viewModel.fetchSensorData(2)
+        viewModel.fetchSensorData(1)
 
         return binding.root
     }
@@ -78,6 +79,11 @@ class MyLocationFragment : Fragment() {
             if (it != null) {
                 finishAnimation()
                 viewModel.resetEvents()
+                if (it == false) {
+                    //refresh all graphs in case there's no data
+                    setupHBarCharts(0f, 0f, 0f)
+                    setupWindow(4) //4 - NO_DATA
+                }
             }
         })
         viewModel.responseType.observe(viewLifecycleOwner, Observer {

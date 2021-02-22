@@ -2,6 +2,7 @@ package hr.foi.academiclifestyle.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.LiveData
 import hr.foi.academiclifestyle.database.LocalDatabase
 import hr.foi.academiclifestyle.database.model.Event
@@ -405,13 +406,14 @@ class MainRepository (private val database: LocalDatabase) {
                                 sensor.Results!!.y,
                                 sensor.Results!!.z,
                                 sensor.Results!!.status,
-                                sensor.Results!!.temp,
-                                sensor.Results!!.humid,
-                                sensor.Results!!.press,
+                                sensor.Results!!.Temperature,
+                                sensor.Results!!.Humidity,
+                                sensor.Results!!.AirPressure,
                                 tab
                         ))
                     }
                 }
+
                 database.sensorDao.insertSensors(sensorList)
                 true
             } else {
